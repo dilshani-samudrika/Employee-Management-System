@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Employee Management System
 
 Group project for **COSC 31112 / BECS 31242 – Visual Programming**.
@@ -84,3 +85,6 @@ EmployeeManagementSystem/
 - Never commit `.csproj.user` files (personal IDE settings).
 - Formal attire + 10 min early arrival for the viva. All members must attend.
 - Final submission deadline: **21/06/2026, 11:59 PM**.
+=======
+# Employee-Management-System
+>>>>>>> 4b4719b08ac10fd30a4b1407cb415c3c8d3857a1
