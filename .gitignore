@@ -1,0 +1,39 @@
+## .NET / Visual Studio .gitignore for WinForms project
+
+# Build outputs - NEVER commit these
+[Bb]in/
+[Oo]bj/
+
+# User-specific files (personal IDE settings, do not share)
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio cache/options directory
+.vs/
+
+# NuGet packages folder (restored automatically via csproj)
+packages/
+*.nupkg
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# Rider / other IDEs
+.idea/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Local database files (if using LocalDB/SQLite for dev testing)
+*.mdf
+*.ldf
+*.sqlite
+
+# Logs
+*.log
