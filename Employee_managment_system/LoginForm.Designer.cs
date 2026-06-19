@@ -2,15 +2,8 @@
 {
     partial class LoginForm
     {
-        /// <summary>
-        ///  Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        ///  Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,243 +13,249 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        ///  Required method for Designer support - do not modify
-        ///  the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoginForm));
-            panel1 = new Panel();
-            label2 = new Label();
-            pictureBox1 = new PictureBox();
-            label1 = new Label();
-            label3 = new Label();
-            openFileDialog1 = new OpenFileDialog();
-            panel2 = new Panel();
-            button2 = new Button();
-            button1 = new Button();
-            checkBox1 = new CheckBox();
-            label6 = new Label();
-            label5 = new Label();
-            textBox2 = new TextBox();
-            textBox1 = new TextBox();
-            label4 = new Label();
-            linkLabel1 = new LinkLabel();
-            panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            panel2.SuspendLayout();
+            // Top Panel
+            topPanel = new Panel();
+            lblTitle = new Label();
+            pictureBoxLogo = new PictureBox();
+
+            // Main Panel
+            mainPanel = new Panel();
+
+            // Login Panel
+            loginPanel = new Panel();
+            lblWelcome = new Label();
+            lblSubtitle = new Label();
+            lblUsername = new Label();
+            txtUsername = new TextBox();
+            lblPassword = new Label();
+            txtPassword = new TextBox();
+            chkShowPassword = new CheckBox();
+            btnLogin = new Button();
+            btnClear = new Button();
+            linkForgotPassword = new LinkLabel();
+
+            topPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBoxLogo).BeginInit();
+            loginPanel.SuspendLayout();
             SuspendLayout();
-            // 
-            // panel1
-            // 
-            panel1.BackColor = Color.FromArgb(30, 58, 95);
-            panel1.Controls.Add(label2);
-            panel1.Dock = DockStyle.Top;
-            panel1.Location = new Point(0, 0);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(1331, 51);
-            panel1.TabIndex = 0;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(435, 9);
-            label2.Name = "label2";
-            label2.Size = new Size(420, 27);
-            label2.TabIndex = 3;
-            label2.Text = "Employee Management System-Login";
-            // 
-            // pictureBox1
-            // 
-            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(595, 88);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(92, 88);
-            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox1.TabIndex = 1;
-            pictureBox1.TabStop = false;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.BackColor = Color.AliceBlue;
-            label1.Font = new Font("Arial", 13.875F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.ForeColor = Color.FromArgb(30, 58, 95);
-            label1.Location = new Point(365, 206);
-            label1.Name = "label1";
-            label1.Size = new Size(576, 44);
-            label1.TabIndex = 2;
-            label1.Text = "Employee Management System";
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Arial", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label3.ForeColor = SystemColors.ControlDark;
-            label3.Location = new Point(503, 261);
-            label3.Name = "label3";
-            label3.Size = new Size(289, 27);
-            label3.TabIndex = 3;
-            label3.Text = "Please sign in to continue";
-            // 
-            // openFileDialog1
-            // 
-            openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // panel2
-            // 
-            panel2.BackColor = Color.WhiteSmoke;
-            panel2.Controls.Add(button2);
-            panel2.Controls.Add(button1);
-            panel2.Controls.Add(checkBox1);
-            panel2.Controls.Add(label6);
-            panel2.Controls.Add(label5);
-            panel2.Controls.Add(textBox2);
-            panel2.Controls.Add(textBox1);
-            panel2.Controls.Add(label4);
-            panel2.ForeColor = Color.Wheat;
-            panel2.Location = new Point(332, 311);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(647, 543);
-            panel2.TabIndex = 4;
-            // 
-            // button2
-            // 
-            button2.BackColor = Color.White;
-            button2.ForeColor = Color.LightGray;
-            button2.Location = new Point(333, 423);
-            button2.Name = "button2";
-            button2.Size = new Size(150, 59);
-            button2.TabIndex = 8;
-            button2.Text = "Clear";
-            button2.UseVisualStyleBackColor = false;
-            // 
-            // button1
-            // 
-            button1.BackColor = Color.White;
-            button1.ForeColor = Color.LightGray;
-            button1.Location = new Point(152, 423);
-            button1.Name = "button1";
-            button1.Size = new Size(150, 59);
-            button1.TabIndex = 7;
-            button1.Text = "LogIn";
-            button1.UseVisualStyleBackColor = false;
-            // 
-            // checkBox1
-            // 
-            checkBox1.AutoSize = true;
-            checkBox1.Font = new Font("Arial", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            checkBox1.ForeColor = Color.Black;
-            checkBox1.Location = new Point(74, 351);
-            checkBox1.Name = "checkBox1";
-            checkBox1.Size = new Size(204, 31);
-            checkBox1.TabIndex = 6;
-            checkBox1.Text = "Show Pasword";
-            checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Font = new Font("Arial", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label6.ForeColor = Color.Black;
-            label6.Location = new Point(125, 351);
-            label6.Name = "label6";
-            label6.Size = new Size(0, 27);
-            label6.TabIndex = 5;
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Font = new Font("Arial", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label5.ForeColor = Color.Black;
-            label5.Location = new Point(74, 220);
-            label5.Name = "label5";
-            label5.Size = new Size(153, 36);
-            label5.TabIndex = 3;
-            label5.Text = "Password";
-            // 
-            // textBox2
-            // 
-            textBox2.Location = new Point(74, 272);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(501, 35);
-            textBox2.TabIndex = 2;
-            // 
-            // textBox1
-            // 
-            textBox1.BackColor = SystemColors.HighlightText;
-            textBox1.Location = new Point(74, 132);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(501, 35);
-            textBox1.TabIndex = 1;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Font = new Font("Arial", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label4.ForeColor = Color.Black;
-            label4.Location = new Point(74, 85);
-            label4.Name = "label4";
-            label4.Size = new Size(161, 36);
-            label4.TabIndex = 0;
-            label4.Text = "Username";
-            // 
-            // linkLabel1
-            // 
-            linkLabel1.AutoSize = true;
-            linkLabel1.LinkColor = Color.CornflowerBlue;
-            linkLabel1.Location = new Point(562, 868);
-            linkLabel1.Name = "linkLabel1";
-            linkLabel1.Size = new Size(200, 27);
-            linkLabel1.TabIndex = 5;
-            linkLabel1.TabStop = true;
-            linkLabel1.Text = "ForgotPassword?";
-            // 
-            // LoginForm
-            // 
-            AutoScaleDimensions = new SizeF(14F, 27F);
+
+            // ============================================
+            // TOP PANEL
+            // ============================================
+            topPanel.BackColor = Color.FromArgb(30, 58, 95);
+            topPanel.Controls.Add(lblTitle);
+            topPanel.Controls.Add(pictureBoxLogo);
+            topPanel.Dock = DockStyle.Top;
+            topPanel.Location = new Point(0, 0);
+            topPanel.Name = "topPanel";
+            topPanel.Size = new Size(600, 70);
+            topPanel.TabIndex = 0;
+
+            // pictureBoxLogo
+            pictureBoxLogo.Location = new Point(20, 12);
+            pictureBoxLogo.Name = "pictureBoxLogo";
+            pictureBoxLogo.Size = new Size(50, 46);
+            pictureBoxLogo.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBoxLogo.TabIndex = 0;
+            pictureBoxLogo.TabStop = false;
+
+            // lblTitle
+            lblTitle.AutoSize = true;
+            lblTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            lblTitle.ForeColor = Color.White;
+            lblTitle.Location = new Point(80, 18);
+            lblTitle.Name = "lblTitle";
+            lblTitle.Size = new Size(352, 37);
+            lblTitle.TabIndex = 1;
+            lblTitle.Text = "Employee Management System";
+
+            // ============================================
+            // MAIN PANEL
+            // ============================================
+            mainPanel.BackColor = Color.FromArgb(248, 249, 250);
+            mainPanel.Dock = DockStyle.Fill;
+            mainPanel.Location = new Point(0, 70);
+            mainPanel.Name = "mainPanel";
+            mainPanel.Size = new Size(600, 520);
+            mainPanel.TabIndex = 1;
+
+            // ============================================
+            // LOGIN PANEL
+            // ============================================
+            loginPanel.BackColor = Color.White;
+            loginPanel.BorderStyle = BorderStyle.FixedSingle;
+            loginPanel.Controls.Add(lblWelcome);
+            loginPanel.Controls.Add(lblSubtitle);
+            loginPanel.Controls.Add(lblUsername);
+            loginPanel.Controls.Add(txtUsername);
+            loginPanel.Controls.Add(lblPassword);
+            loginPanel.Controls.Add(txtPassword);
+            loginPanel.Controls.Add(chkShowPassword);
+            loginPanel.Controls.Add(btnLogin);
+            loginPanel.Controls.Add(btnClear);
+            loginPanel.Controls.Add(linkForgotPassword);
+            loginPanel.Location = new Point(75, 30);
+            loginPanel.Name = "loginPanel";
+            loginPanel.Size = new Size(450, 460);
+            loginPanel.TabIndex = 0;
+
+            // lblWelcome
+            lblWelcome.AutoSize = true;
+            lblWelcome.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
+            lblWelcome.ForeColor = Color.FromArgb(30, 58, 95);
+            lblWelcome.Location = new Point(100, 30);
+            lblWelcome.Name = "lblWelcome";
+            lblWelcome.Size = new Size(250, 46);
+            lblWelcome.TabIndex = 2;
+            lblWelcome.Text = "Welcome Back!";
+
+            // lblSubtitle
+            lblSubtitle.AutoSize = true;
+            lblSubtitle.Font = new Font("Segoe UI", 11F);
+            lblSubtitle.ForeColor = Color.FromArgb(100, 100, 100);
+            lblSubtitle.Location = new Point(95, 76);
+            lblSubtitle.Name = "lblSubtitle";
+            lblSubtitle.Size = new Size(260, 25);
+            lblSubtitle.TabIndex = 3;
+            lblSubtitle.Text = "Please sign in to your account";
+
+            // lblUsername
+            lblUsername.AutoSize = true;
+            lblUsername.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lblUsername.ForeColor = Color.FromArgb(30, 58, 95);
+            lblUsername.Location = new Point(50, 140);
+            lblUsername.Name = "lblUsername";
+            lblUsername.Size = new Size(95, 23);
+            lblUsername.TabIndex = 4;
+            lblUsername.Text = "Username:";
+
+            // txtUsername
+            txtUsername.BorderStyle = BorderStyle.FixedSingle;
+            txtUsername.Font = new Font("Segoe UI", 11F);
+            txtUsername.Location = new Point(50, 166);
+            txtUsername.Name = "txtUsername";
+            txtUsername.Size = new Size(350, 32);
+            txtUsername.TabIndex = 1;
+            txtUsername.Text = "admin";
+
+            // lblPassword
+            lblPassword.AutoSize = true;
+            lblPassword.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lblPassword.ForeColor = Color.FromArgb(30, 58, 95);
+            lblPassword.Location = new Point(50, 215);
+            lblPassword.Name = "lblPassword";
+            lblPassword.Size = new Size(90, 23);
+            lblPassword.TabIndex = 6;
+            lblPassword.Text = "Password:";
+
+            // txtPassword
+            txtPassword.BorderStyle = BorderStyle.FixedSingle;
+            txtPassword.Font = new Font("Segoe UI", 11F);
+            txtPassword.Location = new Point(50, 241);
+            txtPassword.Name = "txtPassword";
+            txtPassword.PasswordChar = '●';
+            txtPassword.Size = new Size(350, 32);
+            txtPassword.TabIndex = 2;
+            txtPassword.Text = "admin123";
+
+            // chkShowPassword
+            chkShowPassword.AutoSize = true;
+            chkShowPassword.Font = new Font("Segoe UI", 9F);
+            chkShowPassword.ForeColor = Color.FromArgb(30, 58, 95);
+            chkShowPassword.Location = new Point(50, 280);
+            chkShowPassword.Name = "chkShowPassword";
+            chkShowPassword.Size = new Size(140, 24);
+            chkShowPassword.TabIndex = 3;
+            chkShowPassword.Text = "Show Password";
+            chkShowPassword.UseVisualStyleBackColor = true;
+            chkShowPassword.CheckedChanged += chkShowPassword_CheckedChanged;
+
+            // btnLogin
+            btnLogin.BackColor = Color.FromArgb(46, 204, 113);
+            btnLogin.Cursor = Cursors.Hand;
+            btnLogin.FlatAppearance.BorderSize = 0;
+            btnLogin.FlatStyle = FlatStyle.Flat;
+            btnLogin.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnLogin.ForeColor = Color.White;
+            btnLogin.Location = new Point(50, 330);
+            btnLogin.Name = "btnLogin";
+            btnLogin.Size = new Size(160, 50);
+            btnLogin.TabIndex = 4;
+            btnLogin.Text = "🔑 Login";
+            btnLogin.UseVisualStyleBackColor = false;
+            btnLogin.Click += btnLogin_Click;
+
+            // btnClear
+            btnClear.BackColor = Color.FromArgb(149, 165, 166);
+            btnClear.Cursor = Cursors.Hand;
+            btnClear.FlatAppearance.BorderSize = 0;
+            btnClear.FlatStyle = FlatStyle.Flat;
+            btnClear.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnClear.ForeColor = Color.White;
+            btnClear.Location = new Point(240, 330);
+            btnClear.Name = "btnClear";
+            btnClear.Size = new Size(160, 50);
+            btnClear.TabIndex = 5;
+            btnClear.Text = "🗑 Clear";
+            btnClear.UseVisualStyleBackColor = false;
+            btnClear.Click += btnClear_Click;
+
+            // linkForgotPassword
+            linkForgotPassword.AutoSize = true;
+            linkForgotPassword.Font = new Font("Segoe UI", 9F);
+            linkForgotPassword.LinkColor = Color.FromArgb(52, 152, 219);
+            linkForgotPassword.Location = new Point(50, 400);
+            linkForgotPassword.Name = "linkForgotPassword";
+            linkForgotPassword.Size = new Size(140, 20);
+            linkForgotPassword.TabIndex = 6;
+            linkForgotPassword.TabStop = true;
+            linkForgotPassword.Text = "Forgot Password?";
+            linkForgotPassword.LinkClicked += linkForgotPassword_LinkClicked;
+
+            // ============================================
+            // LOGIN FORM
+            // ============================================
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.AliceBlue;
-            ClientSize = new Size(1331, 1215);
-            Controls.Add(linkLabel1);
-            Controls.Add(panel2);
-            Controls.Add(label3);
-            Controls.Add(label1);
-            Controls.Add(pictureBox1);
-            Controls.Add(panel1);
-            Font = new Font("Arial", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            ForeColor = SystemColors.ButtonHighlight;
+            BackColor = Color.FromArgb(248, 249, 250);
+            ClientSize = new Size(600, 590);
+            Controls.Add(loginPanel);
+            Controls.Add(mainPanel);
+            Controls.Add(topPanel);
+            Font = new Font("Segoe UI", 9F);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "LoginForm";
-            Text = "Employee Management System-Login";
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            panel2.ResumeLayout(false);
-            panel2.PerformLayout();
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Login - Employee Management System";
+            Load += LoginForm_Load;
+
+            topPanel.ResumeLayout(false);
+            topPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBoxLogo).EndInit();
+            loginPanel.ResumeLayout(false);
+            loginPanel.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
 
-        #endregion
-
-        private Panel panel1;
-        private PictureBox pictureBox1;
-        private Label label1;
-        private Label label2;
-        private Label label3;
-        private OpenFileDialog openFileDialog1;
-        private Panel panel2;
-        private Label label4;
-        private Label label6;
-        private Label label5;
-        private TextBox textBox2;
-        private TextBox textBox1;
-        private Button button2;
-        private Button button1;
-        private CheckBox checkBox1;
-        private LinkLabel linkLabel1;
+        // Control declarations
+        private Panel topPanel;
+        private Panel mainPanel;
+        private Panel loginPanel;
+        private PictureBox pictureBoxLogo;
+        private Label lblTitle;
+        private Label lblWelcome;
+        private Label lblSubtitle;
+        private Label lblUsername;
+        private TextBox txtUsername;
+        private Label lblPassword;
+        private TextBox txtPassword;
+        private CheckBox chkShowPassword;
+        private Button btnLogin;
+        private Button btnClear;
+        private LinkLabel linkForgotPassword;
     }
 }

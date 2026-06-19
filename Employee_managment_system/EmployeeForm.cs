@@ -1,314 +1,165 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
-using System.Security.Cryptography;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Employee_managment_system
 {
     public partial class EmployeeForm : Form
     {
-        // Models
         public class Department
         {
-            public int Id { get; set; }
-            public string Name { get; set; }
+            public int DeptID { get; set; }
+            public string? DeptName { get; set; }
+            public string? Description { get; set; }
         }
 
         public class Designation
         {
-            public int Id { get; set; }
-            public string Title { get; set; }
-            public int DepartmentId { get; set; }
+            public int DesignationID { get; set; }
+            public int DeptID { get; set; }
+            public string? Title { get; set; }
+            public decimal BasicSalary { get; set; }
+            public decimal? OTRate { get; set; }
+            public decimal? MaxMonthlyOTHours { get; set; }
         }
 
         public class Employee
         {
-            public int Id { get; set; }
-            public string EmployeeCode { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public string Gender { get; set; }
-            public string NIC { get; set; }
-            public DateTime? DOB { get; set; }
-            public DateTime? JoinDate { get; set; }
-            public string ContactNo { get; set; }
-            public string Email { get; set; }
-            public string Category { get; set; }
-            public int DepartmentId { get; set; }
-            public int? DesignationId { get; set; }
-            public decimal BasicSalary { get; set; }
-            public string Address { get; set; }
-            public string Status { get; set; }
-            public string PhotoBase64 { get; set; }
-            public string DepartmentName { get; set; }
-            public string DesignationTitle { get; set; }
+            public string? EmpNo { get; set; }
+            public string? FullName { get; set; }
+            public string? Gender { get; set; }
+            public DateTime? DateOfBirth { get; set; }
+            public string? NIC { get; set; }
+            public string? ContactNo { get; set; }
+            public string? Email { get; set; }
+            public string? Address { get; set; }
+            public int? DeptID { get; set; }
+            public int? DesignationID { get; set; }
+            public DateTime? JoinedDate { get; set; }
+            public decimal? BasicSalary { get; set; }
+            public string? Category { get; set; }
+            public string? PhotoBase64 { get; set; }
+            public string? DeptName { get; set; }
+            public string? DesignationTitle { get; set; }
         }
 
-        public class User
-        {
-            public int UserId { get; set; }
-            public string Username { get; set; }
-            public string PasswordHash { get; set; }
-            public string Role { get; set; }
-            public bool IsActive { get; set; }
-            public int? EmployeeId { get; set; }
-            public bool MustChangePassword { get; set; }
-            public string TemporaryPassword { get; set; } // For display only
-        }
-
-        // Data storage
         private List<Employee> employees = new List<Employee>();
         private List<Department> departments = new List<Department>();
         private List<Designation> designations = new List<Designation>();
-        private List<User> users = new List<User>();
-        private int nextEmpId = 1001;
-        private int nextUserId = 1;
 
-        private Employee selectedEmployee = null;
-        private string newPhotoBase64 = null;
-        private string currentUserRole = "Admin"; // This would come from login
+        private Employee? selectedEmployee = null;
+        private string? newPhotoBase64 = null;
 
-        public EmployeeForm(string userRole = "Admin")
+        public EmployeeForm()
         {
             InitializeComponent();
-            currentUserRole = userRole;
+
+            if (!DatabaseHelper.TestConnection())
+            {
+                MessageBox.Show("Cannot connect to database. Please check your connection string.",
+                    "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             LoadMasterData();
-            LoadSampleEmployees();
-            LoadSampleUsers();
+            LoadEmployees();
             ConfigureGrid();
             LoadFilterDropdowns();
             LoadFormCombos();
             RefreshGrid();
 
-            // Apply RBAC restrictions
-            ApplyRoleBasedAccess();
 
-            // Events
-            btnAdd.Click += BtnAdd_Click;
-            btnDelete.Click += BtnDelete_Click;
-            btnExport.Click += BtnExport_Click;
-            txtSearch.TextChanged += (s, e) => RefreshGrid();
-            cmbDeptFilter.SelectedIndexChanged += (s, e) => RefreshGrid();
-            cmbStatusFilter.SelectedIndexChanged += (s, e) => RefreshGrid();
-            dgvEmployees.SelectionChanged += DgvEmployees_SelectionChanged;
-            btnSave.Click += BtnSave_Click;
-            btnCancel.Click += (s, e) => { pnlRightPanel.Visible = false; selectedEmployee = null; };
-            btnUploadPhoto.Click += BtnUploadPhoto_Click;
-            cmbDepartment.SelectedIndexChanged += CmbDepartment_SelectedIndexChanged;
         }
 
-        private void ApplyRoleBasedAccess()
-        {
-            switch (currentUserRole)
-            {
-                case "Admin":
-                    // Full access - enable everything
-                    btnAdd.Visible = true;
-                    btnDelete.Visible = true;
-                    btnExport.Visible = true;
-                    btnSave.Visible = true;
-                    break;
 
-                case "HR Officer":
-                    // HR Officer - can manage employees but not delete users
-                    btnAdd.Visible = true;
-                    btnDelete.Visible = false; // Cannot delete employees
-                    btnExport.Visible = true;
-                    btnSave.Visible = true;
-                    // Cannot modify admin accounts
-                    break;
-
-                case "Employee":
-                    // Employee - view only their own profile
-                    btnAdd.Visible = false;
-                    btnDelete.Visible = false;
-                    btnExport.Visible = false;
-                    btnSave.Visible = false;
-                    txtSearch.Enabled = false;
-                    cmbDeptFilter.Enabled = false;
-                    cmbStatusFilter.Enabled = false;
-                    // Show only current employee
-                    break;
-            }
-        }
+        // EXISTING METHODS
 
         private void LoadMasterData()
         {
-            departments = new List<Department>
+            departments.Clear();
+            string deptQuery = "SELECT DeptID, DeptName, Description FROM Departments ORDER BY DeptName";
+            DataTable deptTable = DatabaseHelper.ExecuteQuery(deptQuery);
+            foreach (DataRow row in deptTable.Rows)
             {
-                new Department { Id = 1, Name = "IT" },
-                new Department { Id = 2, Name = "HR" },
-                new Department { Id = 3, Name = "Finance" },
-                new Department { Id = 4, Name = "Marketing" },
-                new Department { Id = 5, Name = "Operations" }
-            };
-
-            designations = new List<Designation>
-            {
-                new Designation { Id = 1, Title = "Developer", DepartmentId = 1 },
-                new Designation { Id = 2, Title = "Manager", DepartmentId = 1 },
-                new Designation { Id = 3, Title = "HR Generalist", DepartmentId = 2 },
-                new Designation { Id = 4, Title = "HR Manager", DepartmentId = 2 },
-                new Designation { Id = 5, Title = "Accountant", DepartmentId = 3 },
-                new Designation { Id = 6, Title = "Finance Manager", DepartmentId = 3 }
-            };
-        }
-
-        private void LoadSampleEmployees()
-        {
-            employees = new List<Employee>
-            {
-                new Employee
+                departments.Add(new Department
                 {
-                    Id = 1001, EmployeeCode = "EMP001", FirstName = "John", LastName = "Doe",
-                    Gender = "Male", NIC = "990123456V", DOB = new DateTime(1999,1,1),
-                    JoinDate = new DateTime(2022,1,1),
-                    ContactNo = "0712345678", Email = "john.doe@example.com", Category = "Permanent",
-                    DepartmentId = 1, DesignationId = 1, BasicSalary = 50000,
-                    Address = "Colombo", Status = "Active",
-                    DepartmentName = "IT", DesignationTitle = "Developer", PhotoBase64 = null
-                },
-                new Employee
+                    DeptID = Convert.ToInt32(row["DeptID"]),
+                    DeptName = row["DeptName"]?.ToString(),
+                    Description = row["Description"]?.ToString()
+                });
+            }
+
+            designations.Clear();
+            string desigQuery = "SELECT DesignationID, DeptID, Title, BasicSalary, OTRate, MaxMonthlyOTHours FROM Designations ORDER BY Title";
+            DataTable desigTable = DatabaseHelper.ExecuteQuery(desigQuery);
+            foreach (DataRow row in desigTable.Rows)
+            {
+                designations.Add(new Designation
                 {
-                    Id = 1002, EmployeeCode = "EMP002", FirstName = "Jane", LastName = "Smith",
-                    Gender = "Female", NIC = "880234567V", DOB = new DateTime(1988,5,15),
-                    JoinDate = new DateTime(2021,6,15),
-                    ContactNo = "0723456789", Email = "jane.smith@example.com", Category = "Permanent",
-                    DepartmentId = 2, DesignationId = 3, BasicSalary = 48000,
-                    Address = "Kandy", Status = "Active",
-                    DepartmentName = "HR", DesignationTitle = "HR Generalist", PhotoBase64 = null
-                }
-            };
-            nextEmpId = employees.Max(e => e.Id) + 1;
-        }
-
-        private void LoadSampleUsers()
-        {
-            users = new List<User>
-            {
-                new User { UserId = 1, Username = "admin", PasswordHash = HashPassword("admin123"),
-                           Role = "Admin", IsActive = true, EmployeeId = null, MustChangePassword = false },
-                new User { UserId = 2, Username = "EMP001", PasswordHash = HashPassword("emp123"),
-                           Role = "Employee", IsActive = true, EmployeeId = 1001, MustChangePassword = false },
-                new User { UserId = 3, Username = "hr01", PasswordHash = HashPassword("hr123"),
-                           Role = "HR Officer", IsActive = true, EmployeeId = null, MustChangePassword = false }
-            };
-            nextUserId = users.Max(u => u.UserId) + 1;
-        }
-
-        // Password hashing for security
-        private string HashPassword(string password)
-        {
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                return Convert.ToBase64String(hashedBytes);
+                    DesignationID = Convert.ToInt32(row["DesignationID"]),
+                    DeptID = Convert.ToInt32(row["DeptID"]),
+                    Title = row["Title"]?.ToString(),
+                    BasicSalary = Convert.ToDecimal(row["BasicSalary"]),
+                    OTRate = row["OTRate"] != DBNull.Value ? (decimal?)Convert.ToDecimal(row["OTRate"]) : null,
+                    MaxMonthlyOTHours = row["MaxMonthlyOTHours"] != DBNull.Value ? (decimal?)Convert.ToDecimal(row["MaxMonthlyOTHours"]) : null
+                });
             }
         }
 
-        // Generate random secure password
-        private string GenerateRandomPassword()
+        private void LoadEmployees()
         {
-            const string upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            const string lowerChars = "abcdefghijklmnopqrstuvwxyz";
-            const string digits = "0123456789";
-            const string specialChars = "!@#$%^&*";
+            employees.Clear();
+            string query = @"
+                SELECT 
+                    e.EmpNo,
+                    e.FullName,
+                    e.Gender,
+                    e.DateOfBirth,
+                    e.NIC,
+                    e.ContactNo,
+                    e.Email,
+                    e.Address,
+                    e.DeptID,
+                    e.DesignationID,
+                    e.JoinedDate,
+                    e.BasicSalary,
+                    e.Category,
+                    e.PhotoBase64,
+                    d.DeptName,
+                    des.Title AS DesignationTitle
+                FROM Employees e
+                LEFT JOIN Departments d ON e.DeptID = d.DeptID
+                LEFT JOIN Designations des ON e.DesignationID = des.DesignationID
+                ORDER BY e.EmpNo";
 
-            Random random = new Random();
-
-            // Ensure at least one character from each category
-            string password = "";
-            password += upperChars[random.Next(upperChars.Length)];
-            password += lowerChars[random.Next(lowerChars.Length)];
-            password += digits[random.Next(digits.Length)];
-            password += specialChars[random.Next(specialChars.Length)];
-
-            // Fill remaining characters
-            string allChars = upperChars + lowerChars + digits + specialChars;
-            for (int i = password.Length; i < 10; i++)
+            DataTable dt = DatabaseHelper.ExecuteQuery(query);
+            foreach (DataRow row in dt.Rows)
             {
-                password += allChars[random.Next(allChars.Length)];
-            }
-
-            // Shuffle the password
-            return new string(password.ToCharArray().OrderBy(x => random.Next()).ToArray());
-        }
-
-        // Send email with credentials
-        private void SendCredentialsEmail(string toEmail, string username, string password, string employeeName)
-        {
-            try
-            {
-                // Configure SMTP (Update with your email settings)
-                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com")
+                employees.Add(new Employee
                 {
-                    Port = 587,
-                    Credentials = new NetworkCredential("your_email@gmail.com", "your_app_password"),
-                    EnableSsl = true,
-                };
-
-                MailMessage mail = new MailMessage
-                {
-                    From = new MailAddress("hr@ems.com"),
-                    Subject = "Your Employee Management System Login Credentials",
-                    Body = $@"
-Dear {employeeName},
-
-Your EMS account has been created successfully.
-
-Login Credentials:
-------------------------
-Username: {username}
-Temporary Password: {password}
-
-Please login and change your password immediately for security purposes.
-
-If you have any issues, please contact HR.
-
-Best regards,
-HR Department
-Employee Management System
-",
-                    IsBodyHtml = false,
-                };
-
-                mail.To.Add(toEmail);
-
-                // Uncomment to actually send email
-                // smtpClient.Send(mail);
-
-                MessageBox.Show($"Credentials would be sent to {toEmail}\n\nUsername: {username}\nPassword: {password}",
-                              "Email Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    EmpNo = row["EmpNo"]?.ToString(),
+                    FullName = row["FullName"]?.ToString(),
+                    Gender = row["Gender"]?.ToString(),
+                    DateOfBirth = row["DateOfBirth"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(row["DateOfBirth"]) : null,
+                    NIC = row["NIC"]?.ToString(),
+                    ContactNo = row["ContactNo"]?.ToString(),
+                    Email = row["Email"]?.ToString(),
+                    Address = row["Address"]?.ToString(),
+                    DeptID = row["DeptID"] != DBNull.Value ? (int?)Convert.ToInt32(row["DeptID"]) : null,
+                    DesignationID = row["DesignationID"] != DBNull.Value ? (int?)Convert.ToInt32(row["DesignationID"]) : null,
+                    JoinedDate = row["JoinedDate"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(row["JoinedDate"]) : null,
+                    BasicSalary = row["BasicSalary"] != DBNull.Value ? (decimal?)Convert.ToDecimal(row["BasicSalary"]) : null,
+                    Category = row["Category"]?.ToString(),
+                    PhotoBase64 = row["PhotoBase64"]?.ToString(),
+                    DeptName = row["DeptName"]?.ToString(),
+                    DesignationTitle = row["DesignationTitle"]?.ToString()
+                });
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Email sending failed: {ex.Message}\n\nUsername: {username}\nPassword: {password}",
-                              "Manual Credentials", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-
-        // Create user account for employee
-        private void CreateUserAccount(Employee employee, string plainPassword)
-        {
-            var newUser = new User
-            {
-                UserId = nextUserId++,
-                Username = employee.EmployeeCode,  // Username = EmployeeCode
-                PasswordHash = HashPassword(plainPassword),
-                Role = "Employee",
-                IsActive = true,
-                EmployeeId = employee.Id,
-                MustChangePassword = true
-            };
-
-            users.Add(newUser);
         }
 
         private void ConfigureGrid()
@@ -318,10 +169,10 @@ Employee Management System
             {
                 switch (col.Name)
                 {
-                    case "colEmployeeCode": col.DataPropertyName = "EmployeeCode"; break;
-                    case "colFirstName": col.DataPropertyName = "FirstName"; break;
-                    case "colLastName": col.DataPropertyName = "LastName"; break;
-                    case "colDepartment": col.DataPropertyName = "DepartmentName"; break;
+                    case "colEmployeeCode": col.DataPropertyName = "EmpNo"; break;
+                    case "colFirstName": col.DataPropertyName = "FullName"; break;
+                    case "colLastName": col.DataPropertyName = "FullName"; break;
+                    case "colDepartment": col.DataPropertyName = "DeptName"; break;
                     case "colDesignation": col.DataPropertyName = "DesignationTitle"; break;
                     case "colNIC": col.DataPropertyName = "NIC"; break;
                     case "colContact": col.DataPropertyName = "ContactNo"; break;
@@ -335,298 +186,442 @@ Employee Management System
             cmbDeptFilter.Items.Clear();
             cmbDeptFilter.Items.Add("All");
             foreach (var d in departments)
-                cmbDeptFilter.Items.Add(d.Name);
-            if (cmbDeptFilter.Items.Count > 0)
-                cmbDeptFilter.SelectedIndex = 0;
+            {
+                if (d.DeptName != null)
+                    cmbDeptFilter.Items.Add(d.DeptName);
+            }
+            cmbDeptFilter.SelectedIndex = 0;
 
             cmbStatusFilter.Items.Clear();
-            cmbStatusFilter.Items.AddRange(new[] { "All", "Active", "Inactive" });
-            if (cmbStatusFilter.Items.Count > 0)
-                cmbStatusFilter.SelectedIndex = 0;
+            cmbStatusFilter.Items.Add("All");
+            cmbStatusFilter.Items.Add("Active");
+            cmbStatusFilter.Items.Add("Inactive");
+            cmbStatusFilter.SelectedIndex = 0;
         }
 
         private void LoadFormCombos()
         {
             cmbDepartment.DataSource = null;
             cmbDepartment.DataSource = departments.ToList();
-            cmbDepartment.DisplayMember = "Name";
-            cmbDepartment.ValueMember = "Id";
+            cmbDepartment.DisplayMember = "DeptName";
+            cmbDepartment.ValueMember = "DeptID";
 
             cmbGender.Items.Clear();
-            cmbGender.Items.AddRange(new[] { "Male", "Female", "Other" });
-            if (cmbGender.Items.Count > 0)
-                cmbGender.SelectedIndex = 0;
+            cmbGender.Items.AddRange(new object[] { "Male", "Female", "Other" });
+            cmbGender.SelectedIndex = 0;
 
             cmbCategory.Items.Clear();
-            cmbCategory.Items.AddRange(new[] { "Permanent", "Contract", "Intern", "Temporary" });
-            if (cmbCategory.Items.Count > 0)
-                cmbCategory.SelectedIndex = 0;
+            cmbCategory.Items.AddRange(new object[] { "Permanent", "Contract", "Intern", "Temporary" });
+            cmbCategory.SelectedIndex = 0;
 
             cmbStatus.Items.Clear();
-            cmbStatus.Items.AddRange(new[] { "Active", "Inactive" });
-            if (cmbStatus.Items.Count > 0)
-                cmbStatus.SelectedIndex = 0;
+            cmbStatus.Items.AddRange(new object[] { "Active", "Inactive" });
+            cmbStatus.SelectedIndex = 0;
         }
 
-        private void CmbDepartment_SelectedIndexChanged(object sender, EventArgs e)
+        private void cmbDeptFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbDepartment.SelectedValue is int deptId)
             {
-                var filtered = designations.Where(d => d.DepartmentId == deptId).ToList();
+                var filtered = designations.Where(d => d.DeptID == deptId).ToList();
                 cmbDesignation.DataSource = filtered;
                 cmbDesignation.DisplayMember = "Title";
-                cmbDesignation.ValueMember = "Id";
+                cmbDesignation.ValueMember = "DesignationID";
             }
             else
+            {
                 cmbDesignation.DataSource = null;
+            }
         }
 
         private void RefreshGrid()
         {
             var filtered = employees.AsEnumerable();
 
-            // For Employee role, only show their own record
-            if (currentUserRole == "Employee")
-            {
-                var currentEmployee = employees.FirstOrDefault(e => e.Email == "current_employee_email");
-                if (currentEmployee != null)
-                    filtered = new List<Employee> { currentEmployee };
-            }
-
             string search = txtSearch.Text.Trim();
             if (!string.IsNullOrEmpty(search))
             {
                 filtered = filtered.Where(e =>
-                    e.FirstName.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                    e.LastName.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                    e.EmployeeCode.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                    e.Email.Contains(search, StringComparison.OrdinalIgnoreCase));
+                    (e.FullName != null && e.FullName.Contains(search, StringComparison.OrdinalIgnoreCase)) ||
+                    (e.EmpNo != null && e.EmpNo.Contains(search, StringComparison.OrdinalIgnoreCase)) ||
+                    (e.Email != null && e.Email.Contains(search, StringComparison.OrdinalIgnoreCase)) ||
+                    (e.NIC != null && e.NIC.Contains(search, StringComparison.OrdinalIgnoreCase)));
             }
 
             if (cmbDeptFilter.SelectedIndex > 0 && cmbDeptFilter.SelectedItem != null)
             {
-                string dept = cmbDeptFilter.SelectedItem.ToString();
-                filtered = filtered.Where(e => e.DepartmentName == dept);
+                string dept = cmbDeptFilter.SelectedItem.ToString()!;
+                filtered = filtered.Where(e => e.DeptName == dept);
             }
-
-            if (cmbStatusFilter.SelectedIndex > 0 && cmbStatusFilter.SelectedItem != null)
-            {
-                string status = cmbStatusFilter.SelectedItem.ToString();
-                filtered = filtered.Where(e => e.Status == status);
-            }
-
             dgvEmployees.DataSource = filtered.ToList();
         }
 
-        private void DgvEmployees_SelectionChanged(object sender, EventArgs e)
+
+
+
+
+        private void btnAdd_Click(object sender, EventArgs e)
         {
-            if (dgvEmployees.SelectedRows.Count > 0)
-            {
-                selectedEmployee = (Employee)dgvEmployees.SelectedRows[0].DataBoundItem;
-                LoadEmployeeToPanel(selectedEmployee);
-                pnlRightPanel.Visible = true;
-
-                // Show delete button only for Admin
-                btnDelete.Visible = (currentUserRole == "Admin");
-            }
-            else
-            {
-                pnlRightPanel.Visible = false;
-                selectedEmployee = null;
-            }
-        }
-
-        private void BtnAdd_Click(object sender, EventArgs e)
-        {
-            // Only Admin and HR Officer can add employees
-            if (currentUserRole != "Admin" && currentUserRole != "HR Officer")
-            {
-                MessageBox.Show("You don't have permission to add employees.", "Access Denied",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            using (var addForm = new AddEmployeeForm(employees, departments, designations, nextEmpId, this))
+            using (var addForm = new AddEmployeeForm(employees, departments, designations, this))
             {
                 if (addForm.ShowDialog() == DialogResult.OK)
                 {
+                    LoadEmployees();
                     RefreshGrid();
-                    nextEmpId = employees.Max(emp => emp.Id) + 1;
+                    MessageBox.Show("Employee added successfully!", "Success",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }
 
-        // Method to add employee with auto-credentials (called from AddEmployeeForm)
-        public void AddEmployeeWithCredentials(Employee newEmployee, string generatedPassword)
+        private void btnExport_Click(object sender, EventArgs e)
         {
-            employees.Add(newEmployee);
-            CreateUserAccount(newEmployee, generatedPassword);
-            SendCredentialsEmail(newEmployee.Email, newEmployee.EmployeeCode, generatedPassword,
-                               $"{newEmployee.FirstName} {newEmployee.LastName}");
-        }
-
-        private void BtnDelete_Click(object sender, EventArgs e)
-        {
-            // Only Admin can delete employees
-            if (currentUserRole != "Admin")
+            using (SaveFileDialog sfd = new SaveFileDialog())
             {
-                MessageBox.Show("You don't have permission to delete employees.", "Access Denied",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                sfd.Filter = "CSV Files (*.csv)|*.csv";
+                sfd.FileName = $"Employees_{DateTime.Now:yyyy-MM-dd}.csv";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        var data = (List<Employee>)dgvEmployees.DataSource!;
+                        var lines = new List<string>
+                        {
+                            "Employee No,Full Name,Department,Designation,NIC,Contact,Email,Salary"
+                        };
+
+                        foreach (var emp in data)
+                        {
+                            lines.Add($"\"{emp.EmpNo}\",\"{emp.FullName}\",\"{emp.DeptName}\",\"{emp.DesignationTitle}\",\"{emp.NIC}\",\"{emp.ContactNo}\",\"{emp.Email}\",{emp.BasicSalary:F2}");
+                        }
+
+                        File.WriteAllLines(sfd.FileName, lines);
+                        MessageBox.Show($"Successfully exported {data.Count} employees to CSV.", "Export Complete",
+                                      MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error exporting data: {ex.Message}", "Export Error",
+                                      MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
             }
 
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
             if (selectedEmployee == null) return;
-            if (MessageBox.Show($"Delete {selectedEmployee.FirstName} {selectedEmployee.LastName}?\n\nThis will also delete the user account.",
-                "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-            {
-                // Delete associated user account
-                var userToDelete = users.FirstOrDefault(u => u.EmployeeId == selectedEmployee.Id);
-                if (userToDelete != null)
-                    users.Remove(userToDelete);
 
-                employees.Remove(selectedEmployee);
-                RefreshGrid();
-                pnlRightPanel.Visible = false;
-                selectedEmployee = null;
-                MessageBox.Show("Employee deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (MessageBox.Show($"Are you sure you want to delete {selectedEmployee.FullName}?\n\nThis action cannot be undone.",
+                "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                try
+                {
+#pragma warning disable CS0618 // Type or member is obsolete
+                    string query = "DELETE FROM Employees WHERE EmpNo = @EmpNo";
+                    SqlParameter[] parameters = {
+                        new SqlParameter("@EmpNo", selectedEmployee.EmpNo ?? "")
+                    };
+#pragma warning restore CS0618
+
+                    int rowsAffected = DatabaseHelper.ExecuteNonQuery(query, parameters);
+
+                    if (rowsAffected > 0)
+                    {
+                        employees.Remove(selectedEmployee);
+                        RefreshGrid();
+                        pnlRightPanel.Visible = false;
+                        selectedEmployee = null;
+                        MessageBox.Show("Employee deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error deleting employee: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
-        private void BtnSave_Click(object sender, EventArgs e)
+        private void btnSave_Click(object sender, EventArgs e)
         {
-            // Only Admin and HR Officer can edit employees
-            if (currentUserRole != "Admin" && currentUserRole != "HR Officer")
-            {
-                MessageBox.Show("You don't have permission to edit employees.", "Access Denied",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
             if (selectedEmployee == null)
             {
-                MessageBox.Show("No employee selected.");
+                MessageBox.Show("No employee selected.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(txtFirstName.Text) || string.IsNullOrWhiteSpace(txtLastName.Text))
-            { MessageBox.Show("First name and last name are required."); return; }
-            if (string.IsNullOrWhiteSpace(txtEmail.Text))
-            { MessageBox.Show("Email is required."); return; }
-            if (cmbDepartment.SelectedValue == null)
-            { MessageBox.Show("Please select a department."); return; }
-
-            // Duplicate check for NIC/Email excluding current employee
-            if (!string.IsNullOrEmpty(txtNIC.Text) && employees.Any(e => e.NIC == txtNIC.Text.Trim() && e.Id != selectedEmployee.Id))
-            { MessageBox.Show("NIC already exists for another employee."); return; }
-            if (employees.Any(e => e.Email.Equals(txtEmail.Text.Trim(), StringComparison.OrdinalIgnoreCase) && e.Id != selectedEmployee.Id))
-            { MessageBox.Show("Email already exists for another employee."); return; }
-
-            // Update selected employee
-            selectedEmployee.FirstName = txtFirstName.Text.Trim();
-            selectedEmployee.LastName = txtLastName.Text.Trim();
-            selectedEmployee.Gender = cmbGender.Text;
-            selectedEmployee.NIC = txtNIC.Text.Trim();
-            selectedEmployee.DOB = dtpDOB.Value;
-            selectedEmployee.JoinDate = dtpJoinDate.Value;
-            selectedEmployee.ContactNo = txtContact.Text.Trim();
-            selectedEmployee.Email = txtEmail.Text.Trim();
-            selectedEmployee.Category = cmbCategory.Text;
-            selectedEmployee.DepartmentId = (int)cmbDepartment.SelectedValue;
-            selectedEmployee.DesignationId = cmbDesignation.SelectedValue as int?;
-            selectedEmployee.BasicSalary = decimal.TryParse(txtSalary.Text, out decimal sal) ? sal : 0;
-            selectedEmployee.Address = txtAddress.Text;
-            selectedEmployee.Status = cmbStatus.Text;
-            if (newPhotoBase64 != null)
-                selectedEmployee.PhotoBase64 = newPhotoBase64;
-            selectedEmployee.DepartmentName = departments.First(d => d.Id == selectedEmployee.DepartmentId).Name;
-            selectedEmployee.DesignationTitle = designations.FirstOrDefault(d => d.Id == selectedEmployee.DesignationId)?.Title;
-
-            RefreshGrid();
-            LoadEmployeeToPanel(selectedEmployee);
-            MessageBox.Show("Employee updated successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void BtnExport_Click(object sender, EventArgs e)
-        {
-            // Only Admin and HR Officer can export reports
-            if (currentUserRole != "Admin" && currentUserRole != "HR Officer")
             {
-                MessageBox.Show("You don't have permission to export employee data.", "Access Denied",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Full name is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtFirstName.Focus();
                 return;
             }
 
-            using (SaveFileDialog sfd = new SaveFileDialog { Filter = "CSV|*.csv", FileName = "Employees.csv" })
+            if (string.IsNullOrWhiteSpace(txtEmail.Text))
             {
-                if (sfd.ShowDialog() == DialogResult.OK)
+                MessageBox.Show("Email is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtEmail.Focus();
+                return;
+            }
+
+            if (cmbDepartment.SelectedValue == null)
+            {
+                MessageBox.Show("Please select a department.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cmbDepartment.Focus();
+                return;
+            }
+
+            try
+            {
+                string fullName = $"{txtFirstName.Text.Trim()} {txtLastName.Text.Trim()}";
+
+#pragma warning disable CS0618 // Type or member is obsolete
+                string query = @"
+                    UPDATE Employees 
+                    SET 
+                        FullName = @FullName,
+                        Gender = @Gender,
+                        NIC = @NIC,
+                        DateOfBirth = @DateOfBirth,
+                        ContactNo = @ContactNo,
+                        Email = @Email,
+                        Address = @Address,
+                        DeptID = @DeptID,
+                        DesignationID = @DesignationID,
+                        BasicSalary = @BasicSalary,
+                        Category = @Category,
+                        PhotoBase64 = @PhotoBase64
+                    WHERE EmpNo = @EmpNo";
+
+                SqlParameter[] parameters = {
+                    new SqlParameter("@EmpNo", selectedEmployee.EmpNo ?? ""),
+                    new SqlParameter("@FullName", fullName),
+                    new SqlParameter("@Gender", (object?)cmbGender.Text ?? DBNull.Value),
+                    new SqlParameter("@NIC", (object?)txtNIC.Text.Trim() ?? DBNull.Value),
+                    new SqlParameter("@DateOfBirth", dtpDOB.Value.Date),
+                    new SqlParameter("@ContactNo", (object?)txtContact.Text.Trim() ?? DBNull.Value),
+                    new SqlParameter("@Email", txtEmail.Text.Trim()),
+                    new SqlParameter("@Address", (object?)txtAddress.Text.Trim() ?? DBNull.Value),
+                    new SqlParameter("@DeptID", (int)cmbDepartment.SelectedValue),
+                    new SqlParameter("@DesignationID", cmbDesignation.SelectedValue != null ? (object)(int)cmbDesignation.SelectedValue : DBNull.Value),
+                    new SqlParameter("@BasicSalary", decimal.TryParse(txtSalary.Text, out decimal sal) ? sal : 0),
+                    new SqlParameter("@Category", (object?)cmbCategory.Text ?? DBNull.Value),
+                    new SqlParameter("@PhotoBase64", (object?)newPhotoBase64 ?? DBNull.Value)
+                };
+#pragma warning restore CS0618
+
+                int rowsAffected = DatabaseHelper.ExecuteNonQuery(query, parameters);
+
+                if (rowsAffected > 0)
                 {
-                    var data = (List<Employee>)dgvEmployees.DataSource;
-                    var lines = new List<string> { "EmpCode,FullName,Department,Designation,NIC,Contact,Status,Email,Salary" };
-                    foreach (var emp in data)
+                    LoadEmployees();
+                    RefreshGrid();
+                    var updatedEmp = employees.FirstOrDefault(e => e.EmpNo == selectedEmployee.EmpNo);
+                    if (updatedEmp != null)
                     {
-                        lines.Add($"\"{emp.EmployeeCode}\",\"{emp.FirstName} {emp.LastName}\",\"{emp.DepartmentName}\",\"{emp.DesignationTitle}\",\"{emp.NIC}\",\"{emp.ContactNo}\",\"{emp.Status}\",\"{emp.Email}\",{emp.BasicSalary}");
+                        selectedEmployee = updatedEmp;
+                        LoadEmployeeToPanel(selectedEmployee);
                     }
-                    File.WriteAllLines(sfd.FileName, lines);
-                    MessageBox.Show("Exported successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Employee updated successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving employee: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void BtnUploadPhoto_Click(object sender, EventArgs e)
+        private void btnUploadPhoto_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog ofd = new OpenFileDialog { Filter = "Image Files|*.jpg;*.png;*.bmp" })
+            using (OpenFileDialog ofd = new OpenFileDialog())
             {
+                ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+                ofd.Title = "Select Employee Photo";
+
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    byte[] bytes = File.ReadAllBytes(ofd.FileName);
-                    newPhotoBase64 = Convert.ToBase64String(bytes);
-                    using (var ms = new MemoryStream(bytes))
-                        picEmployeePhoto.Image = Image.FromStream(ms);
+                    try
+                    {
+                        byte[] bytes = File.ReadAllBytes(ofd.FileName);
+                        newPhotoBase64 = Convert.ToBase64String(bytes);
+
+                        using (var ms = new MemoryStream(bytes))
+                        {
+                            picEmployeePhoto.Image = Image.FromStream(ms);
+                        }
+
+                        MessageBox.Show("Photo uploaded successfully. Click Save to update.", "Upload Complete",
+                                      MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error uploading photo: {ex.Message}", "Upload Error",
+                                      MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
-        }
 
+
+        }
         private void LoadEmployeeToPanel(Employee emp)
         {
-            txtFirstName.Text = emp.FirstName;
-            txtLastName.Text = emp.LastName;
-            txtNIC.Text = emp.NIC;
-            txtContact.Text = emp.ContactNo;
-            txtEmail.Text = emp.Email;
-            txtSalary.Text = emp.BasicSalary.ToString("0.00");
-            txtAddress.Text = emp.Address;
-            dtpDOB.Value = emp.DOB ?? DateTime.Now.AddYears(-25);
-            dtpJoinDate.Value = emp.JoinDate ?? DateTime.Now;
-            cmbGender.Text = emp.Gender;
-            cmbCategory.Text = emp.Category;
-            cmbStatus.Text = emp.Status;
-            cmbDepartment.SelectedValue = emp.DepartmentId;
+            string[] nameParts = emp.FullName?.Split(new[] { ' ' }, 2) ?? new[] { "", "" };
+            txtFirstName.Text = nameParts[0];
+            txtLastName.Text = nameParts.Length > 1 ? nameParts[1] : "";
 
-            var filtered = designations.Where(d => d.DepartmentId == emp.DepartmentId).ToList();
-            cmbDesignation.DataSource = filtered;
-            cmbDesignation.DisplayMember = "Title";
-            cmbDesignation.ValueMember = "Id";
-            if (emp.DesignationId.HasValue)
-                cmbDesignation.SelectedValue = emp.DesignationId.Value;
+            txtNIC.Text = emp.NIC ?? "";
+            txtContact.Text = emp.ContactNo ?? "";
+            txtEmail.Text = emp.Email ?? "";
+            txtSalary.Text = emp.BasicSalary?.ToString("0.00") ?? "0.00";
+            txtAddress.Text = emp.Address ?? "";
+            dtpDOB.Value = emp.DateOfBirth ?? DateTime.Now.AddYears(-25);
+            dtpJoinDate.Value = emp.JoinedDate ?? DateTime.Now;
+            cmbGender.Text = emp.Gender ?? "";
+            cmbCategory.Text = emp.Category ?? "";
+
+            if (emp.DeptID.HasValue)
+                cmbDepartment.SelectedValue = emp.DeptID.Value;
+
+            if (emp.DeptID.HasValue)
+            {
+                var filtered = designations.Where(d => d.DeptID == emp.DeptID.Value).ToList();
+                cmbDesignation.DataSource = filtered;
+                cmbDesignation.DisplayMember = "Title";
+                cmbDesignation.ValueMember = "DesignationID";
+                if (emp.DesignationID.HasValue)
+                    cmbDesignation.SelectedValue = emp.DesignationID.Value;
+            }
 
             if (!string.IsNullOrEmpty(emp.PhotoBase64))
             {
-                byte[] bytes = Convert.FromBase64String(emp.PhotoBase64);
-                using (var ms = new MemoryStream(bytes))
-                    picEmployeePhoto.Image = Image.FromStream(ms);
+                try
+                {
+                    byte[] bytes = Convert.FromBase64String(emp.PhotoBase64);
+                    using (var ms = new MemoryStream(bytes))
+                        picEmployeePhoto.Image = Image.FromStream(ms);
+                }
+                catch
+                {
+                    picEmployeePhoto.Image = null;
+                }
             }
             else
+            {
                 picEmployeePhoto.Image = null;
+            }
+
+            newPhotoBase64 = null;
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            pnlRightPanel.Visible = false;
+            selectedEmployee = null;
+            picEmployeePhoto.Image = null;
+            newPhotoBase64 = null;
+            ClearEmployeeFields();
+            dgvEmployees.ClearSelection();
+        }
+
+        private void ClearEmployeeFields()
+        {
+            txtFirstName.Clear();
+            txtLastName.Clear();
+            txtNIC.Clear();
+            txtContact.Clear();
+            txtEmail.Clear();
+            txtSalary.Clear();
+            txtAddress.Clear();
+
+            cmbGender.SelectedIndex = -1;
+            cmbCategory.SelectedIndex = -1;
+            cmbStatus.SelectedIndex = -1;
+            cmbDepartment.SelectedIndex = -1;
+            cmbDesignation.DataSource = null;
+
+            dtpDOB.Value = DateTime.Now.AddYears(-25);
+            dtpJoinDate.Value = DateTime.Now;
+
+            picEmployeePhoto.Image = null;
             newPhotoBase64 = null;
         }
 
         private void EmployeeForm_Load(object sender, EventArgs e)
         {
+            dtpDOB.MaxDate = DateTime.Now.AddYears(-16);
+            dtpDOB.Value = DateTime.Now.AddYears(-25);
+            dtpJoinDate.Value = DateTime.Now;
 
         }
 
-        private void filterPanel_Paint(object sender, PaintEventArgs e)
+        private void btnDashboard_Click(object sender, EventArgs e)
         {
+            DashboardForm dash = new DashboardForm();
+            dash.Show();
+            this.Hide();
+        }
+
+        private void btnDepartment_Click(object sender, EventArgs e)
+        {
+            DepartmentForm dept = new DepartmentForm();
+            dept.Show();
+            this.Hide();
+        }
+
+        private void btnAttendance_Click(object sender, EventArgs e)
+        {
+            AttendanceForm att = new AttendanceForm();
+            att.Show();
+            this.Hide();
+        }
+
+        private void btnLeave_Click(object sender, EventArgs e)
+        {
+            LeaveForm leave = new LeaveForm();
+            leave.Show();
+            this.Hide();
+        }
+
+        private void btnPayroll_Click(object sender, EventArgs e)
+        {
+            PayrollForm payroll = new PayrollForm();
+            payroll.Show();
+            this.Hide();
+        }
+
+        private void btnReports_Click(object sender, EventArgs e)
+        {
+            ReportForm report = new ReportForm();
+            report.Show();
+            this.Hide();
+        }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            LoginForm login = new LoginForm();
+            login.Show();
+            this.Close();
+        }
+
+        private void dgvEmployees_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvEmployees.SelectedRows.Count > 0)
+            {
+                selectedEmployee = (Employee)dgvEmployees.SelectedRows[0].DataBoundItem;
+                if (selectedEmployee != null)
+                {
+                    LoadEmployeeToPanel(selectedEmployee);
+                    pnlRightPanel.Visible = true;
+                    pnlRightPanel.BringToFront();
+                }
+            }
+            else
+            {
+                pnlRightPanel.Visible = false;
+                selectedEmployee = null;
+            }
 
         }
     }

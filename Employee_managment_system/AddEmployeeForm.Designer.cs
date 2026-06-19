@@ -47,6 +47,7 @@
             btnUploadPhoto = new Button();
             btnSave = new Button();
             btnCancel = new Button();
+            btnClear = new Button();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picEmployeePhoto).BeginInit();
             SuspendLayout();
@@ -278,6 +279,7 @@
             cmbDepartment.Name = "cmbDepartment";
             cmbDepartment.Size = new Size(250, 28);
             cmbDepartment.TabIndex = 19;
+            cmbDepartment.SelectedIndexChanged += cmbDepartment_SelectedIndexChanged;
             // 
             // labelDesignation
             // 
@@ -364,30 +366,46 @@
             btnUploadPhoto.TabIndex = 2;
             btnUploadPhoto.Text = "Upload Photo";
             btnUploadPhoto.UseVisualStyleBackColor = true;
+            btnUploadPhoto.Click += btnUploadPhoto_Click;
             // 
             // btnSave
             // 
             btnSave.BackColor = Color.FromArgb(39, 174, 96);
             btnSave.FlatStyle = FlatStyle.Flat;
             btnSave.ForeColor = Color.White;
-            btnSave.Location = new Point(233, 723);
+            btnSave.Location = new Point(116, 723);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(120, 40);
             btnSave.TabIndex = 1;
             btnSave.Text = "Save";
             btnSave.UseVisualStyleBackColor = false;
+            btnSave.Click += btnSave_Click;
             // 
             // btnCancel
             // 
             btnCancel.BackColor = Color.Gray;
             btnCancel.FlatStyle = FlatStyle.Flat;
             btnCancel.ForeColor = Color.White;
-            btnCancel.Location = new Point(379, 723);
+            btnCancel.Location = new Point(368, 723);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(120, 40);
             btnCancel.TabIndex = 0;
             btnCancel.Text = "Cancel";
             btnCancel.UseVisualStyleBackColor = false;
+            btnCancel.Click += btnCancel_Click;
+            // 
+            // btnClear
+            // 
+            btnClear.BackColor = Color.Gray;
+            btnClear.FlatStyle = FlatStyle.Flat;
+            btnClear.ForeColor = Color.White;
+            btnClear.Location = new Point(242, 723);
+            btnClear.Name = "btnClear";
+            btnClear.Size = new Size(120, 40);
+            btnClear.TabIndex = 5;
+            btnClear.Text = "Clear";
+            btnClear.UseVisualStyleBackColor = false;
+            btnClear.Click += btnClear_Click;
             // 
             // AddEmployeeForm
             // 
@@ -395,6 +413,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             AutoScroll = true;
             ClientSize = new Size(540, 780);
+            Controls.Add(btnClear);
             Controls.Add(btnCancel);
             Controls.Add(btnSave);
             Controls.Add(tableLayoutPanel1);
@@ -446,5 +465,6 @@
         private Button btnUploadPhoto;
         private Button btnSave;
         private Button btnCancel;
+        private Button btnClear;
     }
 }
