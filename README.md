@@ -144,8 +144,10 @@ git pull origin main
 
 ## Contributors
 
-* Dilshani Samudrika
-* Project Team Members
+* Dilshani Balasuriya
+* Kawshi Raveesha
+* Sanduni Ramanayaka
+* Manushanketh Mahendran
 
 ## License
 
