@@ -642,5 +642,10 @@ namespace Employee_managment_system
         {
 
         }
+
+        private void btnEmployees_Click(object sender, EventArgs e)
+        {
+            LoadEmployees();
+        }
     }
 }

@@ -2,8 +2,15 @@
 {
     partial class EmployeeForm
     {
+        /// <summary>
+        ///  Required designer variable.
+        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
+        /// <summary>
+        ///  Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -13,12 +20,18 @@
             base.Dispose(disposing);
         }
 
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        ///  Required method for Designer support - do not modify
+        ///  the contents of this method with the code editor.
+        /// </summary>
+
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EmployeeForm));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            mainContainer = new SplitContainer();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             panelSideMenu = new Panel();
             panelLogo = new Panel();
             pictureBox2 = new PictureBox();
@@ -87,10 +100,6 @@
             btnAdd = new Button();
             btnExport = new Button();
             lblPageTitle = new Label();
-            ((System.ComponentModel.ISupportInitialize)mainContainer).BeginInit();
-            mainContainer.Panel1.SuspendLayout();
-            mainContainer.Panel2.SuspendLayout();
-            mainContainer.SuspendLayout();
             panelSideMenu.SuspendLayout();
             panelLogo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
@@ -108,26 +117,6 @@
             topPanel.SuspendLayout();
             SuspendLayout();
             // 
-            // mainContainer
-            // 
-            mainContainer.Dock = DockStyle.Fill;
-            mainContainer.Location = new Point(0, 0);
-            mainContainer.Name = "mainContainer";
-            // 
-            // mainContainer.Panel1
-            // 
-            mainContainer.Panel1.BackColor = Color.FromArgb(25, 48, 78);
-            mainContainer.Panel1.Controls.Add(panelSideMenu);
-            // 
-            // mainContainer.Panel2
-            // 
-            mainContainer.Panel2.BackColor = Color.FromArgb(248, 249, 250);
-            mainContainer.Panel2.Controls.Add(panelContent);
-            mainContainer.Size = new Size(1924, 1055);
-            mainContainer.SplitterDistance = 347;
-            mainContainer.SplitterWidth = 2;
-            mainContainer.TabIndex = 0;
-            // 
             // panelSideMenu
             // 
             panelSideMenu.BackColor = Color.FromArgb(25, 48, 78);
@@ -140,6 +129,7 @@
             panelSideMenu.Controls.Add(btnPayroll);
             panelSideMenu.Controls.Add(btnReports);
             panelSideMenu.Controls.Add(btnLogout);
+            panelSideMenu.Dock = DockStyle.Left;
             panelSideMenu.Location = new Point(0, 0);
             panelSideMenu.Name = "panelSideMenu";
             panelSideMenu.Size = new Size(351, 1055);
@@ -160,9 +150,9 @@
             // pictureBox2
             // 
             pictureBox2.Image = Properties.Resources.logo_and_name_for_header;
-            pictureBox2.Location = new Point(0, 3);
+            pictureBox2.Location = new Point(0, -3);
             pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(343, 80);
+            pictureBox2.Size = new Size(351, 86);
             pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox2.TabIndex = 2;
             pictureBox2.TabStop = false;
@@ -218,6 +208,7 @@
             btnEmployees.Text = "👥 Employees";
             btnEmployees.TextAlign = ContentAlignment.MiddleLeft;
             btnEmployees.UseVisualStyleBackColor = false;
+            btnEmployees.Click += btnEmployees_Click;
             // 
             // btnDepartment
             // 
@@ -320,10 +311,10 @@
             // 
             panelContent.Controls.Add(panelMainContent);
             panelContent.Dock = DockStyle.Fill;
-            panelContent.Location = new Point(0, 0);
+            panelContent.Location = new Point(351, 0);
             panelContent.Name = "panelContent";
-            panelContent.Size = new Size(1575, 1055);
-            panelContent.TabIndex = 0;
+            panelContent.Size = new Size(1573, 1055);
+            panelContent.TabIndex = 1;
             // 
             // panelMainContent
             // 
@@ -333,7 +324,7 @@
             panelMainContent.Dock = DockStyle.Fill;
             panelMainContent.Location = new Point(0, 0);
             panelMainContent.Name = "panelMainContent";
-            panelMainContent.Size = new Size(1575, 1055);
+            panelMainContent.Size = new Size(1573, 1055);
             panelMainContent.TabIndex = 1;
             // 
             // splitContainer1
@@ -350,8 +341,8 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(pnlRightPanel);
-            splitContainer1.Size = new Size(1575, 970);
-            splitContainer1.SplitterDistance = 1101;
+            splitContainer1.Size = new Size(1573, 970);
+            splitContainer1.SplitterDistance = 1099;
             splitContainer1.SplitterWidth = 6;
             splitContainer1.TabIndex = 2;
             // 
@@ -365,7 +356,7 @@
             filterPanel.Location = new Point(0, 0);
             filterPanel.Name = "filterPanel";
             filterPanel.Padding = new Padding(10, 8, 10, 8);
-            filterPanel.Size = new Size(1101, 50);
+            filterPanel.Size = new Size(1099, 50);
             filterPanel.TabIndex = 5;
             // 
             // txtSearch
@@ -405,24 +396,24 @@
             dgvEmployees.BorderStyle = BorderStyle.None;
             dgvEmployees.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
             dgvEmployees.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = Color.FromArgb(30, 58, 95);
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            dataGridViewCellStyle1.ForeColor = Color.White;
-            dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(30, 58, 95);
-            dataGridViewCellStyle1.SelectionForeColor = Color.White;
-            dgvEmployees.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = Color.FromArgb(30, 58, 95);
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            dataGridViewCellStyle3.ForeColor = Color.White;
+            dataGridViewCellStyle3.SelectionBackColor = Color.FromArgb(30, 58, 95);
+            dataGridViewCellStyle3.SelectionForeColor = Color.White;
+            dgvEmployees.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             dgvEmployees.ColumnHeadersHeight = 35;
             dgvEmployees.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvEmployees.Columns.AddRange(new DataGridViewColumn[] { colEmployeeCode, colFirstName, colLastName, colDepartment, colDesignation, colNIC, colContact, colStatus });
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Window;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9.5F);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(52, 152, 219);
-            dataGridViewCellStyle2.SelectionForeColor = Color.White;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            dgvEmployees.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.Window;
+            dataGridViewCellStyle4.Font = new Font("Segoe UI", 9.5F);
+            dataGridViewCellStyle4.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = Color.FromArgb(52, 152, 219);
+            dataGridViewCellStyle4.SelectionForeColor = Color.White;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
+            dgvEmployees.DefaultCellStyle = dataGridViewCellStyle4;
             dgvEmployees.EnableHeadersVisualStyles = false;
             dgvEmployees.Location = new Point(0, 50);
             dgvEmployees.MultiSelect = false;
@@ -432,7 +423,7 @@
             dgvEmployees.RowHeadersWidth = 51;
             dgvEmployees.RowTemplate.Height = 35;
             dgvEmployees.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvEmployees.Size = new Size(1101, 908);
+            dgvEmployees.Size = new Size(1099, 920);
             dgvEmployees.TabIndex = 0;
             dgvEmployees.CellContentClick += dgvEmployees_CellContentClick;
             dgvEmployees.SelectionChanged += dgvEmployees_SelectionChanged;
@@ -922,7 +913,7 @@
             topPanel.Dock = DockStyle.Top;
             topPanel.Location = new Point(0, 0);
             topPanel.Name = "topPanel";
-            topPanel.Size = new Size(1575, 85);
+            topPanel.Size = new Size(1573, 85);
             topPanel.TabIndex = 4;
             // 
             // btnAdd
@@ -975,16 +966,14 @@
             BackColor = Color.White;
             BackgroundImage = Properties.Resources.otherBackground;
             ClientSize = new Size(1924, 1055);
-            Controls.Add(mainContainer);
+            Controls.Add(panelContent);
+            Controls.Add(panelSideMenu);
             Font = new Font("Segoe UI", 9F);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "EmployeeForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Employees - Employee Management System";
+            Text = "NexusHR - Employee Managment";
             Load += EmployeeForm_Load;
-            mainContainer.Panel1.ResumeLayout(false);
-            mainContainer.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)mainContainer).EndInit();
-            mainContainer.ResumeLayout(false);
             panelSideMenu.ResumeLayout(false);
             panelLogo.ResumeLayout(false);
             panelLogo.PerformLayout();
@@ -1007,10 +996,8 @@
             ResumeLayout(false);
         }
 
-        // ============================================
-        // CONTROL DECLARATIONS
-        // ============================================
-        private SplitContainer mainContainer;
+        #endregion
+
         private Panel panelSideMenu;
         private Panel panelLogo;
         private PictureBox pictureBoxLogo;
@@ -1025,8 +1012,6 @@
         private Button btnLogout;
         private Panel panelContent;
         private Panel panelMainContent;
-
-        // Employee Form Controls
         private Panel topPanel;
         private SplitContainer splitContainer1;
         private DataGridView dgvEmployees;

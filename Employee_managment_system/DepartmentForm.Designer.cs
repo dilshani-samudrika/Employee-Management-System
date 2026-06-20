@@ -2,7 +2,15 @@
 {
     partial class DepartmentForm
     {
+        /// <summary>
+        ///  Required designer variable.
+        /// </summary>
         private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        ///  Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 
         protected override void Dispose(bool disposing)
         {
@@ -13,9 +21,16 @@
             base.Dispose(disposing);
         }
 
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        ///  Required method for Designer support - do not modify
+        ///  the contents of this method with the code editor.
+        /// </summary>
+
         private void InitializeComponent()
         {
-            mainContainer = new SplitContainer();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DepartmentForm));
             panelSideMenu = new Panel();
             panelLogo = new Panel();
             pictureBoxLogo = new PictureBox();
@@ -75,10 +90,6 @@
             btnSaveDesig = new Button();
             btnCancelDesig = new Button();
             lblDesigInfo = new Label();
-            ((System.ComponentModel.ISupportInitialize)mainContainer).BeginInit();
-            mainContainer.Panel1.SuspendLayout();
-            mainContainer.Panel2.SuspendLayout();
-            mainContainer.SuspendLayout();
             panelSideMenu.SuspendLayout();
             panelLogo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBoxLogo).BeginInit();
@@ -96,28 +107,6 @@
             ((System.ComponentModel.ISupportInitialize)dgvDesignations).BeginInit();
             pnlDesigDetails.SuspendLayout();
             SuspendLayout();
-
-            // 
-            // mainContainer
-            // 
-            mainContainer.Dock = DockStyle.Fill;
-            mainContainer.Location = new Point(0, 0);
-            mainContainer.Name = "mainContainer";
-            // 
-            // mainContainer.Panel1
-            // 
-            mainContainer.Panel1.BackColor = Color.FromArgb(25, 48, 78);
-            mainContainer.Panel1.Controls.Add(panelSideMenu);
-            // 
-            // mainContainer.Panel2
-            // 
-            mainContainer.Panel2.BackColor = Color.FromArgb(248, 249, 250);
-            mainContainer.Panel2.Controls.Add(panelContent);
-            mainContainer.Size = new Size(1924, 1055);
-            mainContainer.SplitterDistance = 351;
-            mainContainer.SplitterWidth = 2;
-            mainContainer.TabIndex = 0;
-
             // 
             // panelSideMenu
             // 
@@ -135,7 +124,6 @@
             panelSideMenu.Name = "panelSideMenu";
             panelSideMenu.Size = new Size(351, 1055);
             panelSideMenu.TabIndex = 0;
-
             // 
             // panelLogo
             // 
@@ -147,18 +135,16 @@
             panelLogo.Size = new Size(351, 80);
             panelLogo.TabIndex = 0;
             panelLogo.Paint += panelLogo_Paint;
-
             // 
             // pictureBoxLogo
             // 
             pictureBoxLogo.Image = Properties.Resources.logo_and_name_for_header;
             pictureBoxLogo.Location = new Point(-5, 0);
             pictureBoxLogo.Name = "pictureBoxLogo";
-            pictureBoxLogo.Size = new Size(333, 80);
+            pictureBoxLogo.Size = new Size(353, 80);
             pictureBoxLogo.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBoxLogo.TabIndex = 1;
             pictureBoxLogo.TabStop = false;
-
             // 
             // btnDashboard
             // 
@@ -175,7 +161,6 @@
             btnDashboard.TextAlign = ContentAlignment.MiddleLeft;
             btnDashboard.UseVisualStyleBackColor = false;
             btnDashboard.Click += btnDashboard_Click;
-
             // 
             // btnEmployees
             // 
@@ -192,7 +177,6 @@
             btnEmployees.TextAlign = ContentAlignment.MiddleLeft;
             btnEmployees.UseVisualStyleBackColor = false;
             btnEmployees.Click += btnEmployees_Click;
-
             // 
             // btnDepartment
             // 
@@ -208,7 +192,6 @@
             btnDepartment.Text = "🏢 Department";
             btnDepartment.TextAlign = ContentAlignment.MiddleLeft;
             btnDepartment.UseVisualStyleBackColor = false;
-
             // 
             // btnAttendance
             // 
@@ -225,7 +208,6 @@
             btnAttendance.TextAlign = ContentAlignment.MiddleLeft;
             btnAttendance.UseVisualStyleBackColor = false;
             btnAttendance.Click += btnAttendance_Click;
-
             // 
             // btnLeave
             // 
@@ -242,7 +224,6 @@
             btnLeave.TextAlign = ContentAlignment.MiddleLeft;
             btnLeave.UseVisualStyleBackColor = false;
             btnLeave.Click += btnLeave_Click;
-
             // 
             // btnPayroll
             // 
@@ -259,7 +240,6 @@
             btnPayroll.TextAlign = ContentAlignment.MiddleLeft;
             btnPayroll.UseVisualStyleBackColor = false;
             btnPayroll.Click += btnPayroll_Click;
-
             // 
             // btnReports
             // 
@@ -276,7 +256,6 @@
             btnReports.TextAlign = ContentAlignment.MiddleLeft;
             btnReports.UseVisualStyleBackColor = false;
             btnReports.Click += btnReports_Click;
-
             // 
             // btnLogout
             // 
@@ -294,18 +273,15 @@
             btnLogout.TextAlign = ContentAlignment.MiddleLeft;
             btnLogout.UseVisualStyleBackColor = false;
             btnLogout.Click += btnLogout_Click;
-
             // 
             // panelContent
             // 
             panelContent.Controls.Add(topBar);
             panelContent.Controls.Add(panelMainContent);
-            panelContent.Dock = DockStyle.Fill;
-            panelContent.Location = new Point(0, 0);
+            panelContent.Location = new Point(351, 0);
             panelContent.Name = "panelContent";
-            panelContent.Size = new Size(1571, 1055);
-            panelContent.TabIndex = 0;
-
+            panelContent.Size = new Size(1576, 1055);
+            panelContent.TabIndex = 1;
             // 
             // topBar
             // 
@@ -315,9 +291,8 @@
             topBar.ForeColor = SystemColors.ControlLightLight;
             topBar.Location = new Point(0, 0);
             topBar.Name = "topBar";
-            topBar.Size = new Size(1571, 80);
+            topBar.Size = new Size(1576, 80);
             topBar.TabIndex = 0;
-
             // 
             // lblPageTitle
             // 
@@ -329,7 +304,6 @@
             lblPageTitle.Size = new Size(506, 37);
             lblPageTitle.TabIndex = 0;
             lblPageTitle.Text = "Department & Designation Managment";
-
             // 
             // panelMainContent
             // 
@@ -338,12 +312,10 @@
             panelMainContent.BackgroundImageLayout = ImageLayout.Stretch;
             panelMainContent.Controls.Add(panelLeft);
             panelMainContent.Controls.Add(panelRight);
-            panelMainContent.Dock = DockStyle.Fill;
-            panelMainContent.Location = new Point(0, 0);
+            panelMainContent.Location = new Point(0, 80);
             panelMainContent.Name = "panelMainContent";
-            panelMainContent.Size = new Size(1571, 1055);
+            panelMainContent.Size = new Size(1573, 975);
             panelMainContent.TabIndex = 1;
-
             // 
             // panelLeft
             // 
@@ -356,9 +328,8 @@
             panelLeft.Controls.Add(lblDeptInfo);
             panelLeft.Location = new Point(0, 0);
             panelLeft.Name = "panelLeft";
-            panelLeft.Size = new Size(803, 1055);
+            panelLeft.Size = new Size(707, 975);
             panelLeft.TabIndex = 0;
-
             // 
             // panelDeptHeader
             // 
@@ -368,7 +339,6 @@
             panelDeptHeader.Name = "panelDeptHeader";
             panelDeptHeader.Size = new Size(800, 30);
             panelDeptHeader.TabIndex = 0;
-
             // 
             // lblDeptHeader
             // 
@@ -380,7 +350,6 @@
             lblDeptHeader.Size = new Size(115, 23);
             lblDeptHeader.TabIndex = 0;
             lblDeptHeader.Text = "Departments";
-
             // 
             // panelDeptButtons
             // 
@@ -390,7 +359,6 @@
             panelDeptButtons.Name = "panelDeptButtons";
             panelDeptButtons.Size = new Size(800, 49);
             panelDeptButtons.TabIndex = 1;
-
             // 
             // btnAddDept
             // 
@@ -407,7 +375,6 @@
             btnAddDept.Text = "➕ Add";
             btnAddDept.UseVisualStyleBackColor = false;
             btnAddDept.Click += btnAddDept_Click;
-
             // 
             // btnDeleteDept
             // 
@@ -425,37 +392,31 @@
             btnDeleteDept.Text = "🗑️ Delete";
             btnDeleteDept.UseVisualStyleBackColor = false;
             btnDeleteDept.Click += btnDeleteDept_Click;
-
-            // ============================================
-            // dgvDepartments - FIXED WITH SCROLLING
-            // ============================================
+            // 
+            // dgvDepartments
+            // 
             dgvDepartments.AllowUserToAddRows = false;
             dgvDepartments.AllowUserToDeleteRows = false;
             dgvDepartments.AllowUserToResizeColumns = false;
             dgvDepartments.AllowUserToResizeRows = false;
-            dgvDepartments.AutoGenerateColumns = false;
             dgvDepartments.BackgroundColor = Color.White;
             dgvDepartments.BorderStyle = BorderStyle.None;
             dgvDepartments.ColumnHeadersHeight = 30;
             dgvDepartments.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvDepartments.Columns.AddRange(new DataGridViewColumn[] { id, colDepartmentName, colDescription, colEmployeeCount });
-            dgvDepartments.Dock = DockStyle.None;
             dgvDepartments.EnableHeadersVisualStyles = false;
-            dgvDepartments.Location = new Point(0, 289);
+            dgvDepartments.Location = new Point(0, 252);
             dgvDepartments.MultiSelect = false;
             dgvDepartments.Name = "dgvDepartments";
             dgvDepartments.ReadOnly = true;
             dgvDepartments.RowHeadersVisible = false;
             dgvDepartments.RowHeadersWidth = 51;
             dgvDepartments.RowTemplate.Height = 28;
-            dgvDepartments.ScrollBars = ScrollBars.Both;
-            dgvDepartments.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
             dgvDepartments.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvDepartments.Size = new Size(800, 550);
+            dgvDepartments.Size = new Size(712, 639);
             dgvDepartments.TabIndex = 2;
             dgvDepartments.DataError += dgvDepartments_DataError;
             dgvDepartments.SelectionChanged += dgvDepartments_SelectionChanged;
-
             // 
             // id
             // 
@@ -465,7 +426,6 @@
             id.ReadOnly = true;
             id.Resizable = DataGridViewTriState.False;
             id.Width = 50;
-
             // 
             // colDepartmentName
             // 
@@ -475,7 +435,6 @@
             colDepartmentName.ReadOnly = true;
             colDepartmentName.Resizable = DataGridViewTriState.False;
             colDepartmentName.Width = 200;
-
             // 
             // colDescription
             // 
@@ -485,7 +444,6 @@
             colDescription.ReadOnly = true;
             colDescription.Resizable = DataGridViewTriState.False;
             colDescription.Width = 250;
-
             // 
             // colEmployeeCount
             // 
@@ -495,7 +453,6 @@
             colEmployeeCount.ReadOnly = true;
             colEmployeeCount.Resizable = DataGridViewTriState.False;
             colEmployeeCount.Width = 120;
-
             // 
             // pnlDeptDetails
             // 
@@ -510,12 +467,11 @@
             pnlDeptDetails.Controls.Add(txtDeptEmployeeCount);
             pnlDeptDetails.Controls.Add(btnSaveDept);
             pnlDeptDetails.Controls.Add(btnCancelDept);
-            pnlDeptDetails.Location = new Point(0, 77);
+            pnlDeptDetails.Location = new Point(0, -1);
             pnlDeptDetails.Name = "pnlDeptDetails";
-            pnlDeptDetails.Size = new Size(810, 219);
+            pnlDeptDetails.Size = new Size(737, 262);
             pnlDeptDetails.TabIndex = 3;
             pnlDeptDetails.Visible = false;
-
             // 
             // lblDeptDetailsTitle
             // 
@@ -527,7 +483,6 @@
             lblDeptDetailsTitle.Size = new Size(199, 28);
             lblDeptDetailsTitle.TabIndex = 0;
             lblDeptDetailsTitle.Text = "Department Details";
-
             // 
             // lblDeptName
             // 
@@ -539,7 +494,6 @@
             lblDeptName.Size = new Size(144, 20);
             lblDeptName.TabIndex = 1;
             lblDeptName.Text = "Department Name:";
-
             // 
             // txtDeptName
             // 
@@ -549,7 +503,6 @@
             txtDeptName.Name = "txtDeptName";
             txtDeptName.Size = new Size(220, 30);
             txtDeptName.TabIndex = 2;
-
             // 
             // lblDeptDescription
             // 
@@ -561,7 +514,6 @@
             lblDeptDescription.Size = new Size(93, 20);
             lblDeptDescription.TabIndex = 3;
             lblDeptDescription.Text = "Description:";
-
             // 
             // txtDeptDescription
             // 
@@ -571,7 +523,6 @@
             txtDeptDescription.Name = "txtDeptDescription";
             txtDeptDescription.Size = new Size(220, 30);
             txtDeptDescription.TabIndex = 4;
-
             // 
             // lblDeptEmployeeCount
             // 
@@ -583,7 +534,6 @@
             lblDeptEmployeeCount.Size = new Size(127, 20);
             lblDeptEmployeeCount.TabIndex = 5;
             lblDeptEmployeeCount.Text = "Employee Count:";
-
             // 
             // txtDeptEmployeeCount
             // 
@@ -595,7 +545,6 @@
             txtDeptEmployeeCount.ReadOnly = true;
             txtDeptEmployeeCount.Size = new Size(100, 30);
             txtDeptEmployeeCount.TabIndex = 6;
-
             // 
             // btnSaveDept
             // 
@@ -612,7 +561,6 @@
             btnSaveDept.Text = "💾 Save";
             btnSaveDept.UseVisualStyleBackColor = false;
             btnSaveDept.Click += btnSaveDept_Click;
-
             // 
             // btnCancelDept
             // 
@@ -629,7 +577,6 @@
             btnCancelDept.Text = "❌ Cancel";
             btnCancelDept.UseVisualStyleBackColor = false;
             btnCancelDept.Click += btnCancelDept_Click;
-
             // 
             // lblDeptInfo
             // 
@@ -641,7 +588,6 @@
             lblDeptInfo.Size = new Size(292, 19);
             lblDeptInfo.TabIndex = 4;
             lblDeptInfo.Text = "💡 Click a department to view and edit details";
-
             // 
             // panelRight
             // 
@@ -652,11 +598,10 @@
             panelRight.Controls.Add(dgvDesignations);
             panelRight.Controls.Add(pnlDesigDetails);
             panelRight.Controls.Add(lblDesigInfo);
-            panelRight.Location = new Point(803, 0);
+            panelRight.Location = new Point(708, 0);
             panelRight.Name = "panelRight";
-            panelRight.Size = new Size(711, 1055);
+            panelRight.Size = new Size(806, 975);
             panelRight.TabIndex = 1;
-
             // 
             // panelDesigHeader
             // 
@@ -666,7 +611,6 @@
             panelDesigHeader.Name = "panelDesigHeader";
             panelDesigHeader.Size = new Size(706, 33);
             panelDesigHeader.TabIndex = 0;
-
             // 
             // lblDesigHeader
             // 
@@ -678,7 +622,6 @@
             lblDesigHeader.Size = new Size(113, 23);
             lblDesigHeader.TabIndex = 0;
             lblDesigHeader.Text = "Designations";
-
             // 
             // panelDesigButtons
             // 
@@ -688,7 +631,6 @@
             panelDesigButtons.Name = "panelDesigButtons";
             panelDesigButtons.Size = new Size(606, 54);
             panelDesigButtons.TabIndex = 1;
-
             // 
             // btnAddDesig
             // 
@@ -705,7 +647,6 @@
             btnAddDesig.Text = "➕ Add";
             btnAddDesig.UseVisualStyleBackColor = false;
             btnAddDesig.Click += btnAddDesig_Click;
-
             // 
             // btnDeleteDesig
             // 
@@ -723,37 +664,31 @@
             btnDeleteDesig.Text = "🗑️ Delete";
             btnDeleteDesig.UseVisualStyleBackColor = false;
             btnDeleteDesig.Click += btnDeleteDesig_Click;
-
-            // ============================================
-            // dgvDesignations - FIXED WITH SCROLLING
-            // ============================================
+            // 
+            // dgvDesignations
+            // 
             dgvDesignations.AllowUserToAddRows = false;
             dgvDesignations.AllowUserToDeleteRows = false;
             dgvDesignations.AllowUserToResizeColumns = false;
             dgvDesignations.AllowUserToResizeRows = false;
-            dgvDesignations.AutoGenerateColumns = false;
             dgvDesignations.BackgroundColor = Color.White;
             dgvDesignations.BorderStyle = BorderStyle.None;
             dgvDesignations.ColumnHeadersHeight = 30;
             dgvDesignations.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvDesignations.Columns.AddRange(new DataGridViewColumn[] { DesignationId, Title, DeptName, DesigEmployeeCount });
-            dgvDesignations.Dock = DockStyle.None;
             dgvDesignations.EnableHeadersVisualStyles = false;
-            dgvDesignations.Location = new Point(0, 289);
+            dgvDesignations.Location = new Point(10, 252);
             dgvDesignations.MultiSelect = false;
             dgvDesignations.Name = "dgvDesignations";
             dgvDesignations.ReadOnly = true;
             dgvDesignations.RowHeadersVisible = false;
             dgvDesignations.RowHeadersWidth = 51;
             dgvDesignations.RowTemplate.Height = 28;
-            dgvDesignations.ScrollBars = ScrollBars.Both;
-            dgvDesignations.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
             dgvDesignations.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvDesignations.Size = new Size(700, 550);
+            dgvDesignations.Size = new Size(647, 587);
             dgvDesignations.TabIndex = 2;
             dgvDesignations.DataError += dgvDesignations_DataError;
             dgvDesignations.SelectionChanged += dgvDesignations_SelectionChanged;
-
             // 
             // DesignationId
             // 
@@ -763,7 +698,6 @@
             DesignationId.ReadOnly = true;
             DesignationId.Resizable = DataGridViewTriState.False;
             DesignationId.Width = 40;
-
             // 
             // Title
             // 
@@ -773,7 +707,6 @@
             Title.ReadOnly = true;
             Title.Resizable = DataGridViewTriState.False;
             Title.Width = 200;
-
             // 
             // DeptName
             // 
@@ -783,7 +716,6 @@
             DeptName.ReadOnly = true;
             DeptName.Resizable = DataGridViewTriState.False;
             DeptName.Width = 200;
-
             // 
             // DesigEmployeeCount
             // 
@@ -793,7 +725,6 @@
             DesigEmployeeCount.ReadOnly = true;
             DesigEmployeeCount.Resizable = DataGridViewTriState.False;
             DesigEmployeeCount.Width = 120;
-
             // 
             // pnlDesigDetails
             // 
@@ -808,12 +739,11 @@
             pnlDesigDetails.Controls.Add(txtDesigEmployeeCount);
             pnlDesigDetails.Controls.Add(btnSaveDesig);
             pnlDesigDetails.Controls.Add(btnCancelDesig);
-            pnlDesigDetails.Location = new Point(0, 77);
+            pnlDesigDetails.Location = new Point(10, -1);
             pnlDesigDetails.Name = "pnlDesigDetails";
-            pnlDesigDetails.Size = new Size(706, 219);
+            pnlDesigDetails.Size = new Size(647, 255);
             pnlDesigDetails.TabIndex = 3;
             pnlDesigDetails.Visible = false;
-
             // 
             // lblDesigDetailsTitle
             // 
@@ -825,7 +755,6 @@
             lblDesigDetailsTitle.Size = new Size(198, 28);
             lblDesigDetailsTitle.TabIndex = 0;
             lblDesigDetailsTitle.Text = "Designation Details";
-
             // 
             // lblDesigTitle
             // 
@@ -837,7 +766,6 @@
             lblDesigTitle.Size = new Size(90, 20);
             lblDesigTitle.TabIndex = 1;
             lblDesigTitle.Text = "Title Name:";
-
             // 
             // txtDesigTitle
             // 
@@ -847,7 +775,6 @@
             txtDesigTitle.Name = "txtDesigTitle";
             txtDesigTitle.Size = new Size(220, 30);
             txtDesigTitle.TabIndex = 2;
-
             // 
             // lblDesigDepartment
             // 
@@ -859,7 +786,6 @@
             lblDesigDepartment.Size = new Size(98, 20);
             lblDesigDepartment.TabIndex = 3;
             lblDesigDepartment.Text = "Department:";
-
             // 
             // cmbDesigDepartment
             // 
@@ -870,7 +796,6 @@
             cmbDesigDepartment.Size = new Size(220, 31);
             cmbDesigDepartment.TabIndex = 4;
             cmbDesigDepartment.SelectedIndexChanged += cmbDesigDepartment_SelectedIndexChanged_1;
-
             // 
             // lblDesigEmployeeCount
             // 
@@ -883,7 +808,6 @@
             lblDesigEmployeeCount.TabIndex = 5;
             lblDesigEmployeeCount.Text = "Employee Count:";
             lblDesigEmployeeCount.Click += lblDesigEmployeeCount_Click;
-
             // 
             // txtDesigEmployeeCount
             // 
@@ -895,7 +819,6 @@
             txtDesigEmployeeCount.ReadOnly = true;
             txtDesigEmployeeCount.Size = new Size(100, 30);
             txtDesigEmployeeCount.TabIndex = 6;
-
             // 
             // btnSaveDesig
             // 
@@ -912,7 +835,6 @@
             btnSaveDesig.Text = "💾 Save";
             btnSaveDesig.UseVisualStyleBackColor = false;
             btnSaveDesig.Click += btnSaveDesig_Click;
-
             // 
             // btnCancelDesig
             // 
@@ -929,7 +851,6 @@
             btnCancelDesig.Text = "❌ Cancel";
             btnCancelDesig.UseVisualStyleBackColor = false;
             btnCancelDesig.Click += btnCancelDesig_Click;
-
             // 
             // lblDesigInfo
             // 
@@ -941,25 +862,21 @@
             lblDesigInfo.Size = new Size(291, 19);
             lblDesigInfo.TabIndex = 4;
             lblDesigInfo.Text = "💡 Click a designation to view and edit details";
-
             // 
             // DepartmentForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(1924, 1055);
-            Controls.Add(mainContainer);
+            ClientSize = new Size(1719, 1055);
+            Controls.Add(panelContent);
+            Controls.Add(panelSideMenu);
             Font = new Font("Segoe UI", 9F);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DepartmentForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Department & Designation - Employee Management System";
+            Text = "NexusHR - Department & Designation ";
             Load += DepartmentForm_Load_1;
-
-            mainContainer.Panel1.ResumeLayout(false);
-            mainContainer.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)mainContainer).EndInit();
-            mainContainer.ResumeLayout(false);
             panelSideMenu.ResumeLayout(false);
             panelLogo.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pictureBoxLogo).EndInit();
@@ -984,11 +901,10 @@
             pnlDesigDetails.ResumeLayout(false);
             pnlDesigDetails.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
-        // Control declarations
-        private SplitContainer mainContainer;
+        #endregion
+
         private Panel panelSideMenu;
         private Panel panelLogo;
         private Button btnDashboard;
@@ -1001,8 +917,6 @@
         private Button btnLogout;
         private Panel panelContent;
         private Panel panelMainContent;
-
-        // Left Panel - Departments
         private Panel panelLeft;
         private Panel panelDeptHeader;
         private Label lblDeptHeader;
@@ -1021,8 +935,6 @@
         private Button btnSaveDept;
         private Button btnCancelDept;
         private Label lblDeptInfo;
-
-        // Right Panel - Designations
         private Panel panelRight;
         private Panel panelDesigHeader;
         private Label lblDesigHeader;

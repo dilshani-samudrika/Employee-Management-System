@@ -48,7 +48,7 @@ namespace Employee_managment_system
             btnDeleteDesig.Enabled = false;
         }
 
-        
+
 
         private void DepartmentForm_Load_1(object sender, EventArgs e)
         {
@@ -254,9 +254,9 @@ namespace Employee_managment_system
             txtDeptEmployeeCount.Text = GetEmployeeCountForDepartment(dept.DeptID).ToString();
         }
 
-        // ============================================
-        // DESIGNATION SELECTION CHANGED - Created by double-clicking dgvDesignations
-        // ============================================
+        
+        // DESIGNATION SELECTION CHANGED 
+        
         private void dgvDesignations_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvDesignations.SelectedRows.Count > 0)
@@ -698,5 +698,6 @@ namespace Employee_managment_system
                 this.Hide();
             }
         }
+
     }
 }

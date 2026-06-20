@@ -33,10 +33,20 @@ namespace Employee_managment_system
 
             // Disable login button during processing
             btnLogin.Enabled = false;
-            btnLogin.Text = "⏳ Logging in...";
+            btnLogin.Text = "Logging in...";
 
             try
             {
+                // Test database connection first
+                if (!DatabaseHelper.TestConnection())
+                {
+                    MessageBox.Show("Cannot connect to database. Please check your connection string.",
+                        "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    btnLogin.Enabled = true;
+                    btnLogin.Text = "Login";
+                    return;
+                }
+
                 // Use secure authentication service
                 var result = AuthService.Login(username, password);
 
@@ -60,13 +70,15 @@ namespace Employee_managment_system
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred during login: {ex.Message}",
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error: {ex.Message}\n\nPlease try again or contact administrator.",
+                    "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtPassword.Clear();
+                txtPassword.Focus();
             }
             finally
             {
                 btnLogin.Enabled = true;
-                btnLogin.Text = "🔑 Login";
+                btnLogin.Text = "Login";
             }
         }
 
@@ -90,7 +102,7 @@ namespace Employee_managment_system
 
         private void txtPassword_TextChanged(object sender, EventArgs e)
         {
-
+            
         }
     }
 }

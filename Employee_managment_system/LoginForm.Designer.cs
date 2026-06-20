@@ -35,17 +35,18 @@
             // 
             mainPanel.BackColor = Color.FromArgb(248, 249, 250);
             mainPanel.BackgroundImage = Properties.Resources.LoginBackground;
-            mainPanel.BorderStyle = BorderStyle.Fixed3D;
+            mainPanel.BackgroundImageLayout = ImageLayout.Stretch;
             mainPanel.Controls.Add(loginPanel);
             mainPanel.Dock = DockStyle.Fill;
             mainPanel.Location = new Point(0, 0);
             mainPanel.Name = "mainPanel";
-            mainPanel.Size = new Size(1693, 855);
+            mainPanel.Size = new Size(1489, 841);
             mainPanel.TabIndex = 1;
             // 
             // loginPanel
             // 
             loginPanel.BackColor = Color.White;
+            loginPanel.BackgroundImageLayout = ImageLayout.Stretch;
             loginPanel.BorderStyle = BorderStyle.FixedSingle;
             loginPanel.Controls.Add(lblWelcome);
             loginPanel.Controls.Add(lblSubtitle);
@@ -56,7 +57,7 @@
             loginPanel.Controls.Add(chkShowPassword);
             loginPanel.Controls.Add(btnLogin);
             loginPanel.Controls.Add(btnClear);
-            loginPanel.Location = new Point(1087, 101);
+            loginPanel.Location = new Point(1000, 167);
             loginPanel.Name = "loginPanel";
             loginPanel.Size = new Size(450, 489);
             loginPanel.TabIndex = 0;
@@ -66,7 +67,7 @@
             lblWelcome.AutoSize = true;
             lblWelcome.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
             lblWelcome.ForeColor = Color.FromArgb(30, 58, 95);
-            lblWelcome.Location = new Point(97, 24);
+            lblWelcome.Location = new Point(78, 20);
             lblWelcome.Name = "lblWelcome";
             lblWelcome.Size = new Size(262, 46);
             lblWelcome.TabIndex = 2;
@@ -146,7 +147,7 @@
             btnLogin.FlatStyle = FlatStyle.Flat;
             btnLogin.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             btnLogin.ForeColor = Color.White;
-            btnLogin.Location = new Point(50, 320);
+            btnLogin.Location = new Point(50, 359);
             btnLogin.Name = "btnLogin";
             btnLogin.Size = new Size(160, 50);
             btnLogin.TabIndex = 4;
@@ -162,7 +163,7 @@
             btnClear.FlatStyle = FlatStyle.Flat;
             btnClear.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             btnClear.ForeColor = Color.White;
-            btnClear.Location = new Point(240, 320);
+            btnClear.Location = new Point(240, 359);
             btnClear.Name = "btnClear";
             btnClear.Size = new Size(160, 50);
             btnClear.TabIndex = 5;
@@ -176,14 +177,17 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(248, 249, 250);
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
-            ClientSize = new Size(1693, 855);
+            BackgroundImageLayout = ImageLayout.Stretch;
+            ClientSize = new Size(1489, 841);
             Controls.Add(mainPanel);
+            DoubleBuffered = true;
             Font = new Font("Segoe UI", 9F);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             Name = "LoginForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Login - Employee Management System";
+            Text = "NexusHR - Login";
             Load += LoginForm_Load;
             mainPanel.ResumeLayout(false);
             loginPanel.ResumeLayout(false);
