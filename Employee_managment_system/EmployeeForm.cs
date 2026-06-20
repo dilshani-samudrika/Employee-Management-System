@@ -46,6 +46,7 @@ namespace Employee_managment_system
             public string? PhotoBase64 { get; set; }
             public string? DeptName { get; set; }
             public string? DesignationTitle { get; set; }
+            public string? Status { get; set; }
         }
 
         private List<Employee> employees = new List<Employee>();
@@ -73,9 +74,11 @@ namespace Employee_managment_system
             LoadFormCombos();
             RefreshGrid();
 
-
+            // Wire up events that might be missing
+            txtSearch.TextChanged += (s, e) => RefreshGrid();
+            cmbDeptFilter.SelectedIndexChanged += (s, e) => RefreshGrid();
+            cmbStatusFilter.SelectedIndexChanged += (s, e) => RefreshGrid();
         }
-
 
         // EXISTING METHODS
 
@@ -130,6 +133,7 @@ namespace Employee_managment_system
                     e.BasicSalary,
                     e.Category,
                     e.PhotoBase64,
+                    e.Status,
                     d.DeptName,
                     des.Title AS DesignationTitle
                 FROM Employees e
@@ -157,7 +161,8 @@ namespace Employee_managment_system
                     Category = row["Category"]?.ToString(),
                     PhotoBase64 = row["PhotoBase64"]?.ToString(),
                     DeptName = row["DeptName"]?.ToString(),
-                    DesignationTitle = row["DesignationTitle"]?.ToString()
+                    DesignationTitle = row["DesignationTitle"]?.ToString(),
+                    Status = row["Status"]?.ToString() ?? "Active"
                 });
             }
         }
@@ -219,21 +224,6 @@ namespace Employee_managment_system
             cmbStatus.SelectedIndex = 0;
         }
 
-        private void cmbDeptFilter_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cmbDepartment.SelectedValue is int deptId)
-            {
-                var filtered = designations.Where(d => d.DeptID == deptId).ToList();
-                cmbDesignation.DataSource = filtered;
-                cmbDesignation.DisplayMember = "Title";
-                cmbDesignation.ValueMember = "DesignationID";
-            }
-            else
-            {
-                cmbDesignation.DataSource = null;
-            }
-        }
-
         private void RefreshGrid()
         {
             var filtered = employees.AsEnumerable();
@@ -253,61 +243,14 @@ namespace Employee_managment_system
                 string dept = cmbDeptFilter.SelectedItem.ToString()!;
                 filtered = filtered.Where(e => e.DeptName == dept);
             }
+
+            if (cmbStatusFilter.SelectedIndex > 0 && cmbStatusFilter.SelectedItem != null)
+            {
+                string status = cmbStatusFilter.SelectedItem.ToString()!;
+                filtered = filtered.Where(e => e.Status == status);
+            }
+
             dgvEmployees.DataSource = filtered.ToList();
-        }
-
-
-
-
-
-        private void btnAdd_Click(object sender, EventArgs e)
-        {
-            using (var addForm = new AddEmployeeForm(employees, departments, designations, this))
-            {
-                if (addForm.ShowDialog() == DialogResult.OK)
-                {
-                    LoadEmployees();
-                    RefreshGrid();
-                    MessageBox.Show("Employee added successfully!", "Success",
-                                  MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
-        }
-
-        private void btnExport_Click(object sender, EventArgs e)
-        {
-            using (SaveFileDialog sfd = new SaveFileDialog())
-            {
-                sfd.Filter = "CSV Files (*.csv)|*.csv";
-                sfd.FileName = $"Employees_{DateTime.Now:yyyy-MM-dd}.csv";
-
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        var data = (List<Employee>)dgvEmployees.DataSource!;
-                        var lines = new List<string>
-                        {
-                            "Employee No,Full Name,Department,Designation,NIC,Contact,Email,Salary"
-                        };
-
-                        foreach (var emp in data)
-                        {
-                            lines.Add($"\"{emp.EmpNo}\",\"{emp.FullName}\",\"{emp.DeptName}\",\"{emp.DesignationTitle}\",\"{emp.NIC}\",\"{emp.ContactNo}\",\"{emp.Email}\",{emp.BasicSalary:F2}");
-                        }
-
-                        File.WriteAllLines(sfd.FileName, lines);
-                        MessageBox.Show($"Successfully exported {data.Count} employees to CSV.", "Export Complete",
-                                      MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Error exporting data: {ex.Message}", "Export Error",
-                                      MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -319,12 +262,10 @@ namespace Employee_managment_system
             {
                 try
                 {
-#pragma warning disable CS0618 // Type or member is obsolete
                     string query = "DELETE FROM Employees WHERE EmpNo = @EmpNo";
                     SqlParameter[] parameters = {
                         new SqlParameter("@EmpNo", selectedEmployee.EmpNo ?? "")
                     };
-#pragma warning restore CS0618
 
                     int rowsAffected = DatabaseHelper.ExecuteNonQuery(query, parameters);
 
@@ -377,7 +318,6 @@ namespace Employee_managment_system
             {
                 string fullName = $"{txtFirstName.Text.Trim()} {txtLastName.Text.Trim()}";
 
-#pragma warning disable CS0618 // Type or member is obsolete
                 string query = @"
                     UPDATE Employees 
                     SET 
@@ -392,7 +332,8 @@ namespace Employee_managment_system
                         DesignationID = @DesignationID,
                         BasicSalary = @BasicSalary,
                         Category = @Category,
-                        PhotoBase64 = @PhotoBase64
+                        PhotoBase64 = @PhotoBase64,
+                        Status = @Status
                     WHERE EmpNo = @EmpNo";
 
                 SqlParameter[] parameters = {
@@ -408,9 +349,9 @@ namespace Employee_managment_system
                     new SqlParameter("@DesignationID", cmbDesignation.SelectedValue != null ? (object)(int)cmbDesignation.SelectedValue : DBNull.Value),
                     new SqlParameter("@BasicSalary", decimal.TryParse(txtSalary.Text, out decimal sal) ? sal : 0),
                     new SqlParameter("@Category", (object?)cmbCategory.Text ?? DBNull.Value),
-                    new SqlParameter("@PhotoBase64", (object?)newPhotoBase64 ?? DBNull.Value)
+                    new SqlParameter("@PhotoBase64", (object?)newPhotoBase64 ?? DBNull.Value),
+                    new SqlParameter("@Status", cmbStatus.Text)
                 };
-#pragma warning restore CS0618
 
                 int rowsAffected = DatabaseHelper.ExecuteNonQuery(query, parameters);
 
@@ -462,9 +403,8 @@ namespace Employee_managment_system
                     }
                 }
             }
-
-
         }
+
         private void LoadEmployeeToPanel(Employee emp)
         {
             string[] nameParts = emp.FullName?.Split(new[] { ' ' }, 2) ?? new[] { "", "" };
@@ -480,6 +420,7 @@ namespace Employee_managment_system
             dtpJoinDate.Value = emp.JoinedDate ?? DateTime.Now;
             cmbGender.Text = emp.Gender ?? "";
             cmbCategory.Text = emp.Category ?? "";
+            cmbStatus.Text = emp.Status ?? "Active";
 
             if (emp.DeptID.HasValue)
                 cmbDepartment.SelectedValue = emp.DeptID.Value;
@@ -553,7 +494,6 @@ namespace Employee_managment_system
             dtpDOB.MaxDate = DateTime.Now.AddYears(-16);
             dtpDOB.Value = DateTime.Now.AddYears(-25);
             dtpJoinDate.Value = DateTime.Now;
-
         }
 
         private void btnDashboard_Click(object sender, EventArgs e)
@@ -600,9 +540,14 @@ namespace Employee_managment_system
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
-            LoginForm login = new LoginForm();
-            login.Show();
-            this.Close();
+            DialogResult result = MessageBox.Show("Are you sure you want to logout?",
+                                    "Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                LoginForm login = new LoginForm();
+                login.Show();
+                this.Hide();
+            }
         }
 
         private void dgvEmployees_SelectionChanged(object sender, EventArgs e)
@@ -622,6 +567,79 @@ namespace Employee_managment_system
                 pnlRightPanel.Visible = false;
                 selectedEmployee = null;
             }
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            using (var addForm = new AddEmployeeForm(employees, departments, designations, this))
+            {
+                if (addForm.ShowDialog() == DialogResult.OK)
+                {
+                    LoadEmployees();
+                    RefreshGrid();
+                    MessageBox.Show("Employee added successfully!", "Success",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog sfd = new SaveFileDialog())
+            {
+                sfd.Filter = "CSV Files (*.csv)|*.csv";
+                sfd.FileName = $"Employees_{DateTime.Now:yyyy-MM-dd}.csv";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        var data = (List<Employee>)dgvEmployees.DataSource!;
+                        var lines = new List<string>
+                        {
+                            "Employee No,Full Name,Department,Designation,NIC,Contact,Email,Salary,Status"
+                        };
+
+                        foreach (var emp in data)
+                        {
+                            lines.Add($"\"{emp.EmpNo}\",\"{emp.FullName}\",\"{emp.DeptName}\",\"{emp.DesignationTitle}\",\"{emp.NIC}\",\"{emp.ContactNo}\",\"{emp.Email}\",{emp.BasicSalary:F2},\"{emp.Status}\"");
+                        }
+
+                        File.WriteAllLines(sfd.FileName, lines);
+                        MessageBox.Show($"Successfully exported {data.Count} employees to CSV.", "Export Complete",
+                                      MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error exporting data: {ex.Message}", "Export Error",
+                                      MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void cmbStatusFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RefreshGrid();
+        }
+
+        private void cmbDeptFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RefreshGrid();
+        }
+
+        private void txtSearch_TextChanged(object sender, EventArgs e)
+        {
+            RefreshGrid();
+        }
+
+        private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void dgvEmployees_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
 
         }
     }

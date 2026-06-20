@@ -21,6 +21,7 @@
             mainContainer = new SplitContainer();
             panelSideMenu = new Panel();
             panelLogo = new Panel();
+            pictureBox2 = new PictureBox();
             lblAppTitle = new Label();
             pictureBoxLogo = new PictureBox();
             btnDashboard = new Button();
@@ -32,10 +33,12 @@
             btnReports = new Button();
             btnLogout = new Button();
             panelContent = new Panel();
-            topBar = new Panel();
-            lblPageTitle = new Label();
             panelMainContent = new Panel();
             splitContainer1 = new SplitContainer();
+            filterPanel = new Panel();
+            txtSearch = new TextBox();
+            cmbDeptFilter = new ComboBox();
+            cmbStatusFilter = new ComboBox();
             dgvEmployees = new DataGridView();
             colEmployeeCode = new DataGridViewTextBoxColumn();
             colFirstName = new DataGridViewTextBoxColumn();
@@ -80,35 +83,29 @@
             btnSave = new Button();
             btnCancel = new Button();
             btnDelete = new Button();
-            filterPanel = new Panel();
-            btnExport = new Button();
-            btnAdd = new Button();
-            txtSearch = new TextBox();
-            cmbDeptFilter = new ComboBox();
-            cmbStatusFilter = new ComboBox();
             topPanel = new Panel();
-            pictureBox1 = new PictureBox();
-            lblTitle = new Label();
+            btnAdd = new Button();
+            btnExport = new Button();
+            lblPageTitle = new Label();
             ((System.ComponentModel.ISupportInitialize)mainContainer).BeginInit();
             mainContainer.Panel1.SuspendLayout();
             mainContainer.Panel2.SuspendLayout();
             mainContainer.SuspendLayout();
             panelSideMenu.SuspendLayout();
             panelLogo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxLogo).BeginInit();
             panelContent.SuspendLayout();
-            topBar.SuspendLayout();
             panelMainContent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
+            filterPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvEmployees).BeginInit();
             pnlRightPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picEmployeePhoto).BeginInit();
-            filterPanel.SuspendLayout();
             topPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // mainContainer
@@ -126,8 +123,8 @@
             // 
             mainContainer.Panel2.BackColor = Color.FromArgb(248, 249, 250);
             mainContainer.Panel2.Controls.Add(panelContent);
-            mainContainer.Size = new Size(1468, 751);
-            mainContainer.SplitterDistance = 265;
+            mainContainer.Size = new Size(1924, 1055);
+            mainContainer.SplitterDistance = 347;
             mainContainer.SplitterWidth = 2;
             mainContainer.TabIndex = 0;
             // 
@@ -143,22 +140,32 @@
             panelSideMenu.Controls.Add(btnPayroll);
             panelSideMenu.Controls.Add(btnReports);
             panelSideMenu.Controls.Add(btnLogout);
-            panelSideMenu.Dock = DockStyle.Fill;
             panelSideMenu.Location = new Point(0, 0);
             panelSideMenu.Name = "panelSideMenu";
-            panelSideMenu.Size = new Size(265, 751);
+            panelSideMenu.Size = new Size(351, 1055);
             panelSideMenu.TabIndex = 0;
             // 
             // panelLogo
             // 
             panelLogo.BackColor = Color.FromArgb(30, 58, 95);
+            panelLogo.Controls.Add(pictureBox2);
             panelLogo.Controls.Add(lblAppTitle);
             panelLogo.Controls.Add(pictureBoxLogo);
             panelLogo.Dock = DockStyle.Top;
             panelLogo.Location = new Point(0, 0);
             panelLogo.Name = "panelLogo";
-            panelLogo.Size = new Size(265, 80);
+            panelLogo.Size = new Size(351, 80);
             panelLogo.TabIndex = 0;
+            // 
+            // pictureBox2
+            // 
+            pictureBox2.Image = Properties.Resources.logo_and_name_for_header;
+            pictureBox2.Location = new Point(0, 3);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(343, 80);
+            pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox2.TabIndex = 2;
+            pictureBox2.TabStop = false;
             // 
             // lblAppTitle
             // 
@@ -190,7 +197,7 @@
             btnDashboard.ForeColor = Color.FromArgb(200, 200, 200);
             btnDashboard.Location = new Point(0, 90);
             btnDashboard.Name = "btnDashboard";
-            btnDashboard.Size = new Size(220, 45);
+            btnDashboard.Size = new Size(344, 45);
             btnDashboard.TabIndex = 1;
             btnDashboard.Text = "📊 Dashboard";
             btnDashboard.TextAlign = ContentAlignment.MiddleLeft;
@@ -206,7 +213,7 @@
             btnEmployees.ForeColor = Color.White;
             btnEmployees.Location = new Point(0, 140);
             btnEmployees.Name = "btnEmployees";
-            btnEmployees.Size = new Size(220, 45);
+            btnEmployees.Size = new Size(348, 45);
             btnEmployees.TabIndex = 2;
             btnEmployees.Text = "👥 Employees";
             btnEmployees.TextAlign = ContentAlignment.MiddleLeft;
@@ -221,7 +228,7 @@
             btnDepartment.ForeColor = Color.FromArgb(200, 200, 200);
             btnDepartment.Location = new Point(0, 190);
             btnDepartment.Name = "btnDepartment";
-            btnDepartment.Size = new Size(220, 45);
+            btnDepartment.Size = new Size(343, 45);
             btnDepartment.TabIndex = 3;
             btnDepartment.Text = "🏢 Department";
             btnDepartment.TextAlign = ContentAlignment.MiddleLeft;
@@ -237,7 +244,7 @@
             btnAttendance.ForeColor = Color.FromArgb(200, 200, 200);
             btnAttendance.Location = new Point(0, 240);
             btnAttendance.Name = "btnAttendance";
-            btnAttendance.Size = new Size(220, 45);
+            btnAttendance.Size = new Size(343, 45);
             btnAttendance.TabIndex = 4;
             btnAttendance.Text = "📅 Attendance";
             btnAttendance.TextAlign = ContentAlignment.MiddleLeft;
@@ -253,7 +260,7 @@
             btnLeave.ForeColor = Color.FromArgb(200, 200, 200);
             btnLeave.Location = new Point(0, 290);
             btnLeave.Name = "btnLeave";
-            btnLeave.Size = new Size(220, 45);
+            btnLeave.Size = new Size(343, 45);
             btnLeave.TabIndex = 5;
             btnLeave.Text = "🏖 Leave";
             btnLeave.TextAlign = ContentAlignment.MiddleLeft;
@@ -269,7 +276,7 @@
             btnPayroll.ForeColor = Color.FromArgb(200, 200, 200);
             btnPayroll.Location = new Point(0, 340);
             btnPayroll.Name = "btnPayroll";
-            btnPayroll.Size = new Size(220, 45);
+            btnPayroll.Size = new Size(343, 45);
             btnPayroll.TabIndex = 6;
             btnPayroll.Text = "💰 Payroll";
             btnPayroll.TextAlign = ContentAlignment.MiddleLeft;
@@ -285,7 +292,7 @@
             btnReports.ForeColor = Color.FromArgb(200, 200, 200);
             btnReports.Location = new Point(0, 390);
             btnReports.Name = "btnReports";
-            btnReports.Size = new Size(220, 45);
+            btnReports.Size = new Size(343, 45);
             btnReports.TabIndex = 7;
             btnReports.Text = "📈 Reports";
             btnReports.TextAlign = ContentAlignment.MiddleLeft;
@@ -295,13 +302,14 @@
             // btnLogout
             // 
             btnLogout.BackColor = Color.FromArgb(25, 48, 78);
+            btnLogout.Dock = DockStyle.Bottom;
             btnLogout.FlatAppearance.BorderSize = 0;
             btnLogout.FlatStyle = FlatStyle.Flat;
             btnLogout.Font = new Font("Segoe UI", 10F);
             btnLogout.ForeColor = Color.FromArgb(231, 76, 60);
-            btnLogout.Location = new Point(0, 580);
+            btnLogout.Location = new Point(0, 1010);
             btnLogout.Name = "btnLogout";
-            btnLogout.Size = new Size(220, 45);
+            btnLogout.Size = new Size(351, 45);
             btnLogout.TabIndex = 8;
             btnLogout.Text = "🚪 Logout";
             btnLogout.TextAlign = ContentAlignment.MiddleLeft;
@@ -310,64 +318,84 @@
             // 
             // panelContent
             // 
-            panelContent.Controls.Add(topBar);
             panelContent.Controls.Add(panelMainContent);
             panelContent.Dock = DockStyle.Fill;
             panelContent.Location = new Point(0, 0);
             panelContent.Name = "panelContent";
-            panelContent.Size = new Size(1201, 751);
+            panelContent.Size = new Size(1575, 1055);
             panelContent.TabIndex = 0;
-            // 
-            // topBar
-            // 
-            topBar.BackColor = Color.White;
-            topBar.Controls.Add(lblPageTitle);
-            topBar.Dock = DockStyle.Top;
-            topBar.Location = new Point(0, 0);
-            topBar.Name = "topBar";
-            topBar.Size = new Size(1201, 50);
-            topBar.TabIndex = 0;
-            // 
-            // lblPageTitle
-            // 
-            lblPageTitle.AutoSize = true;
-            lblPageTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-            lblPageTitle.ForeColor = Color.FromArgb(30, 58, 95);
-            lblPageTitle.Location = new Point(20, 8);
-            lblPageTitle.Name = "lblPageTitle";
-            lblPageTitle.Size = new Size(155, 37);
-            lblPageTitle.TabIndex = 0;
-            lblPageTitle.Text = "Employees";
             // 
             // panelMainContent
             // 
             panelMainContent.BackColor = Color.FromArgb(248, 249, 250);
             panelMainContent.Controls.Add(splitContainer1);
-            panelMainContent.Controls.Add(filterPanel);
             panelMainContent.Controls.Add(topPanel);
             panelMainContent.Dock = DockStyle.Fill;
             panelMainContent.Location = new Point(0, 0);
             panelMainContent.Name = "panelMainContent";
-            panelMainContent.Size = new Size(1201, 751);
+            panelMainContent.Size = new Size(1575, 1055);
             panelMainContent.TabIndex = 1;
             // 
             // splitContainer1
             // 
             splitContainer1.Dock = DockStyle.Fill;
-            splitContainer1.Location = new Point(0, 100);
+            splitContainer1.Location = new Point(0, 85);
             splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
             // 
+            splitContainer1.Panel1.Controls.Add(filterPanel);
             splitContainer1.Panel1.Controls.Add(dgvEmployees);
             // 
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(pnlRightPanel);
-            splitContainer1.Size = new Size(1201, 651);
-            splitContainer1.SplitterDistance = 840;
+            splitContainer1.Size = new Size(1575, 970);
+            splitContainer1.SplitterDistance = 1101;
             splitContainer1.SplitterWidth = 6;
             splitContainer1.TabIndex = 2;
+            // 
+            // filterPanel
+            // 
+            filterPanel.BackColor = Color.FromArgb(248, 249, 250);
+            filterPanel.Controls.Add(txtSearch);
+            filterPanel.Controls.Add(cmbDeptFilter);
+            filterPanel.Controls.Add(cmbStatusFilter);
+            filterPanel.Dock = DockStyle.Top;
+            filterPanel.Location = new Point(0, 0);
+            filterPanel.Name = "filterPanel";
+            filterPanel.Padding = new Padding(10, 8, 10, 8);
+            filterPanel.Size = new Size(1101, 50);
+            filterPanel.TabIndex = 5;
+            // 
+            // txtSearch
+            // 
+            txtSearch.BorderStyle = BorderStyle.FixedSingle;
+            txtSearch.Font = new Font("Segoe UI", 10F);
+            txtSearch.Location = new Point(15, 8);
+            txtSearch.Name = "txtSearch";
+            txtSearch.PlaceholderText = "🔍 Search by name, ID or email...";
+            txtSearch.Size = new Size(250, 30);
+            txtSearch.TabIndex = 0;
+            // 
+            // cmbDeptFilter
+            // 
+            cmbDeptFilter.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbDeptFilter.Font = new Font("Segoe UI", 10F);
+            cmbDeptFilter.Location = new Point(280, 7);
+            cmbDeptFilter.Name = "cmbDeptFilter";
+            cmbDeptFilter.Size = new Size(150, 31);
+            cmbDeptFilter.TabIndex = 1;
+            // 
+            // cmbStatusFilter
+            // 
+            cmbStatusFilter.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbStatusFilter.Font = new Font("Segoe UI", 10F);
+            cmbStatusFilter.Location = new Point(445, 7);
+            cmbStatusFilter.Name = "cmbStatusFilter";
+            cmbStatusFilter.Size = new Size(120, 31);
+            cmbStatusFilter.TabIndex = 2;
+            cmbStatusFilter.SelectedIndexChanged += cmbStatusFilter_SelectedIndexChanged;
             // 
             // dgvEmployees
             // 
@@ -395,9 +423,8 @@
             dataGridViewCellStyle2.SelectionForeColor = Color.White;
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
             dgvEmployees.DefaultCellStyle = dataGridViewCellStyle2;
-            dgvEmployees.Dock = DockStyle.Fill;
             dgvEmployees.EnableHeadersVisualStyles = false;
-            dgvEmployees.Location = new Point(0, 0);
+            dgvEmployees.Location = new Point(0, 50);
             dgvEmployees.MultiSelect = false;
             dgvEmployees.Name = "dgvEmployees";
             dgvEmployees.ReadOnly = true;
@@ -405,8 +432,9 @@
             dgvEmployees.RowHeadersWidth = 51;
             dgvEmployees.RowTemplate.Height = 35;
             dgvEmployees.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvEmployees.Size = new Size(840, 651);
+            dgvEmployees.Size = new Size(1101, 908);
             dgvEmployees.TabIndex = 0;
+            dgvEmployees.CellContentClick += dgvEmployees_CellContentClick;
             dgvEmployees.SelectionChanged += dgvEmployees_SelectionChanged;
             // 
             // colEmployeeCode
@@ -511,10 +539,10 @@
             pnlRightPanel.Controls.Add(btnSave);
             pnlRightPanel.Controls.Add(btnCancel);
             pnlRightPanel.Controls.Add(btnDelete);
-            pnlRightPanel.Dock = DockStyle.Fill;
-            pnlRightPanel.Location = new Point(0, 0);
+            pnlRightPanel.Dock = DockStyle.Right;
+            pnlRightPanel.Location = new Point(116, 0);
             pnlRightPanel.Name = "pnlRightPanel";
-            pnlRightPanel.Size = new Size(355, 651);
+            pnlRightPanel.Size = new Size(352, 970);
             pnlRightPanel.TabIndex = 0;
             pnlRightPanel.Visible = false;
             // 
@@ -885,36 +913,17 @@
             btnDelete.UseVisualStyleBackColor = false;
             btnDelete.Click += btnDelete_Click;
             // 
-            // filterPanel
+            // topPanel
             // 
-            filterPanel.BackColor = Color.FromArgb(248, 249, 250);
-            filterPanel.Controls.Add(btnExport);
-            filterPanel.Controls.Add(btnAdd);
-            filterPanel.Controls.Add(txtSearch);
-            filterPanel.Controls.Add(cmbDeptFilter);
-            filterPanel.Controls.Add(cmbStatusFilter);
-            filterPanel.Dock = DockStyle.Top;
-            filterPanel.Location = new Point(0, 55);
-            filterPanel.Name = "filterPanel";
-            filterPanel.Padding = new Padding(10, 8, 10, 8);
-            filterPanel.Size = new Size(1201, 45);
-            filterPanel.TabIndex = 3;
-            // 
-            // btnExport
-            // 
-            btnExport.BackColor = Color.FromArgb(52, 152, 219);
-            btnExport.Cursor = Cursors.Hand;
-            btnExport.FlatAppearance.BorderSize = 0;
-            btnExport.FlatStyle = FlatStyle.Flat;
-            btnExport.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnExport.ForeColor = Color.White;
-            btnExport.Location = new Point(827, 5);
-            btnExport.Name = "btnExport";
-            btnExport.Size = new Size(120, 35);
-            btnExport.TabIndex = 2;
-            btnExport.Text = "📊 Export CSV";
-            btnExport.UseVisualStyleBackColor = false;
-            btnExport.Click += btnExport_Click;
+            topPanel.BackColor = Color.FromArgb(30, 58, 95);
+            topPanel.Controls.Add(btnAdd);
+            topPanel.Controls.Add(btnExport);
+            topPanel.Controls.Add(lblPageTitle);
+            topPanel.Dock = DockStyle.Top;
+            topPanel.Location = new Point(0, 0);
+            topPanel.Name = "topPanel";
+            topPanel.Size = new Size(1575, 85);
+            topPanel.TabIndex = 4;
             // 
             // btnAdd
             // 
@@ -924,7 +933,7 @@
             btnAdd.FlatStyle = FlatStyle.Flat;
             btnAdd.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnAdd.ForeColor = Color.White;
-            btnAdd.Location = new Point(682, 5);
+            btnAdd.Location = new Point(881, 30);
             btnAdd.Name = "btnAdd";
             btnAdd.Size = new Size(120, 35);
             btnAdd.TabIndex = 1;
@@ -932,71 +941,40 @@
             btnAdd.UseVisualStyleBackColor = false;
             btnAdd.Click += btnAdd_Click;
             // 
-            // txtSearch
+            // btnExport
             // 
-            txtSearch.BorderStyle = BorderStyle.FixedSingle;
-            txtSearch.Font = new Font("Segoe UI", 10F);
-            txtSearch.Location = new Point(15, 8);
-            txtSearch.Name = "txtSearch";
-            txtSearch.PlaceholderText = "🔍 Search by name, ID or email...";
-            txtSearch.Size = new Size(250, 30);
-            txtSearch.TabIndex = 0;
+            btnExport.BackColor = Color.FromArgb(52, 152, 219);
+            btnExport.Cursor = Cursors.Hand;
+            btnExport.FlatAppearance.BorderSize = 0;
+            btnExport.FlatStyle = FlatStyle.Flat;
+            btnExport.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnExport.ForeColor = Color.White;
+            btnExport.Location = new Point(1040, 27);
+            btnExport.Name = "btnExport";
+            btnExport.Size = new Size(120, 35);
+            btnExport.TabIndex = 2;
+            btnExport.Text = "📊 Export CSV";
+            btnExport.UseVisualStyleBackColor = false;
+            btnExport.Click += btnExport_Click;
             // 
-            // cmbDeptFilter
+            // lblPageTitle
             // 
-            cmbDeptFilter.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbDeptFilter.Font = new Font("Segoe UI", 10F);
-            cmbDeptFilter.Location = new Point(280, 7);
-            cmbDeptFilter.Name = "cmbDeptFilter";
-            cmbDeptFilter.Size = new Size(150, 31);
-            cmbDeptFilter.TabIndex = 1;
-            // 
-            // cmbStatusFilter
-            // 
-            cmbStatusFilter.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbStatusFilter.Font = new Font("Segoe UI", 10F);
-            cmbStatusFilter.Location = new Point(445, 7);
-            cmbStatusFilter.Name = "cmbStatusFilter";
-            cmbStatusFilter.Size = new Size(120, 31);
-            cmbStatusFilter.TabIndex = 2;
-            // 
-            // topPanel
-            // 
-            topPanel.BackColor = Color.FromArgb(30, 58, 95);
-            topPanel.Controls.Add(pictureBox1);
-            topPanel.Controls.Add(lblTitle);
-            topPanel.Dock = DockStyle.Top;
-            topPanel.Location = new Point(0, 0);
-            topPanel.Name = "topPanel";
-            topPanel.Size = new Size(1201, 55);
-            topPanel.TabIndex = 4;
-            // 
-            // pictureBox1
-            // 
-            pictureBox1.Location = new Point(15, 5);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(40, 45);
-            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox1.TabIndex = 3;
-            pictureBox1.TabStop = false;
-            // 
-            // lblTitle
-            // 
-            lblTitle.AutoSize = true;
-            lblTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            lblTitle.ForeColor = Color.White;
-            lblTitle.Location = new Point(65, 10);
-            lblTitle.Name = "lblTitle";
-            lblTitle.Size = new Size(283, 32);
-            lblTitle.TabIndex = 0;
-            lblTitle.Text = "Employee Management";
+            lblPageTitle.AutoSize = true;
+            lblPageTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            lblPageTitle.ForeColor = Color.White;
+            lblPageTitle.Location = new Point(18, 20);
+            lblPageTitle.Name = "lblPageTitle";
+            lblPageTitle.Size = new Size(306, 37);
+            lblPageTitle.TabIndex = 1;
+            lblPageTitle.Text = "Employee Managment";
             // 
             // EmployeeForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(1468, 751);
+            BackgroundImage = Properties.Resources.otherBackground;
+            ClientSize = new Size(1924, 1055);
             Controls.Add(mainContainer);
             Font = new Font("Segoe UI", 9F);
             Name = "EmployeeForm";
@@ -1010,24 +988,22 @@
             panelSideMenu.ResumeLayout(false);
             panelLogo.ResumeLayout(false);
             panelLogo.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxLogo).EndInit();
             panelContent.ResumeLayout(false);
-            topBar.ResumeLayout(false);
-            topBar.PerformLayout();
             panelMainContent.ResumeLayout(false);
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
+            filterPanel.ResumeLayout(false);
+            filterPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvEmployees).EndInit();
             pnlRightPanel.ResumeLayout(false);
             pnlRightPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)picEmployeePhoto).EndInit();
-            filterPanel.ResumeLayout(false);
-            filterPanel.PerformLayout();
             topPanel.ResumeLayout(false);
             topPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
@@ -1048,18 +1024,10 @@
         private Button btnReports;
         private Button btnLogout;
         private Panel panelContent;
-        private Panel topBar;
-        private Label lblPageTitle;
         private Panel panelMainContent;
 
         // Employee Form Controls
         private Panel topPanel;
-        private PictureBox pictureBox1;
-        private Label lblTitle;
-        private Panel filterPanel;
-        private TextBox txtSearch;
-        private ComboBox cmbDeptFilter;
-        private ComboBox cmbStatusFilter;
         private SplitContainer splitContainer1;
         private DataGridView dgvEmployees;
         private DataGridViewTextBoxColumn colEmployeeCode;
@@ -1105,7 +1073,13 @@
         private Button btnSave;
         private Button btnCancel;
         private Button btnDelete;
+        private PictureBox pictureBox2;
+        private Panel filterPanel;
         private Button btnExport;
         private Button btnAdd;
+        private TextBox txtSearch;
+        private ComboBox cmbDeptFilter;
+        private ComboBox cmbStatusFilter;
+        private Label lblPageTitle;
     }
 }

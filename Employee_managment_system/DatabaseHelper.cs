@@ -7,7 +7,6 @@ namespace Employee_managment_system
 {
     public static class DatabaseHelper
     {
-        // Update this connection string with your SQL Server details
         private static string connectionString = @"Data Source=DILSHANI;Initial Catalog=EMS_DB;Integrated Security=True;";
 
         public static SqlConnection GetConnection()
@@ -15,7 +14,7 @@ namespace Employee_managment_system
             return new SqlConnection(connectionString);
         }
 
-        public static DataTable ExecuteQuery(string query, SqlParameter[] parameters = null)
+        public static DataTable ExecuteQuery(string query, SqlParameter[]? parameters = null)
         {
             using (SqlConnection conn = GetConnection())
             {
@@ -34,7 +33,7 @@ namespace Employee_managment_system
             }
         }
 
-        public static int ExecuteNonQuery(string query, SqlParameter[] parameters = null)
+        public static int ExecuteNonQuery(string query, SqlParameter[]? parameters = null)
         {
             using (SqlConnection conn = GetConnection())
             {
@@ -49,7 +48,7 @@ namespace Employee_managment_system
             }
         }
 
-        public static object ExecuteScalar(string query, SqlParameter[] parameters = null)
+        public static object? ExecuteScalar(string query, SqlParameter[]? parameters = null)
         {
             using (SqlConnection conn = GetConnection())
             {

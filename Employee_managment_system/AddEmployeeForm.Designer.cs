@@ -304,7 +304,7 @@
             labelSalary.Name = "labelSalary";
             labelSalary.Size = new Size(120, 35);
             labelSalary.TabIndex = 22;
-            labelSalary.Text = "Basic Salary ($)";
+            labelSalary.Text = "Basic Salary (Rs)";
             labelSalary.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // txtSalary
