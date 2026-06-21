@@ -46,61 +46,30 @@ namespace Employee_managment_system
             // Set initial button states
             btnDeleteDept.Enabled = false;
             btnDeleteDesig.Enabled = false;
-
-            // Wire up events
-            dgvDepartments.SelectionChanged += DgvDepartments_SelectionChanged!;
-            dgvDesignations.SelectionChanged += DgvDesignations_SelectionChanged!;
-            btnAddDept.Click += BtnAddDept_Click!;
-            btnDeleteDept.Click += BtnDeleteDept_Click!;
-            btnSaveDept.Click += BtnSaveDept_Click!;
-            btnCancelDept.Click += BtnCancelDept_Click!;
-            btnAddDesig.Click += BtnAddDesig_Click!;
-            btnDeleteDesig.Click += BtnDeleteDesig_Click!;
-            btnSaveDesig.Click += BtnSaveDesig_Click!;
-            btnCancelDesig.Click += BtnCancelDesig_Click!;
-            cmbDesigDepartment.SelectedIndexChanged += CmbDesigDepartment_SelectedIndexChanged!;
-
-            // Wire up navigation menu
-            WireUpMenuEvents();
-
-            // Handle DataGridView errors
-            dgvDepartments.DataError += DgvDepartments_DataError!;
-            dgvDesignations.DataError += DgvDesignations_DataError!;
         }
 
-        private void WireUpMenuEvents()
+
+
+        private void DepartmentForm_Load_1(object sender, EventArgs e)
         {
-            btnDashboard.Click += (s, e) => { DashboardForm dash = new DashboardForm(); dash.Show(); Hide(); };
-            btnEmployees.Click += (s, e) => { EmployeeForm emp = new EmployeeForm(); emp.Show(); Hide(); };
-            btnDepartment.Click += (s, e) => { /* Already here */ };
-            btnAttendance.Click += (s, e) => { AttendanceForm att = new AttendanceForm(); att.Show(); Hide(); };
-            btnLeave.Click += (s, e) => { LeaveForm leave = new LeaveForm(); leave.Show(); Hide(); };
-            btnPayroll.Click += (s, e) => { PayrollForm payroll = new PayrollForm(); payroll.Show(); Hide(); };
-            btnReports.Click += (s, e) => { reports report = new reports(); report.Show(); Hide(); };
-            btnLogout.Click += (s, e) => { LoginForm login = new LoginForm(); login.Show(); Close(); };
+
         }
 
-        private void DepartmentForm_Load(object sender, EventArgs e)
-        {
-            // Any additional load logic
-        }
 
-        // ============================================
         // HANDLE DATA GRID VIEW ERRORS
-        // ============================================
-        private void DgvDepartments_DataError(object sender, DataGridViewDataErrorEventArgs e)
+
+        private void dgvDepartments_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            e.ThrowException = false;
+        }
+        private void dgvDesignations_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             e.ThrowException = false;
         }
 
-        private void DgvDesignations_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            e.ThrowException = false;
-        }
 
-        // ============================================
         // LOAD DATA FROM DATABASE
-        // ============================================
+
         private void LoadDepartments()
         {
             try
@@ -160,9 +129,8 @@ namespace Employee_managment_system
             }
         }
 
-        // ============================================
+
         // GET EMPLOYEE COUNTS
-        // ============================================
         private int GetEmployeeCountForDepartment(int deptId)
         {
             try
@@ -191,15 +159,15 @@ namespace Employee_managment_system
             }
         }
 
-        // ============================================
+
         // GRID CONFIGURATION
-        // ============================================
         private void ConfigureDepartmentsGrid()
         {
             dgvDepartments.AutoGenerateColumns = false;
             id.DataPropertyName = "DeptID";
             colDepartmentName.DataPropertyName = "DeptName";
             colDescription.DataPropertyName = "Description";
+            colEmployeeCount.DataPropertyName = "EmployeeCount";
         }
 
         private void ConfigureDesignationsGrid()
@@ -211,19 +179,19 @@ namespace Employee_managment_system
             DesigEmployeeCount.DataPropertyName = "EmployeeCount";
         }
 
-        // ============================================
+
         // BIND DATA TO GRIDS
-        // ============================================
         private void BindDepartmentsGrid()
         {
             dgvDepartments.DataSource = null;
 
+            // Create a list with employee counts
             var deptList = departments.Select(d => new
             {
                 d.DeptID,
                 d.DeptName,
                 d.Description,
-                EmployeeCount = GetEmployeeCountForDepartment(d.DeptID)
+                EmployeeCount = GetEmployeeCountForDepartment(d.DeptID)  // This gets the count
             }).ToList();
 
             dgvDepartments.DataSource = deptList;
@@ -245,16 +213,14 @@ namespace Employee_managment_system
                 Title = d.Title,
                 DeptID = d.DeptID,
                 DeptName = departments.FirstOrDefault(dept => dept.DeptID == d.DeptID)?.DeptName ?? "",
-                EmployeeCount = GetEmployeeCountForDesignation(d.DesignationID)
+                EmployeeCount = GetEmployeeCountForDesignation(d.DesignationID)  // This gets the count
             }).ToList();
 
             dgvDesignations.DataSource = designationDisplayList;
         }
 
-        // ============================================
-        // DEPARTMENT SELECTION CHANGED
-        // ============================================
-        private void DgvDepartments_SelectionChanged(object sender, EventArgs e)
+        // DEPARTMENT SELECTION CHANGED 
+        private void dgvDepartments_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvDepartments.SelectedRows.Count > 0)
             {
@@ -268,7 +234,7 @@ namespace Employee_managment_system
                     LoadDepartmentToPanel(selectedDepartment);
                     pnlDeptDetails.Visible = true;
                     btnDeleteDept.Enabled = true;
-                    lblDeptInfo.Text = $"📌 Selected: {selectedDepartment.DeptName}";
+                    lblDeptInfo.Text = $"Selected: {selectedDepartment.DeptName}";
                     BindDesignationsGrid();
                 }
             }
@@ -288,10 +254,10 @@ namespace Employee_managment_system
             txtDeptEmployeeCount.Text = GetEmployeeCountForDepartment(dept.DeptID).ToString();
         }
 
-        // ============================================
-        // DESIGNATION SELECTION CHANGED
-        // ============================================
-        private void DgvDesignations_SelectionChanged(object sender, EventArgs e)
+        
+        // DESIGNATION SELECTION CHANGED 
+        
+        private void dgvDesignations_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvDesignations.SelectedRows.Count > 0)
             {
@@ -336,15 +302,12 @@ namespace Employee_managment_system
             cmbDesigDepartment.ValueMember = "DeptID";
         }
 
-        private void CmbDesigDepartment_SelectedIndexChanged(object sender, EventArgs e)
+        private void cmbDesigDepartment_SelectedIndexChanged_1(object sender, EventArgs e)
         {
-            // Handle department change for designation
+
         }
 
-        // ============================================
-        // DEPARTMENT BUTTON EVENTS
-        // ============================================
-        private void BtnAddDept_Click(object sender, EventArgs e)
+        private void btnAddDept_Click(object sender, EventArgs e)
         {
             selectedDepartment = null;
             txtDeptName.Clear();
@@ -354,11 +317,13 @@ namespace Employee_managment_system
             txtDeptName.Focus();
             dgvDepartments.ClearSelection();
             btnDeleteDept.Enabled = false;
-            lblDeptInfo.Text = "📝 Adding new department...";
+            lblDeptInfo.Text = "Adding new department...";
+
         }
 
-        private void BtnDeleteDept_Click(object sender, EventArgs e)
+        private void btnDeleteDept_Click(object sender, EventArgs e)
         {
+
             if (selectedDepartment == null) return;
 
             int employeeCount = GetEmployeeCountForDepartment(selectedDepartment.DeptID);
@@ -409,9 +374,10 @@ namespace Employee_managment_system
                                   MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+
         }
 
-        private void BtnSaveDept_Click(object sender, EventArgs e)
+        private void btnSaveDept_Click(object sender, EventArgs e)
         {
             if (isDeptSaving) return;
             isDeptSaving = true;
@@ -453,9 +419,9 @@ namespace Employee_managment_system
                 {
                     string query = @"INSERT INTO Departments (DeptName, Description) VALUES (@DeptName, @Description)";
                     SqlParameter[] parameters = {
-                        new SqlParameter("@DeptName", deptName),
-                        new SqlParameter("@Description", (object?)txtDeptDescription.Text.Trim() ?? DBNull.Value)
-                    };
+                new SqlParameter("@DeptName", deptName),
+                new SqlParameter("@Description", (object?)txtDeptDescription.Text.Trim() ?? DBNull.Value)
+            };
                     DatabaseHelper.ExecuteNonQuery(query, parameters);
                     MessageBox.Show("Department added successfully.", "Success",
                                   MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -464,10 +430,10 @@ namespace Employee_managment_system
                 {
                     string query = @"UPDATE Departments SET DeptName = @DeptName, Description = @Description WHERE DeptID = @DeptID";
                     SqlParameter[] parameters = {
-                        new SqlParameter("@DeptID", selectedDepartment.DeptID),
-                        new SqlParameter("@DeptName", deptName),
-                        new SqlParameter("@Description", (object?)txtDeptDescription.Text.Trim() ?? DBNull.Value)
-                    };
+                new SqlParameter("@DeptID", selectedDepartment.DeptID),
+                new SqlParameter("@DeptName", deptName),
+                new SqlParameter("@Description", (object?)txtDeptDescription.Text.Trim() ?? DBNull.Value)
+            };
                     DatabaseHelper.ExecuteNonQuery(query, parameters);
                     MessageBox.Show("Department updated successfully.", "Success",
                                   MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -490,21 +456,21 @@ namespace Employee_managment_system
             {
                 isDeptSaving = false;
             }
+
         }
 
-        private void BtnCancelDept_Click(object sender, EventArgs e)
+        private void btnCancelDept_Click(object sender, EventArgs e)
         {
+
             pnlDeptDetails.Visible = false;
             selectedDepartment = null;
             btnDeleteDept.Enabled = false;
             dgvDepartments.ClearSelection();
             lblDeptInfo.Text = "💡 Click a department to view and edit details";
+
         }
 
-        // ============================================
-        // DESIGNATION BUTTON EVENTS
-        // ============================================
-        private void BtnAddDesig_Click(object sender, EventArgs e)
+        private void btnAddDesig_Click(object sender, EventArgs e)
         {
             if (selectedDepartment == null)
             {
@@ -522,10 +488,11 @@ namespace Employee_managment_system
             txtDesigTitle.Focus();
             dgvDesignations.ClearSelection();
             btnDeleteDesig.Enabled = false;
-            lblDesigInfo.Text = "📝 Adding new designation...";
+            lblDesigInfo.Text = " Adding new designation...";
+
         }
 
-        private void BtnDeleteDesig_Click(object sender, EventArgs e)
+        private void btnDeleteDesig_Click(object sender, EventArgs e)
         {
             if (selectedDesignation == null) return;
 
@@ -560,10 +527,12 @@ namespace Employee_managment_system
                     MessageBox.Show($"Error deleting designation: {ex.Message}", "Error",
                                   MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+
             }
+
         }
 
-        private void BtnSaveDesig_Click(object sender, EventArgs e)
+        private void btnSaveDesig_Click(object sender, EventArgs e)
         {
             if (isDesigSaving) return;
             isDesigSaving = true;
@@ -615,11 +584,11 @@ namespace Employee_managment_system
                 if (isNew)
                 {
                     string query = @"INSERT INTO Designations (DeptID, Title, BasicSalary, OTRate, MaxMonthlyOTHours) 
-                                    VALUES (@DeptID, @Title, 0, 0, 0)";
+                            VALUES (@DeptID, @Title, 0, 0, 0)";
                     SqlParameter[] parameters = {
-                        new SqlParameter("@DeptID", deptId),
-                        new SqlParameter("@Title", title)
-                    };
+                new SqlParameter("@DeptID", deptId),
+                new SqlParameter("@Title", title)
+            };
                     DatabaseHelper.ExecuteNonQuery(query, parameters);
                     MessageBox.Show("Designation added successfully.", "Success",
                                   MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -628,10 +597,10 @@ namespace Employee_managment_system
                 {
                     string query = @"UPDATE Designations SET DeptID = @DeptID, Title = @Title WHERE DesignationID = @DesignationID";
                     SqlParameter[] parameters = {
-                        new SqlParameter("@DesignationID", selectedDesignation.DesignationID),
-                        new SqlParameter("@DeptID", deptId),
-                        new SqlParameter("@Title", title)
-                    };
+                new SqlParameter("@DesignationID", selectedDesignation.DesignationID),
+                new SqlParameter("@DeptID", deptId),
+                new SqlParameter("@Title", title)
+            };
                     DatabaseHelper.ExecuteNonQuery(query, parameters);
                     MessageBox.Show("Designation updated successfully.", "Success",
                                   MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -643,7 +612,7 @@ namespace Employee_managment_system
                 selectedDesignation = null;
                 btnDeleteDesig.Enabled = false;
                 dgvDesignations.ClearSelection();
-                lblDesigInfo.Text = "💡 Click a designation to view and edit details";
+                lblDesigInfo.Text = "Click a designation to view and edit details";
             }
             catch (Exception ex)
             {
@@ -654,9 +623,10 @@ namespace Employee_managment_system
             {
                 isDesigSaving = false;
             }
+
         }
 
-        private void BtnCancelDesig_Click(object sender, EventArgs e)
+        private void btnCancelDesig_Click(object sender, EventArgs e)
         {
             pnlDesigDetails.Visible = false;
             selectedDesignation = null;
@@ -665,9 +635,69 @@ namespace Employee_managment_system
             lblDesigInfo.Text = "💡 Click a designation to view and edit details";
         }
 
-        private void btnDashboard_Click(object sender, EventArgs e)
+        private void panelLogo_Paint(object sender, PaintEventArgs e)
         {
 
         }
+
+        private void lblDesigEmployeeCount_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnDashboard_Click(object sender, EventArgs e)
+        {
+            DashboardForm dash = new DashboardForm();
+            dash.Show();
+            this.Hide();
+        }
+
+        private void btnEmployees_Click(object sender, EventArgs e)
+        {
+            EmployeeForm emp = new EmployeeForm();
+            emp.Show();
+            this.Hide();
+        }
+
+        private void btnAttendance_Click(object sender, EventArgs e)
+        {
+            AttendanceForm att = new AttendanceForm();
+            att.Show();
+            this.Hide();
+        }
+
+        private void btnLeave_Click(object sender, EventArgs e)
+        {
+            LeaveForm leave = new LeaveForm();
+            leave.Show();
+            this.Hide();
+        }
+
+        private void btnPayroll_Click(object sender, EventArgs e)
+        {
+            PayrollForm payroll = new PayrollForm();
+            payroll.Show();
+            this.Hide();
+        }
+
+        private void btnReports_Click(object sender, EventArgs e)
+        {
+            ReportForm report = new ReportForm();
+            report.Show();
+            this.Hide();
+        }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Are you sure you want to logout?",
+                                    "Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                LoginForm login = new LoginForm();
+                login.Show();
+                this.Hide();
+            }
+        }
+
     }
 }

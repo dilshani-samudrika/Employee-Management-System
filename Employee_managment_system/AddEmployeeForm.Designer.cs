@@ -2,8 +2,16 @@
 {
     partial class AddEmployeeForm
     {
+        /// <summary>
+        ///  Required designer variable.
+        /// </summary>
+
         private System.ComponentModel.IContainer components = null;
 
+        /// <summary>
+        ///  Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -11,8 +19,15 @@
             base.Dispose(disposing);
         }
 
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        ///  Required method for Designer support - do not modify
+        ///  the contents of this method with the code editor.
+        /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddEmployeeForm));
             lblTitle = new Label();
             tableLayoutPanel1 = new TableLayoutPanel();
             labelFirstName = new Label();
@@ -304,7 +319,7 @@
             labelSalary.Name = "labelSalary";
             labelSalary.Size = new Size(120, 35);
             labelSalary.TabIndex = 22;
-            labelSalary.Text = "Basic Salary ($)";
+            labelSalary.Text = "Basic Salary (Rs)";
             labelSalary.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // txtSalary
@@ -420,9 +435,10 @@
             Controls.Add(btnUploadPhoto);
             Controls.Add(picEmployeePhoto);
             Controls.Add(lblTitle);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "AddEmployeeForm";
             StartPosition = FormStartPosition.CenterParent;
-            Text = "Add New Employee - Auto Credentials";
+            Text = "NexusHR - Add New Employee ";
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)picEmployeePhoto).EndInit();
@@ -430,7 +446,8 @@
             PerformLayout();
         }
 
-        // Control declarations
+        #endregion
+
         private Label lblTitle;
         private TableLayoutPanel tableLayoutPanel1;
         private Label labelFirstName;

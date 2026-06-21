@@ -1094,17 +1094,10 @@ namespace Employee_managment_system
         private Label TotalnetPay;
         private Label label14;
         private Label netPayment;
-
-
-        // Sidebar Panel Container
         private Panel panelSideMenu;
-
-        // Logo Section
         private Panel panelLogo;
         private PictureBox pictureBoxLogo;
         private Label lblAppTitle;
-
-        // Navigation Buttons
         private Button btnDashboard;
         private Button btnEmployees;
         private Button btnDepartment;

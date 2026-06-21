@@ -14,6 +14,9 @@ namespace Employee_managment_system
         private void LoginForm_Load(object sender, EventArgs e)
         {
             txtUsername.Focus();
+            txtUsername.Text = "";
+            txtPassword.Text = "";
+            txtPassword.PasswordChar = '●';
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -28,23 +31,54 @@ namespace Employee_managment_system
                 return;
             }
 
-            // Admin login - hardcoded for demo
-            if (username == "admin" && password == "admin123")
-            {
-                MessageBox.Show("Login successful! Welcome Admin.",
-                    "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // Disable login button during processing
+            btnLogin.Enabled = false;
+            btnLogin.Text = "Logging in...";
 
-                // Open Dashboard
-                DashboardForm dashboard = new DashboardForm();
-                dashboard.Show();
-                this.Hide();
-            }
-            else
+            try
             {
-                MessageBox.Show("Invalid username or password. Please try again.",
-                    "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Test database connection first
+                if (!DatabaseHelper.TestConnection())
+                {
+                    MessageBox.Show("Cannot connect to database. Please check your connection string.",
+                        "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    btnLogin.Enabled = true;
+                    btnLogin.Text = "Login";
+                    return;
+                }
+
+                // Use secure authentication service
+                var result = AuthService.Login(username, password);
+
+                if (result.Success)
+                {
+                    MessageBox.Show($"Welcome {result.Username}!",
+                        "Login Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Open Dashboard
+                    DashboardForm dashboard = new DashboardForm();
+                    dashboard.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    MessageBox.Show(result.Message,
+                        "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    txtPassword.Clear();
+                    txtPassword.Focus();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}\n\nPlease try again or contact administrator.",
+                    "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtPassword.Clear();
                 txtPassword.Focus();
+            }
+            finally
+            {
+                btnLogin.Enabled = true;
+                btnLogin.Text = "Login";
             }
         }
 
@@ -61,15 +95,14 @@ namespace Employee_managment_system
             txtPassword.PasswordChar = chkShowPassword.Checked ? '\0' : '●';
         }
 
-        private void linkForgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            MessageBox.Show("Please contact system administrator to reset your password.",
-                "Forgot Password", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
         private void LoginForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Application.Exit();
+        }
+
+        private void txtPassword_TextChanged(object sender, EventArgs e)
+        {
+            
         }
     }
 }

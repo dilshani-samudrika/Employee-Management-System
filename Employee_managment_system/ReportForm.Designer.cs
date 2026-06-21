@@ -701,16 +701,10 @@ namespace Employee_managment_system
         private System.Windows.Forms.DataGridViewTextBoxColumn colStatus;
         private System.Windows.Forms.Label totalRecordsLabel;
         private System.Windows.Forms.Label footerLabel;
-
-        // Sidebar Panel Container
         private Panel panelSideMenu;
-
-        // Logo Section
         private Panel panelLogo;
         private PictureBox pictureBoxLogo;
         private Label lblAppTitle;
-
-        // Navigation Buttons
         private Button btnDashboard;
         private Button btnEmployees;
         private Button btnDepartment;
