@@ -1,6 +1,5 @@
 using System;
 using System.Data;
-using System.Configuration;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 
@@ -17,62 +16,21 @@ namespace Employee_managment_system
 
         public static DataTable ExecuteQuery(string query, SqlParameter[]? parameters = null)
         {
-            try
-            {
-                using (SqlConnection conn = GetConnection())
-                {
-                    conn.Open();
-
-                    if (showMessageBox)
-                    {
-                        MessageBox.Show(
-                            "Database connected successfully!",
-                            "Success",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
-                    }
-
-                    return true;
-                }
-            }
-            catch (Exception ex)
-            {
-                if (showMessageBox)
-                {
-                    MessageBox.Show(
-                        ex.Message,
-                        "Database Connection Error",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
-                }
-
-                return false;
-            }
-        }
-
-        public static DataTable ExecuteQuery(
-            string query,
-            SqlParameter[] parameters = null)
-        {
-            DataTable dt = new DataTable();
-
             using (SqlConnection conn = GetConnection())
             {
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     if (parameters != null)
-                    {
                         cmd.Parameters.AddRange(parameters);
-                    }
 
-                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
                     {
-                        da.Fill(dt);
+                        DataTable dt = new DataTable();
+                        adapter.Fill(dt);
+                        return dt;
                     }
                 }
             }
-
-            return dt;
         }
 
         public static int ExecuteNonQuery(string query, SqlParameter[]? parameters = null)
@@ -82,9 +40,7 @@ namespace Employee_managment_system
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     if (parameters != null)
-                    {
                         cmd.Parameters.AddRange(parameters);
-                    }
 
                     conn.Open();
                     return cmd.ExecuteNonQuery();
@@ -99,9 +55,7 @@ namespace Employee_managment_system
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     if (parameters != null)
-                    {
                         cmd.Parameters.AddRange(parameters);
-                    }
 
                     conn.Open();
                     return cmd.ExecuteScalar();
@@ -109,72 +63,21 @@ namespace Employee_managment_system
             }
         }
 
-        public static DataTable ExecuteStoredProcedure(
-            string procedureName,
-            SqlParameter[] parameters = null)
+        public static bool TestConnection()
         {
-            DataTable dt = new DataTable();
-
-            using (SqlConnection conn = GetConnection())
+            try
             {
-                using (SqlCommand cmd = new SqlCommand(procedureName, conn))
+                using (SqlConnection conn = GetConnection())
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    if (parameters != null)
-                    {
-                        cmd.Parameters.AddRange(parameters);
-                    }
-
-                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
-                    {
-                        da.Fill(dt);
-                    }
+                    conn.Open();
+                    return true;
                 }
             }
-
-            return dt;
-        }
-
-        public static object ExecuteStoredProcedureScalar(
-            string procedureName,
-            SqlParameter[] parameters = null)
-        {
-            using (SqlConnection conn = GetConnection())
+            catch (Exception ex)
             {
-                using (SqlCommand cmd = new SqlCommand(procedureName, conn))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    if (parameters != null)
-                    {
-                        cmd.Parameters.AddRange(parameters);
-                    }
-
-                    conn.Open();
-                    return cmd.ExecuteScalar();
-                }
-            }
-        }
-
-        public static int ExecuteStoredProcedureNonQuery(
-            string procedureName,
-            SqlParameter[] parameters = null)
-        {
-            using (SqlConnection conn = GetConnection())
-            {
-                using (SqlCommand cmd = new SqlCommand(procedureName, conn))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    if (parameters != null)
-                    {
-                        cmd.Parameters.AddRange(parameters);
-                    }
-
-                    conn.Open();
-                    return cmd.ExecuteNonQuery();
-                }
+                MessageBox.Show($"Database connection error: {ex.Message}", "Connection Error",
+                              MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
         }
     }
