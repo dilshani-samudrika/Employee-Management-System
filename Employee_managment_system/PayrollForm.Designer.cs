@@ -38,6 +38,7 @@ namespace Employee_managment_system
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PayrollForm));
             salaryCardPanel = new Panel();
             netPayment = new Label();
             button1 = new Button();
@@ -415,7 +416,7 @@ namespace Employee_managment_system
             tabPage1.Margin = new Padding(2);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(2);
-            tabPage1.Size = new Size(1024, 523);
+            tabPage1.Size = new Size(1094, 523);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Salary Structure";
             tabPage1.UseVisualStyleBackColor = true;
@@ -504,7 +505,7 @@ namespace Employee_managment_system
             dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = Color.White;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F);
-            dataGridViewCellStyle2.ForeColor = Color.Cyan;
+            dataGridViewCellStyle2.ForeColor = Color.Black;
             dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
@@ -514,9 +515,6 @@ namespace Employee_managment_system
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersWidth = 82;
             dataGridViewCellStyle3.BackColor = Color.White;
-            dataGridView1.DefaultCellStyle.ForeColor = Color.Black;
-            dataGridView1.DefaultCellStyle.BackColor = Color.White;
-            dataGridView1.RowsDefaultCellStyle.BackColor = Color.White;
             dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle3;
             dataGridView1.Size = new Size(791, 181);
             dataGridView1.TabIndex = 5;
@@ -771,7 +769,7 @@ namespace Employee_managment_system
             dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle5.BackColor = Color.White;
             dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 9F);
-            dataGridViewCellStyle5.ForeColor = Color.Cyan;
+            dataGridViewCellStyle5.ForeColor = Color.Black;
             dataGridViewCellStyle5.SelectionBackColor = SystemColors.Highlight;
             dataGridViewCellStyle5.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle5.WrapMode = DataGridViewTriState.False;
@@ -780,9 +778,6 @@ namespace Employee_managment_system
             dataGridView2.Margin = new Padding(2);
             dataGridView2.Name = "dataGridView2";
             dataGridView2.RowHeadersWidth = 82;
-            dataGridView2.DefaultCellStyle.ForeColor = Color.Black;
-            dataGridView2.DefaultCellStyle.BackColor = Color.White;
-            dataGridView2.RowsDefaultCellStyle.BackColor = Color.White;
             dataGridViewCellStyle6.BackColor = Color.White;
             dataGridView2.RowsDefaultCellStyle = dataGridViewCellStyle6;
             dataGridView2.Size = new Size(1038, 182);
@@ -1056,9 +1051,9 @@ namespace Employee_managment_system
             lblPageTitle.ForeColor = Color.White;
             lblPageTitle.Location = new Point(20, 8);
             lblPageTitle.Name = "lblPageTitle";
-            lblPageTitle.Size = new Size(506, 37);
+            lblPageTitle.Size = new Size(270, 37);
             lblPageTitle.TabIndex = 0;
-            lblPageTitle.Text = "Department & Designation Managment";
+            lblPageTitle.Text = "Payroll Managment";
             // 
             // PayrollForm
             // 
@@ -1073,9 +1068,10 @@ namespace Employee_managment_system
             Controls.Add(tabControl1);
             ForeColor = Color.Cyan;
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(2);
             Name = "PayrollForm";
-            Text = "Payroll Management";
+            Text = "NexusHR - Payroll Management";
             Load += payrollmanaement_Load;
             salaryCardPanel.ResumeLayout(false);
             salaryCardPanel.PerformLayout();

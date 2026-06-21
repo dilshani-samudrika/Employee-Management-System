@@ -74,13 +74,14 @@ namespace Employee_managment_system
             LoadFormCombos();
             RefreshGrid();
 
-            // Wire up events that might be missing
+            // Wire up events
             txtSearch.TextChanged += (s, e) => RefreshGrid();
             cmbDeptFilter.SelectedIndexChanged += (s, e) => RefreshGrid();
             cmbStatusFilter.SelectedIndexChanged += (s, e) => RefreshGrid();
-        }
 
-        // EXISTING METHODS
+            // Wire up designation selection for salary auto-fill
+            cmbDesignation.SelectedIndexChanged += CmbDesignation_SelectedIndexChanged;
+        }
 
         private void LoadMasterData()
         {
@@ -107,7 +108,7 @@ namespace Employee_managment_system
                     DesignationID = Convert.ToInt32(row["DesignationID"]),
                     DeptID = Convert.ToInt32(row["DeptID"]),
                     Title = row["Title"]?.ToString(),
-                    BasicSalary = Convert.ToDecimal(row["BasicSalary"]),
+                    BasicSalary = row["BasicSalary"] != DBNull.Value ? Convert.ToDecimal(row["BasicSalary"]) : 0,
                     OTRate = row["OTRate"] != DBNull.Value ? (decimal?)Convert.ToDecimal(row["OTRate"]) : null,
                     MaxMonthlyOTHours = row["MaxMonthlyOTHours"] != DBNull.Value ? (decimal?)Convert.ToDecimal(row["MaxMonthlyOTHours"]) : null
                 });
@@ -252,6 +253,33 @@ namespace Employee_managment_system
 
             dgvEmployees.DataSource = filtered.ToList();
         }
+
+        //  DESIGNATION SELECTION - AUTO FILL SALARY
+        private void CmbDesignation_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbDesignation.SelectedItem != null)
+            {
+                var selectedDesignation = cmbDesignation.SelectedItem as Designation;
+                if (selectedDesignation != null && selectedDesignation.BasicSalary > 0)
+                {
+                    txtSalary.Text = selectedDesignation.BasicSalary.ToString("N2");
+                    txtSalary.BackColor = Color.FromArgb(255, 255, 224); // Light yellow
+                }
+                else
+                {
+                    txtSalary.Text = "";
+                    txtSalary.BackColor = SystemColors.Window;
+                }
+            }
+            else
+            {
+                txtSalary.Text = "";
+                txtSalary.BackColor = SystemColors.Window;
+            }
+        }
+
+        
+        
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
@@ -623,20 +651,6 @@ namespace Employee_managment_system
             RefreshGrid();
         }
 
-        private void cmbDeptFilter_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            RefreshGrid();
-        }
-
-        private void txtSearch_TextChanged(object sender, EventArgs e)
-        {
-            RefreshGrid();
-        }
-
-        private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
 
         private void dgvEmployees_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {

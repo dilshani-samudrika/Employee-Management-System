@@ -191,7 +191,7 @@ namespace Employee_managment_system
                 d.DeptID,
                 d.DeptName,
                 d.Description,
-                EmployeeCount = GetEmployeeCountForDepartment(d.DeptID)  // This gets the count
+                EmployeeCount = GetEmployeeCountForDepartment(d.DeptID)  
             }).ToList();
 
             dgvDepartments.DataSource = deptList;
@@ -705,6 +705,11 @@ namespace Employee_managment_system
         }
 
         private void pnlDeptDetails_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void btnDepartment_Click(object sender, EventArgs e)
         {
 
         }

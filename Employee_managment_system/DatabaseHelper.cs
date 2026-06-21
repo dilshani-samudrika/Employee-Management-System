@@ -15,14 +15,14 @@ namespace Employee_managment_system
             return new SqlConnection(connectionString);
         }
 
-        public static DataTable ExecuteQuery(string query, SqlParameter[]? parameters = null)
+        // Removed the duplicate ExecuteQuery method and fixed TestConnection
+        public static bool TestConnection(bool showMessageBox = false)
         {
             try
             {
                 using (SqlConnection conn = GetConnection())
                 {
                     conn.Open();
-
                     if (showMessageBox)
                     {
                         MessageBox.Show(
@@ -31,7 +31,6 @@ namespace Employee_managment_system
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Information);
                     }
-
                     return true;
                 }
             }
@@ -45,14 +44,12 @@ namespace Employee_managment_system
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                 }
-
                 return false;
             }
         }
 
-        public static DataTable ExecuteQuery(
-            string query,
-            SqlParameter[] parameters = null)
+        // Single ExecuteQuery method with optional parameters
+        public static DataTable ExecuteQuery(string query, SqlParameter[]? parameters = null)
         {
             DataTable dt = new DataTable();
 
@@ -111,7 +108,7 @@ namespace Employee_managment_system
 
         public static DataTable ExecuteStoredProcedure(
             string procedureName,
-            SqlParameter[] parameters = null)
+            SqlParameter[]? parameters = null)
         {
             DataTable dt = new DataTable();
 
@@ -136,9 +133,9 @@ namespace Employee_managment_system
             return dt;
         }
 
-        public static object ExecuteStoredProcedureScalar(
+        public static object? ExecuteStoredProcedureScalar(
             string procedureName,
-            SqlParameter[] parameters = null)
+            SqlParameter[]? parameters = null)
         {
             using (SqlConnection conn = GetConnection())
             {
@@ -159,7 +156,7 @@ namespace Employee_managment_system
 
         public static int ExecuteStoredProcedureNonQuery(
             string procedureName,
-            SqlParameter[] parameters = null)
+            SqlParameter[]? parameters = null)
         {
             using (SqlConnection conn = GetConnection())
             {

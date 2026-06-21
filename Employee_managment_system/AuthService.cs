@@ -16,6 +16,7 @@ namespace Employee_managment_system
             public string EmployeeID { get; set; } = "";
         }
 
+        // LOGIN 
         public static LoginResult Login(string username, string password)
         {
             var result = new LoginResult();
@@ -23,11 +24,15 @@ namespace Employee_managment_system
             try
             {
                 string query = @"
-                    SELECT UserID, Username, PasswordHash, Salt, Role, EmployeeID, IsActive
+                    SELECT UserID, Username, Password, Role, EmployeeID, IsActive
                     FROM Users 
-                    WHERE Username = @Username";
+                    WHERE Username = @Username AND Password = @Password";
 
-                SqlParameter[] parameters = { new SqlParameter("@Username", username.Trim()) };
+                SqlParameter[] parameters = {
+                    new SqlParameter("@Username", username.Trim()),
+                    new SqlParameter("@Password", password.Trim())
+                };
+
                 DataTable dt = DatabaseHelper.ExecuteQuery(query, parameters);
 
                 if (dt.Rows.Count == 0)
@@ -38,7 +43,6 @@ namespace Employee_managment_system
 
                 DataRow row = dt.Rows[0];
 
-                // Check if account is active
                 bool isActive = row["IsActive"] != DBNull.Value && Convert.ToBoolean(row["IsActive"]);
                 if (!isActive)
                 {
@@ -46,35 +50,6 @@ namespace Employee_managment_system
                     return result;
                 }
 
-                string storedPassword = row["PasswordHash"]?.ToString() ?? "";
-                string storedSalt = row["Salt"]?.ToString() ?? "";
-                bool passwordValid = false;
-
-                // Check if password is hashed (has salt)
-                if (!string.IsNullOrEmpty(storedSalt))
-                {
-                    // Verify using hash + salt
-                    passwordValid = PasswordHelper.VerifyPassword(password, storedPassword, storedSalt);
-                }
-                else
-                {
-                    // Plain text password - verify directly
-                    passwordValid = (storedPassword == password);
-
-                    // If valid, upgrade to hashed password automatically
-                    if (passwordValid)
-                    {
-                        UpgradeToHashed(username, password);
-                    }
-                }
-
-                if (!passwordValid)
-                {
-                    result.Message = "Invalid username or password.";
-                    return result;
-                }
-
-                // Login successful
                 result.Success = true;
                 result.Message = "Login successful!";
                 result.Username = username;
@@ -82,7 +57,6 @@ namespace Employee_managment_system
                 result.UserID = Convert.ToInt32(row["UserID"]);
                 result.EmployeeID = row["EmployeeID"]?.ToString() ?? "";
 
-                // Log successful login
                 LogUserAction(result.UserID, "Login successful");
 
                 return result;
@@ -94,52 +68,68 @@ namespace Employee_managment_system
             }
         }
 
-        // Upgrade plain text password to hashed
-        private static void UpgradeToHashed(string username, string password)
+        // CHANGE PASSWORD 
+        public static bool ChangePassword(int userId, string currentPassword, string newPassword)
         {
             try
             {
-                string salt = PasswordHelper.GenerateSalt();
-                string hash = PasswordHelper.HashPassword(password, salt);
+                // Verify current password
+                string verifyQuery = @"
+                    SELECT COUNT(*) FROM Users 
+                    WHERE UserID = @UserID AND Password = @Password";
 
-                string query = @"
-                    UPDATE Users 
-                    SET PasswordHash = @PasswordHash, 
-                        Salt = @Salt 
-                    WHERE Username = @Username";
-
-                SqlParameter[] parameters = {
-                    new SqlParameter("@PasswordHash", hash),
-                    new SqlParameter("@Salt", salt),
-                    new SqlParameter("@Username", username)
+                SqlParameter[] verifyParams = {
+                    new SqlParameter("@UserID", userId),
+                    new SqlParameter("@Password", currentPassword.Trim())
                 };
 
-                DatabaseHelper.ExecuteNonQuery(query, parameters);
+                object result = DatabaseHelper.ExecuteScalar(verifyQuery, verifyParams);
+                int count = Convert.ToInt32(result);
+
+                if (count == 0)
+                    return false;
+
+                // Update to new password
+                string updateQuery = @"
+                    UPDATE Users 
+                    SET Password = @NewPassword 
+                    WHERE UserID = @UserID";
+
+                SqlParameter[] updateParams = {
+                    new SqlParameter("@NewPassword", newPassword.Trim()),
+                    new SqlParameter("@UserID", userId)
+                };
+
+                int rowsAffected = DatabaseHelper.ExecuteNonQuery(updateQuery, updateParams);
+
+                if (rowsAffected > 0)
+                {
+                    LogUserAction(userId, "Password changed");
+                }
+
+                return rowsAffected > 0;
             }
             catch
             {
-                // Silent fail - password stays as plain text
+                return false;
             }
         }
 
-        // Create admin user (only if no users exist)
+        // ADMIN CREATE (First time setup)
         public static bool CreateAdminUserIfNeeded()
         {
             try
             {
-                // Check if any users exist
                 string checkQuery = "SELECT COUNT(*) FROM Users";
                 object result = DatabaseHelper.ExecuteScalar(checkQuery);
                 int count = Convert.ToInt32(result);
 
-                // Only create admin if NO users exist
                 if (count > 0)
                     return false;
 
-                // Create admin with plain text password (will be upgraded on first login)
                 string query = @"
-                    INSERT INTO Users (Username, PasswordHash, Salt, Role, IsActive, CreatedAt) 
-                    VALUES ('admin', '123456', NULL, 'Admin', 1, GETDATE())";
+                    INSERT INTO Users (Username, Password, Role, IsActive, CreatedAt) 
+                    VALUES ('admin', '123456', 'Admin', 1, GETDATE())";
 
                 DatabaseHelper.ExecuteNonQuery(query);
                 return true;
@@ -150,7 +140,7 @@ namespace Employee_managment_system
             }
         }
 
-        // Log user actions
+        // LOG USER ACTION
         public static void LogUserAction(int userId, string action)
         {
             try
@@ -166,84 +156,22 @@ namespace Employee_managment_system
 
                 DatabaseHelper.ExecuteNonQuery(query, parameters);
             }
-            catch
-            {
-                // Silent fail
-            }
+            catch { }
         }
 
-        // Create a new user with hashed password
-        public static bool CreateUser(string username, string password, string role = "User", string employeeID = null)
+        //GET USER ID
+        public static int GetUserId(string username)
         {
             try
             {
-                if (UserExists(username))
-                    return false;
-
-                string salt = PasswordHelper.GenerateSalt();
-                string hash = PasswordHelper.HashPassword(password, salt);
-
-                string query = @"
-                    INSERT INTO Users (Username, PasswordHash, Salt, Role, EmployeeID, IsActive, CreatedAt) 
-                    VALUES (@Username, @PasswordHash, @Salt, @Role, @EmployeeID, 1, GETDATE())";
-
-                SqlParameter[] parameters = {
-                    new SqlParameter("@Username", username.Trim()),
-                    new SqlParameter("@PasswordHash", hash),
-                    new SqlParameter("@Salt", salt),
-                    new SqlParameter("@Role", role),
-                    new SqlParameter("@EmployeeID", string.IsNullOrEmpty(employeeID) ? (object)DBNull.Value : employeeID)
-                };
-
-                int rowsAffected = DatabaseHelper.ExecuteNonQuery(query, parameters);
-                return rowsAffected > 0;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public static bool UserExists(string username)
-        {
-            try
-            {
-                string query = "SELECT COUNT(*) FROM Users WHERE Username = @Username";
+                string query = "SELECT UserID FROM Users WHERE Username = @Username";
                 SqlParameter[] parameters = { new SqlParameter("@Username", username.Trim()) };
                 object result = DatabaseHelper.ExecuteScalar(query, parameters);
-                return Convert.ToInt32(result) > 0;
+                return result != null ? Convert.ToInt32(result) : 0;
             }
             catch
             {
-                return false;
-            }
-        }
-
-        // Reset admin password (if admin exists)
-        public static bool ResetAdminPassword(string newPassword)
-        {
-            try
-            {
-                string salt = PasswordHelper.GenerateSalt();
-                string hash = PasswordHelper.HashPassword(newPassword, salt);
-
-                string query = @"
-                    UPDATE Users 
-                    SET PasswordHash = @PasswordHash, 
-                        Salt = @Salt 
-                    WHERE Username = 'admin'";
-
-                SqlParameter[] parameters = {
-                    new SqlParameter("@PasswordHash", hash),
-                    new SqlParameter("@Salt", salt)
-                };
-
-                int rowsAffected = DatabaseHelper.ExecuteNonQuery(query, parameters);
-                return rowsAffected > 0;
-            }
-            catch
-            {
-                return false;
+                return 0;
             }
         }
     }

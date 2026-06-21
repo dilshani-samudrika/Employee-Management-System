@@ -12,7 +12,6 @@ namespace Employee_managment_system
             InitializeComponent();
 
             // Basic Salary on the Salary Structure tab is a read-only reference
-            // (sourced from Employees.BasicSalary, falling back to Designations.BasicSalary)
             textBox1.ReadOnly = true;
             textBox1.BackColor = SystemColors.Control;
 
@@ -57,9 +56,7 @@ namespace Employee_managment_system
             dateTimePicker2.Value = DateTime.Today;
         }
 
-        // ============================================
-        // COMBO / DROPDOWN SETUP
-        // ============================================
+        
         private void LoadEmployeesIntoCombos()
         {
             try
@@ -107,11 +104,7 @@ namespace Employee_managment_system
             MonthSelection.SelectedIndex = 0;
         }
 
-        // ============================================
-        // SIDEBAR NAVIGATION EVENTS
-        // ============================================
-
-        // Dashboard
+        
         private void btnDashboard_Click(object sender, EventArgs e)
         {
             DashboardForm dash = new DashboardForm();
@@ -126,10 +119,7 @@ namespace Employee_managment_system
             this.Hide();
         }
 
-        // Employees (Current Page - no navigation needed)
-        // btnEmployees click is handled by the button itself or can be empty
-
-        // Department
+        
         private void btnDepartment_Click(object sender, EventArgs e)
         {
             DepartmentForm dept = new DepartmentForm();
@@ -137,7 +127,6 @@ namespace Employee_managment_system
             this.Hide();
         }
 
-        // Attendance
         private void btnAttendance_Click(object sender, EventArgs e)
         {
             AttendanceForm att = new AttendanceForm();
@@ -145,7 +134,7 @@ namespace Employee_managment_system
             this.Hide();
         }
 
-        // Leave
+        
         private void btnLeave_Click(object sender, EventArgs e)
         {
             LeaveForm leave = new LeaveForm();
@@ -153,7 +142,7 @@ namespace Employee_managment_system
             this.Hide();
         }
 
-        // Payroll
+        
         private void btnPayroll_Click(object sender, EventArgs e)
         {
             PayrollForm payroll = new PayrollForm();
@@ -161,7 +150,6 @@ namespace Employee_managment_system
             this.Hide();
         }
 
-        // Reports
         private void btnReports_Click(object sender, EventArgs e)
         {
             reports report = new reports();
@@ -169,16 +157,14 @@ namespace Employee_managment_system
             this.Hide();
         }
 
-        // Logout
+       
         private void btnLogout_Click(object sender, EventArgs e)
         {
             LoginForm login = new LoginForm();
             login.Show();
             this.Close();
         }
-        // ============================================
-        // TAB 1: SALARY STRUCTURE
-        // ============================================
+        
         private void employeeSelection_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (employeeSelection.SelectedValue == null) return;
@@ -236,8 +222,7 @@ namespace Employee_managment_system
             }
         }
 
-        // Computes OT Pay = Designations.OTRate × SUM(Attendance.OTHours) for the employee,
-        // scoped to whatever month is selected on the Process Payroll tab's MonthSelection.
+        
         private void LoadOTPay(string empNo)
         {
             try
@@ -396,9 +381,7 @@ namespace Employee_managment_system
             }
         }
 
-        // ============================================
-        // TAB 2: PROCESS PAYROLL
-        // ============================================
+       
         private void generatePayroll_Click(object sender, EventArgs e)
         {
             if (MonthSelection.SelectedItem == null)
@@ -490,8 +473,7 @@ namespace Employee_managment_system
             }
         }
 
-        // Returns an existing Payroll record for this EmpNo/Month/Year if one was already
-        // generated (so Generate is idempotent), otherwise inserts a new Pending record.
+        
         private (int payrollId, string status, decimal basic, decimal allowances, decimal deductions, decimal netSalary)
             GetOrCreatePayrollRecord(string empNo, int payMonth, int payYear, decimal basic, decimal totalOTHours,
                                       decimal otRate, decimal otPay, decimal allowances, decimal deductions, decimal netSalary)
@@ -632,9 +614,7 @@ namespace Employee_managment_system
             MessageBox.Show(slip, "Payslip", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        // ============================================
-        // TAB 3: PAYMENT HISTORY
-        // ============================================
+        
         private void search_paymentHistory_Click(object sender, EventArgs e)
         {
             try
@@ -723,9 +703,7 @@ namespace Employee_managment_system
         {
         }
 
-        // ============================================
-        // LEFTOVER DESIGNER-WIRED HANDLERS (no-ops)
-        // ============================================
+        
         private void tabPage1_Click(object sender, EventArgs e)
         {
         }
@@ -761,20 +739,6 @@ namespace Employee_managment_system
 
         }
 
-        private void label6_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void salaryCardPanel_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void tabPage2_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }
 

@@ -66,6 +66,8 @@
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picEmployeePhoto).BeginInit();
             SuspendLayout();
+            cmbDepartment.SelectedIndexChanged += new System.EventHandler(cmbDepartment_SelectedIndexChanged);
+            cmbDesignation.SelectedIndexChanged += new System.EventHandler(cmbDesignation_SelectedIndexChanged);
             // 
             // lblTitle
             // 

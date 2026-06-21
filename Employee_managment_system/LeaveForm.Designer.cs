@@ -33,7 +33,20 @@
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LeaveForm));
-            panelSideMenu = new Panel();
+            btnLogout = new Button();
+            btnReports = new Button();
+            btnPayroll = new Button();
+            btnLeave = new Button();
+            btnAttendance = new Button();
+            btnDepartment = new Button();
+            btnEmployees = new Button();
+            btnDashboard = new Button();
+            panelLogo = new Panel();
+            pictureBox2 = new PictureBox();
+            topBar = new Panel();
+            lblPageTitle = new Label();
+            panel3 = new Panel();
+            panel2 = new Panel();
             panel4 = new Panel();
             dgvHistory = new DataGridView();
             label7 = new Label();
@@ -51,22 +64,10 @@
             panel7 = new Panel();
             lblApprovedCount = new Label();
             label3 = new Label();
-            panel1 = new Panel();
-            lblPageTitle = new Label();
-            panelLogo = new Panel();
-            panel3 = new Panel();
-            panel2 = new Panel();
-            lblAppTitle = new Label();
-            pictureBoxLogo = new PictureBox();
-            btnDashboard = new Button();
-            btnEmployees = new Button();
-            btnDepartment = new Button();
-            btnAttendance = new Button();
-            btnLeave = new Button();
-            btnPayroll = new Button();
-            btnReports = new Button();
-            btnLogout = new Button();
-            panelSideMenu.SuspendLayout();
+            panelSideMenu = new Panel();
+            panelLogo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
+            topBar.SuspendLayout();
             panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvHistory).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvPending).BeginInit();
@@ -74,34 +75,202 @@
             panel6.SuspendLayout();
             pnlPending.SuspendLayout();
             panel7.SuspendLayout();
-            panel1.SuspendLayout();
-            panelLogo.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxLogo).BeginInit();
+            panelSideMenu.SuspendLayout();
             SuspendLayout();
             // 
-            // panelSideMenu
+            // btnLogout
             // 
-            panelSideMenu.BackColor = Color.FromArgb(25, 48, 78);
-            panelSideMenu.Controls.Add(panel4);
-            panelSideMenu.Controls.Add(panel1);
-            panelSideMenu.Controls.Add(panelLogo);
-            panelSideMenu.Controls.Add(btnDashboard);
-            panelSideMenu.Controls.Add(btnEmployees);
-            panelSideMenu.Controls.Add(btnDepartment);
-            panelSideMenu.Controls.Add(btnAttendance);
-            panelSideMenu.Controls.Add(btnLeave);
-            panelSideMenu.Controls.Add(btnPayroll);
-            panelSideMenu.Controls.Add(btnReports);
-            panelSideMenu.Controls.Add(btnLogout);
-            panelSideMenu.Dock = DockStyle.Fill;
-            panelSideMenu.Location = new Point(0, 0);
-            panelSideMenu.Name = "panelSideMenu";
-            panelSideMenu.Size = new Size(1421, 803);
-            panelSideMenu.TabIndex = 2;
+            btnLogout.BackColor = Color.FromArgb(25, 48, 78);
+            btnLogout.FlatAppearance.BorderSize = 0;
+            btnLogout.FlatStyle = FlatStyle.Flat;
+            btnLogout.Font = new Font("Segoe UI", 10F);
+            btnLogout.ForeColor = Color.FromArgb(231, 76, 60);
+            btnLogout.Location = new Point(0, 750);
+            btnLogout.Name = "btnLogout";
+            btnLogout.Size = new Size(220, 45);
+            btnLogout.TabIndex = 8;
+            btnLogout.Text = "🚪 Logout";
+            btnLogout.TextAlign = ContentAlignment.MiddleLeft;
+            btnLogout.UseVisualStyleBackColor = false;
+            // 
+            // btnReports
+            // 
+            btnReports.BackColor = Color.FromArgb(25, 48, 78);
+            btnReports.FlatAppearance.BorderSize = 0;
+            btnReports.FlatStyle = FlatStyle.Flat;
+            btnReports.Font = new Font("Segoe UI", 10F);
+            btnReports.ForeColor = Color.FromArgb(200, 200, 200);
+            btnReports.Location = new Point(0, 390);
+            btnReports.Name = "btnReports";
+            btnReports.Size = new Size(328, 45);
+            btnReports.TabIndex = 7;
+            btnReports.Text = "📈 Reports";
+            btnReports.TextAlign = ContentAlignment.MiddleLeft;
+            btnReports.UseVisualStyleBackColor = false;
+            btnReports.Click += btnReports_Click_1;
+            // 
+            // btnPayroll
+            // 
+            btnPayroll.BackColor = Color.FromArgb(25, 48, 78);
+            btnPayroll.FlatAppearance.BorderSize = 0;
+            btnPayroll.FlatStyle = FlatStyle.Flat;
+            btnPayroll.Font = new Font("Segoe UI", 10F);
+            btnPayroll.ForeColor = Color.FromArgb(200, 200, 200);
+            btnPayroll.Location = new Point(0, 340);
+            btnPayroll.Name = "btnPayroll";
+            btnPayroll.Size = new Size(328, 45);
+            btnPayroll.TabIndex = 6;
+            btnPayroll.Text = "💰 Payroll";
+            btnPayroll.TextAlign = ContentAlignment.MiddleLeft;
+            btnPayroll.UseVisualStyleBackColor = false;
+            btnPayroll.Click += btnPayroll_Click_1;
+            // 
+            // btnLeave
+            // 
+            btnLeave.BackColor = Color.FromArgb(52, 152, 219);
+            btnLeave.FlatAppearance.BorderSize = 0;
+            btnLeave.FlatStyle = FlatStyle.Flat;
+            btnLeave.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnLeave.ForeColor = Color.White;
+            btnLeave.Location = new Point(0, 290);
+            btnLeave.Name = "btnLeave";
+            btnLeave.Size = new Size(328, 45);
+            btnLeave.TabIndex = 5;
+            btnLeave.Text = "🏖 Leave";
+            btnLeave.TextAlign = ContentAlignment.MiddleLeft;
+            btnLeave.UseVisualStyleBackColor = false;
+            // 
+            // btnAttendance
+            // 
+            btnAttendance.BackColor = Color.FromArgb(25, 48, 78);
+            btnAttendance.FlatAppearance.BorderSize = 0;
+            btnAttendance.FlatStyle = FlatStyle.Flat;
+            btnAttendance.Font = new Font("Segoe UI", 10F);
+            btnAttendance.ForeColor = Color.FromArgb(200, 200, 200);
+            btnAttendance.Location = new Point(0, 240);
+            btnAttendance.Name = "btnAttendance";
+            btnAttendance.Size = new Size(328, 45);
+            btnAttendance.TabIndex = 4;
+            btnAttendance.Text = "📅 Attendance";
+            btnAttendance.TextAlign = ContentAlignment.MiddleLeft;
+            btnAttendance.UseVisualStyleBackColor = false;
+            btnAttendance.Click += btnAttendance_Click_1;
+            // 
+            // btnDepartment
+            // 
+            btnDepartment.BackColor = Color.FromArgb(25, 48, 78);
+            btnDepartment.FlatAppearance.BorderSize = 0;
+            btnDepartment.FlatStyle = FlatStyle.Flat;
+            btnDepartment.Font = new Font("Segoe UI", 10F);
+            btnDepartment.ForeColor = Color.FromArgb(200, 200, 200);
+            btnDepartment.Location = new Point(0, 190);
+            btnDepartment.Name = "btnDepartment";
+            btnDepartment.Size = new Size(328, 45);
+            btnDepartment.TabIndex = 3;
+            btnDepartment.Text = "🏢 Department";
+            btnDepartment.TextAlign = ContentAlignment.MiddleLeft;
+            btnDepartment.UseVisualStyleBackColor = false;
+            btnDepartment.Click += btnDepartment_Click_1;
+            // 
+            // btnEmployees
+            // 
+            btnEmployees.BackColor = Color.FromArgb(25, 48, 78);
+            btnEmployees.FlatAppearance.BorderSize = 0;
+            btnEmployees.FlatStyle = FlatStyle.Flat;
+            btnEmployees.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnEmployees.ForeColor = SystemColors.ScrollBar;
+            btnEmployees.Location = new Point(0, 140);
+            btnEmployees.Name = "btnEmployees";
+            btnEmployees.Size = new Size(328, 45);
+            btnEmployees.TabIndex = 2;
+            btnEmployees.Text = "👥 Employees";
+            btnEmployees.TextAlign = ContentAlignment.MiddleLeft;
+            btnEmployees.UseVisualStyleBackColor = false;
+            btnEmployees.Click += btnEmployees_Click_1;
+            // 
+            // btnDashboard
+            // 
+            btnDashboard.BackColor = Color.FromArgb(25, 48, 78);
+            btnDashboard.FlatAppearance.BorderSize = 0;
+            btnDashboard.FlatStyle = FlatStyle.Flat;
+            btnDashboard.Font = new Font("Segoe UI", 10F);
+            btnDashboard.ForeColor = Color.FromArgb(200, 200, 200);
+            btnDashboard.Location = new Point(0, 90);
+            btnDashboard.Name = "btnDashboard";
+            btnDashboard.Size = new Size(328, 45);
+            btnDashboard.TabIndex = 1;
+            btnDashboard.Text = "📊 Dashboard";
+            btnDashboard.TextAlign = ContentAlignment.MiddleLeft;
+            btnDashboard.UseVisualStyleBackColor = false;
+            btnDashboard.Click += btnDashboard_Click_1;
+            // 
+            // panelLogo
+            // 
+            panelLogo.BackColor = Color.FromArgb(30, 58, 95);
+            panelLogo.Controls.Add(pictureBox2);
+            panelLogo.Controls.Add(topBar);
+            panelLogo.Controls.Add(panel3);
+            panelLogo.Controls.Add(panel2);
+            panelLogo.Dock = DockStyle.Top;
+            panelLogo.Location = new Point(0, 0);
+            panelLogo.Name = "panelLogo";
+            panelLogo.Size = new Size(1870, 80);
+            panelLogo.TabIndex = 0;
+            // 
+            // pictureBox2
+            // 
+            pictureBox2.Image = Properties.Resources.logo_and_name_for_header;
+            pictureBox2.Location = new Point(0, -2);
+            pictureBox2.Margin = new Padding(2);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(343, 80);
+            pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox2.TabIndex = 13;
+            pictureBox2.TabStop = false;
+            // 
+            // topBar
+            // 
+            topBar.BackColor = Color.FromArgb(25, 48, 78);
+            topBar.Controls.Add(lblPageTitle);
+            topBar.ForeColor = SystemColors.ControlLightLight;
+            topBar.Location = new Point(335, 0);
+            topBar.Margin = new Padding(5);
+            topBar.Name = "topBar";
+            topBar.Size = new Size(1297, 80);
+            topBar.TabIndex = 12;
+            // 
+            // lblPageTitle
+            // 
+            lblPageTitle.AutoSize = true;
+            lblPageTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            lblPageTitle.ForeColor = Color.White;
+            lblPageTitle.Location = new Point(20, 8);
+            lblPageTitle.Name = "lblPageTitle";
+            lblPageTitle.Size = new Size(254, 37);
+            lblPageTitle.TabIndex = 0;
+            lblPageTitle.Text = "Leave Managment";
+            // 
+            // panel3
+            // 
+            panel3.BackColor = Color.White;
+            panel3.Location = new Point(221, 82);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(1200, 703);
+            panel3.TabIndex = 11;
+            // 
+            // panel2
+            // 
+            panel2.BackColor = Color.White;
+            panel2.Location = new Point(222, 82);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(1201, 728);
+            panel2.TabIndex = 10;
             // 
             // panel4
             // 
             panel4.BackColor = Color.White;
+            panel4.BackgroundImage = Properties.Resources.background_for_all_without_logo;
+            panel4.BackgroundImageLayout = ImageLayout.Stretch;
             panel4.Controls.Add(dgvHistory);
             panel4.Controls.Add(label7);
             panel4.Controls.Add(dgvPending);
@@ -110,9 +279,9 @@
             panel4.Controls.Add(panel6);
             panel4.Controls.Add(pnlPending);
             panel4.Controls.Add(panel7);
-            panel4.Location = new Point(220, 77);
+            panel4.Location = new Point(347, 80);
             panel4.Name = "panel4";
-            panel4.Size = new Size(1201, 730);
+            panel4.Size = new Size(1523, 1016);
             panel4.TabIndex = 10;
             panel4.Paint += panel4_Paint;
             // 
@@ -146,13 +315,13 @@
             dgvHistory.DefaultCellStyle = dataGridViewCellStyle2;
             dgvHistory.EnableHeadersVisualStyles = false;
             dgvHistory.GridColor = SystemColors.Menu;
-            dgvHistory.Location = new Point(41, 499);
+            dgvHistory.Location = new Point(41, 562);
             dgvHistory.Name = "dgvHistory";
             dgvHistory.ReadOnly = true;
             dgvHistory.RowHeadersVisible = false;
             dgvHistory.RowHeadersWidth = 51;
             dgvHistory.ScrollBars = ScrollBars.Vertical;
-            dgvHistory.Size = new Size(1120, 206);
+            dgvHistory.Size = new Size(1120, 334);
             dgvHistory.TabIndex = 18;
             // 
             // label7
@@ -160,7 +329,7 @@
             label7.AutoSize = true;
             label7.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label7.ForeColor = Color.FromArgb(32, 61, 101);
-            label7.Location = new Point(41, 442);
+            label7.Location = new Point(41, 502);
             label7.Name = "label7";
             label7.Size = new Size(160, 31);
             label7.TabIndex = 17;
@@ -203,8 +372,11 @@
             dgvPending.RowHeadersWidth = 51;
             dgvPending.ScrollBars = ScrollBars.Vertical;
             dgvPending.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvPending.Size = new Size(1120, 208);
+            dgvPending.Size = new Size(1120, 266);
             dgvPending.TabIndex = 16;
+            dgvPending.CellClick += dgvPending_CellClick;
+            dgvPending.CellContentClick += dgvPending_CellContentClick;
+            dgvPending.MouseClick += dgvPending_MouseClick;
             // 
             // label6
             // 
@@ -345,206 +517,39 @@
             label3.TabIndex = 9;
             label3.Text = "Approved Leaves";
             // 
-            // panel1
+            // panelSideMenu
             // 
-            panel1.BackColor = Color.White;
-            panel1.Controls.Add(lblPageTitle);
-            panel1.Location = new Point(221, 2);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(1201, 50);
-            panel1.TabIndex = 9;
+            panelSideMenu.BackColor = Color.FromArgb(25, 48, 78);
+            panelSideMenu.Controls.Add(panel4);
+            panelSideMenu.Controls.Add(panelLogo);
+            panelSideMenu.Controls.Add(btnDashboard);
+            panelSideMenu.Controls.Add(btnEmployees);
+            panelSideMenu.Controls.Add(btnDepartment);
+            panelSideMenu.Controls.Add(btnAttendance);
+            panelSideMenu.Controls.Add(btnLeave);
+            panelSideMenu.Controls.Add(btnPayroll);
+            panelSideMenu.Controls.Add(btnReports);
+            panelSideMenu.Controls.Add(btnLogout);
+            panelSideMenu.Dock = DockStyle.Fill;
+            panelSideMenu.Location = new Point(0, 0);
+            panelSideMenu.Name = "panelSideMenu";
+            panelSideMenu.Size = new Size(1870, 1055);
+            panelSideMenu.TabIndex = 2;
             // 
-            // lblPageTitle
-            // 
-            lblPageTitle.AutoSize = true;
-            lblPageTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-            lblPageTitle.ForeColor = Color.FromArgb(30, 58, 95);
-            lblPageTitle.Location = new Point(10, 7);
-            lblPageTitle.Name = "lblPageTitle";
-            lblPageTitle.Size = new Size(269, 37);
-            lblPageTitle.TabIndex = 1;
-            lblPageTitle.Text = "Leave Management";
-            // 
-            // panelLogo
-            // 
-            panelLogo.BackColor = Color.FromArgb(30, 58, 95);
-            panelLogo.Controls.Add(panel3);
-            panelLogo.Controls.Add(panel2);
-            panelLogo.Controls.Add(lblAppTitle);
-            panelLogo.Controls.Add(pictureBoxLogo);
-            panelLogo.Dock = DockStyle.Top;
-            panelLogo.Location = new Point(0, 0);
-            panelLogo.Name = "panelLogo";
-            panelLogo.Size = new Size(1421, 80);
-            panelLogo.TabIndex = 0;
-            // 
-            // panel3
-            // 
-            panel3.BackColor = Color.White;
-            panel3.Location = new Point(221, 82);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(1200, 703);
-            panel3.TabIndex = 11;
-            // 
-            // panel2
-            // 
-            panel2.BackColor = Color.White;
-            panel2.Location = new Point(222, 82);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(1201, 728);
-            panel2.TabIndex = 10;
-            // 
-            // lblAppTitle
-            // 
-            lblAppTitle.AutoSize = true;
-            lblAppTitle.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            lblAppTitle.ForeColor = Color.White;
-            lblAppTitle.Location = new Point(116, 30);
-            lblAppTitle.Name = "lblAppTitle";
-            lblAppTitle.Size = new Size(95, 25);
-            lblAppTitle.TabIndex = 1;
-            lblAppTitle.Text = "NexusHR";
-            // 
-            // pictureBoxLogo
-            // 
-            pictureBoxLogo.Image = (Image)resources.GetObject("pictureBoxLogo.Image");
-            pictureBoxLogo.Location = new Point(0, -3);
-            pictureBoxLogo.Name = "pictureBoxLogo";
-            pictureBoxLogo.Size = new Size(93, 83);
-            pictureBoxLogo.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBoxLogo.TabIndex = 0;
-            pictureBoxLogo.TabStop = false;
-            // 
-            // btnDashboard
-            // 
-            btnDashboard.BackColor = Color.FromArgb(25, 48, 78);
-            btnDashboard.FlatAppearance.BorderSize = 0;
-            btnDashboard.FlatStyle = FlatStyle.Flat;
-            btnDashboard.Font = new Font("Segoe UI", 10F);
-            btnDashboard.ForeColor = Color.FromArgb(200, 200, 200);
-            btnDashboard.Location = new Point(0, 90);
-            btnDashboard.Name = "btnDashboard";
-            btnDashboard.Size = new Size(220, 45);
-            btnDashboard.TabIndex = 1;
-            btnDashboard.Text = "📊 Dashboard";
-            btnDashboard.TextAlign = ContentAlignment.MiddleLeft;
-            btnDashboard.UseVisualStyleBackColor = false;
-            // 
-            // btnEmployees
-            // 
-            btnEmployees.BackColor = Color.FromArgb(25, 48, 78);
-            btnEmployees.FlatAppearance.BorderSize = 0;
-            btnEmployees.FlatStyle = FlatStyle.Flat;
-            btnEmployees.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btnEmployees.ForeColor = SystemColors.ScrollBar;
-            btnEmployees.Location = new Point(0, 140);
-            btnEmployees.Name = "btnEmployees";
-            btnEmployees.Size = new Size(220, 45);
-            btnEmployees.TabIndex = 2;
-            btnEmployees.Text = "👥 Employees";
-            btnEmployees.TextAlign = ContentAlignment.MiddleLeft;
-            btnEmployees.UseVisualStyleBackColor = false;
-            // 
-            // btnDepartment
-            // 
-            btnDepartment.BackColor = Color.FromArgb(25, 48, 78);
-            btnDepartment.FlatAppearance.BorderSize = 0;
-            btnDepartment.FlatStyle = FlatStyle.Flat;
-            btnDepartment.Font = new Font("Segoe UI", 10F);
-            btnDepartment.ForeColor = Color.FromArgb(200, 200, 200);
-            btnDepartment.Location = new Point(0, 190);
-            btnDepartment.Name = "btnDepartment";
-            btnDepartment.Size = new Size(220, 45);
-            btnDepartment.TabIndex = 3;
-            btnDepartment.Text = "🏢 Department";
-            btnDepartment.TextAlign = ContentAlignment.MiddleLeft;
-            btnDepartment.UseVisualStyleBackColor = false;
-            // 
-            // btnAttendance
-            // 
-            btnAttendance.BackColor = Color.FromArgb(25, 48, 78);
-            btnAttendance.FlatAppearance.BorderSize = 0;
-            btnAttendance.FlatStyle = FlatStyle.Flat;
-            btnAttendance.Font = new Font("Segoe UI", 10F);
-            btnAttendance.ForeColor = Color.FromArgb(200, 200, 200);
-            btnAttendance.Location = new Point(0, 240);
-            btnAttendance.Name = "btnAttendance";
-            btnAttendance.Size = new Size(220, 45);
-            btnAttendance.TabIndex = 4;
-            btnAttendance.Text = "📅 Attendance";
-            btnAttendance.TextAlign = ContentAlignment.MiddleLeft;
-            btnAttendance.UseVisualStyleBackColor = false;
-            // 
-            // btnLeave
-            // 
-            btnLeave.BackColor = Color.FromArgb(52, 152, 219);
-            btnLeave.FlatAppearance.BorderSize = 0;
-            btnLeave.FlatStyle = FlatStyle.Flat;
-            btnLeave.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnLeave.ForeColor = Color.White;
-            btnLeave.Location = new Point(0, 290);
-            btnLeave.Name = "btnLeave";
-            btnLeave.Size = new Size(220, 45);
-            btnLeave.TabIndex = 5;
-            btnLeave.Text = "🏖 Leave";
-            btnLeave.TextAlign = ContentAlignment.MiddleLeft;
-            btnLeave.UseVisualStyleBackColor = false;
-            // 
-            // btnPayroll
-            // 
-            btnPayroll.BackColor = Color.FromArgb(25, 48, 78);
-            btnPayroll.FlatAppearance.BorderSize = 0;
-            btnPayroll.FlatStyle = FlatStyle.Flat;
-            btnPayroll.Font = new Font("Segoe UI", 10F);
-            btnPayroll.ForeColor = Color.FromArgb(200, 200, 200);
-            btnPayroll.Location = new Point(0, 340);
-            btnPayroll.Name = "btnPayroll";
-            btnPayroll.Size = new Size(220, 45);
-            btnPayroll.TabIndex = 6;
-            btnPayroll.Text = "💰 Payroll";
-            btnPayroll.TextAlign = ContentAlignment.MiddleLeft;
-            btnPayroll.UseVisualStyleBackColor = false;
-            // 
-            // btnReports
-            // 
-            btnReports.BackColor = Color.FromArgb(25, 48, 78);
-            btnReports.FlatAppearance.BorderSize = 0;
-            btnReports.FlatStyle = FlatStyle.Flat;
-            btnReports.Font = new Font("Segoe UI", 10F);
-            btnReports.ForeColor = Color.FromArgb(200, 200, 200);
-            btnReports.Location = new Point(0, 390);
-            btnReports.Name = "btnReports";
-            btnReports.Size = new Size(220, 45);
-            btnReports.TabIndex = 7;
-            btnReports.Text = "📈 Reports";
-            btnReports.TextAlign = ContentAlignment.MiddleLeft;
-            btnReports.UseVisualStyleBackColor = false;
-            // 
-            // btnLogout
-            // 
-            btnLogout.BackColor = Color.FromArgb(25, 48, 78);
-            btnLogout.FlatAppearance.BorderSize = 0;
-            btnLogout.FlatStyle = FlatStyle.Flat;
-            btnLogout.Font = new Font("Segoe UI", 10F);
-            btnLogout.ForeColor = Color.FromArgb(231, 76, 60);
-            btnLogout.Location = new Point(0, 750);
-            btnLogout.Name = "btnLogout";
-            btnLogout.Size = new Size(220, 45);
-            btnLogout.TabIndex = 8;
-            btnLogout.Text = "🚪 Logout";
-            btnLogout.TextAlign = ContentAlignment.MiddleLeft;
-            btnLogout.UseVisualStyleBackColor = false;
-            // 
-            // Form1
+            // LeaveForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1421, 803);
+            ClientSize = new Size(1870, 1055);
             Controls.Add(panelSideMenu);
-            Name = "Form1";
-            Text = "Form1";
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Name = "LeaveForm";
+            Text = "NexusHR - Leave Managment";
             Load += Form1_Load;
-            panelSideMenu.ResumeLayout(false);
+            panelLogo.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
+            topBar.ResumeLayout(false);
+            topBar.PerformLayout();
             panel4.ResumeLayout(false);
             panel4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvHistory).EndInit();
@@ -557,11 +562,7 @@
             pnlPending.PerformLayout();
             panel7.ResumeLayout(false);
             panel7.PerformLayout();
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
-            panelLogo.ResumeLayout(false);
-            panelLogo.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxLogo).EndInit();
+            panelSideMenu.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -600,5 +601,18 @@
         private Label label3;
         private DataGridView dgvHistory;
         private Label label7;
+        private Panel panel8;
+        private Panel panel9;
+        private PictureBox pictureBox2;
+        private Label label1;
+        private Button button1;
+        private Button button2;
+        private Button button3;
+        private Button button4;
+        private Button button5;
+        private Button button6;
+        private Button button7;
+        private Button button8;
+        private Panel topBar;
     }
 }

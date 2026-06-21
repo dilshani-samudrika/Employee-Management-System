@@ -28,6 +28,7 @@ namespace Employee_managment_system
         private void InitializeComponent()
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(reports));
             filterCardPanel = new Panel();
             reportTypeLabel = new Label();
             reportTypeCombo = new ComboBox();
@@ -62,6 +63,7 @@ namespace Employee_managment_system
             panelLogo = new Panel();
             pictureBoxLogo = new PictureBox();
             btnDashboard = new Button();
+            btnEmployees = new Button();
             btnDepartment = new Button();
             btnAttendance = new Button();
             btnLeave = new Button();
@@ -70,7 +72,6 @@ namespace Employee_managment_system
             btnLogout = new Button();
             topBar = new Panel();
             lblPageTitle = new Label();
-            btnEmployees = new Button();
             filterCardPanel.SuspendLayout();
             previewHeaderPanel.SuspendLayout();
             previewCardPanel.SuspendLayout();
@@ -479,6 +480,23 @@ namespace Employee_managment_system
             btnDashboard.UseVisualStyleBackColor = false;
             btnDashboard.Click += btnDashboard_Click;
             // 
+            // btnEmployees
+            // 
+            btnEmployees.BackColor = Color.FromArgb(25, 48, 78);
+            btnEmployees.FlatAppearance.BorderSize = 0;
+            btnEmployees.FlatStyle = FlatStyle.Flat;
+            btnEmployees.Font = new System.Drawing.Font("Segoe UI", 10F);
+            btnEmployees.ForeColor = SystemColors.ScrollBar;
+            btnEmployees.Location = new Point(0, 140);
+            btnEmployees.Margin = new Padding(2);
+            btnEmployees.Name = "btnEmployees";
+            btnEmployees.Size = new Size(328, 45);
+            btnEmployees.TabIndex = 2;
+            btnEmployees.Text = "👥 Employees";
+            btnEmployees.TextAlign = ContentAlignment.MiddleLeft;
+            btnEmployees.UseVisualStyleBackColor = false;
+            btnEmployees.Click += btnEmployees_Click;
+            // 
             // btnDepartment
             // 
             btnDepartment.BackColor = Color.FromArgb(25, 48, 78);
@@ -604,23 +622,6 @@ namespace Employee_managment_system
             lblPageTitle.TabIndex = 0;
             lblPageTitle.Text = "Report Managment";
             // 
-            // btnEmployees
-            // 
-            btnEmployees.BackColor = Color.FromArgb(25, 48, 78);
-            btnEmployees.FlatAppearance.BorderSize = 0;
-            btnEmployees.FlatStyle = FlatStyle.Flat;
-            btnEmployees.Font = new System.Drawing.Font("Segoe UI", 10F);
-            btnEmployees.ForeColor = SystemColors.ScrollBar;
-            btnEmployees.Location = new Point(0, 140);
-            btnEmployees.Margin = new Padding(2);
-            btnEmployees.Name = "btnEmployees";
-            btnEmployees.Size = new Size(328, 45);
-            btnEmployees.TabIndex = 2;
-            btnEmployees.Text = "👥 Employees";
-            btnEmployees.TextAlign = ContentAlignment.MiddleLeft;
-            btnEmployees.UseVisualStyleBackColor = false;
-            btnEmployees.Click += btnEmployees_Click;
-            // 
             // reports
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -635,8 +636,9 @@ namespace Employee_managment_system
             Controls.Add(previewCardPanel);
             Controls.Add(panelSideMenu);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "reports";
-            Text = "Reports";
+            Text = "NexusHR - Reports";
             filterCardPanel.ResumeLayout(false);
             filterCardPanel.PerformLayout();
             previewHeaderPanel.ResumeLayout(false);

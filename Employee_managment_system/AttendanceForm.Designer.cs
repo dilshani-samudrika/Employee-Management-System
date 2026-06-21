@@ -32,6 +32,7 @@
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AttendanceForm));
             panelSideMenu = new Panel();
+            pictureBox2 = new PictureBox();
             panel4 = new Panel();
             panel6 = new Panel();
             txtLate = new TextBox();
@@ -49,13 +50,8 @@
             label1 = new Label();
             label2 = new Label();
             dateTimePicker1 = new DateTimePicker();
-            panel1 = new Panel();
+            topBar = new Panel();
             lblPageTitle = new Label();
-            panelLogo = new Panel();
-            panel3 = new Panel();
-            panel2 = new Panel();
-            lblAppTitle = new Label();
-            pictureBoxLogo = new PictureBox();
             btnDashboard = new Button();
             btnEmployees = new Button();
             btnDepartment = new Button();
@@ -65,21 +61,20 @@
             btnReports = new Button();
             btnLogout = new Button();
             panelSideMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             panel4.SuspendLayout();
             panel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvPending).BeginInit();
             panel5.SuspendLayout();
-            panel1.SuspendLayout();
-            panelLogo.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxLogo).BeginInit();
+            topBar.SuspendLayout();
             SuspendLayout();
             // 
             // panelSideMenu
             // 
             panelSideMenu.BackColor = Color.FromArgb(25, 48, 78);
+            panelSideMenu.Controls.Add(pictureBox2);
             panelSideMenu.Controls.Add(panel4);
-            panelSideMenu.Controls.Add(panel1);
-            panelSideMenu.Controls.Add(panelLogo);
+            panelSideMenu.Controls.Add(topBar);
             panelSideMenu.Controls.Add(btnDashboard);
             panelSideMenu.Controls.Add(btnEmployees);
             panelSideMenu.Controls.Add(btnDepartment);
@@ -91,18 +86,31 @@
             panelSideMenu.Dock = DockStyle.Fill;
             panelSideMenu.Location = new Point(0, 0);
             panelSideMenu.Name = "panelSideMenu";
-            panelSideMenu.Size = new Size(1421, 798);
+            panelSideMenu.Size = new Size(1879, 1051);
             panelSideMenu.TabIndex = 3;
+            // 
+            // pictureBox2
+            // 
+            pictureBox2.Image = Properties.Resources.logo_and_name_for_header;
+            pictureBox2.Location = new Point(0, 0);
+            pictureBox2.Margin = new Padding(2);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(351, 80);
+            pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox2.TabIndex = 14;
+            pictureBox2.TabStop = false;
             // 
             // panel4
             // 
             panel4.BackColor = Color.White;
+            panel4.BackgroundImage = Properties.Resources.background_for_all_without_logo;
+            panel4.BackgroundImageLayout = ImageLayout.Stretch;
             panel4.Controls.Add(panel6);
             panel4.Controls.Add(dgvPending);
             panel4.Controls.Add(panel5);
-            panel4.Location = new Point(220, 77);
+            panel4.Location = new Point(348, 73);
             panel4.Name = "panel4";
-            panel4.Size = new Size(1201, 730);
+            panel4.Size = new Size(1519, 978);
             panel4.TabIndex = 10;
             // 
             // panel6
@@ -117,10 +125,11 @@
             panel6.Controls.Add(label5);
             panel6.Controls.Add(label4);
             panel6.Controls.Add(label3);
-            panel6.Location = new Point(12, 604);
+            panel6.Location = new Point(12, 836);
             panel6.Name = "panel6";
-            panel6.Size = new Size(1174, 105);
+            panel6.Size = new Size(1345, 105);
             panel6.TabIndex = 18;
+            panel6.Paint += panel6_Paint;
             // 
             // txtLate
             // 
@@ -234,7 +243,7 @@
             dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle2.BackColor = Color.LightSteelBlue;
             dataGridViewCellStyle2.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle2.ForeColor = Color.Navy;
+            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
             dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
@@ -249,7 +258,7 @@
             dgvPending.RowHeadersWidth = 51;
             dgvPending.ScrollBars = ScrollBars.Vertical;
             dgvPending.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvPending.Size = new Size(1174, 469);
+            dgvPending.Size = new Size(1345, 717);
             dgvPending.TabIndex = 17;
             // 
             // panel5
@@ -262,7 +271,7 @@
             panel5.ForeColor = Color.White;
             panel5.Location = new Point(11, 17);
             panel5.Name = "panel5";
-            panel5.Size = new Size(1174, 61);
+            panel5.Size = new Size(1346, 61);
             panel5.TabIndex = 0;
             // 
             // comboBox1
@@ -303,75 +312,27 @@
             dateTimePicker1.TabIndex = 3;
             dateTimePicker1.ValueChanged += dateTimePicker1_ValueChanged;
             // 
-            // panel1
+            // topBar
             // 
-            panel1.BackColor = Color.White;
-            panel1.Controls.Add(lblPageTitle);
-            panel1.Location = new Point(221, 2);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(1201, 50);
-            panel1.TabIndex = 9;
+            topBar.BackColor = Color.FromArgb(25, 48, 78);
+            topBar.Controls.Add(lblPageTitle);
+            topBar.ForeColor = SystemColors.ControlLightLight;
+            topBar.Location = new Point(348, 2);
+            topBar.Margin = new Padding(5);
+            topBar.Name = "topBar";
+            topBar.Size = new Size(1297, 78);
+            topBar.TabIndex = 13;
             // 
             // lblPageTitle
             // 
             lblPageTitle.AutoSize = true;
             lblPageTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-            lblPageTitle.ForeColor = Color.FromArgb(30, 58, 95);
-            lblPageTitle.Location = new Point(10, 7);
+            lblPageTitle.ForeColor = Color.White;
+            lblPageTitle.Location = new Point(20, 8);
             lblPageTitle.Name = "lblPageTitle";
-            lblPageTitle.Size = new Size(342, 37);
-            lblPageTitle.TabIndex = 1;
-            lblPageTitle.Text = "Attendance Management";
-            // 
-            // panelLogo
-            // 
-            panelLogo.BackColor = Color.FromArgb(30, 58, 95);
-            panelLogo.Controls.Add(panel3);
-            panelLogo.Controls.Add(panel2);
-            panelLogo.Controls.Add(lblAppTitle);
-            panelLogo.Controls.Add(pictureBoxLogo);
-            panelLogo.Dock = DockStyle.Top;
-            panelLogo.Location = new Point(0, 0);
-            panelLogo.Name = "panelLogo";
-            panelLogo.Size = new Size(1421, 80);
-            panelLogo.TabIndex = 0;
-            // 
-            // panel3
-            // 
-            panel3.BackColor = Color.White;
-            panel3.Location = new Point(221, 82);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(1200, 703);
-            panel3.TabIndex = 11;
-            // 
-            // panel2
-            // 
-            panel2.BackColor = Color.White;
-            panel2.Location = new Point(222, 82);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(1201, 728);
-            panel2.TabIndex = 10;
-            // 
-            // lblAppTitle
-            // 
-            lblAppTitle.AutoSize = true;
-            lblAppTitle.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            lblAppTitle.ForeColor = Color.White;
-            lblAppTitle.Location = new Point(116, 30);
-            lblAppTitle.Name = "lblAppTitle";
-            lblAppTitle.Size = new Size(95, 25);
-            lblAppTitle.TabIndex = 1;
-            lblAppTitle.Text = "NexusHR";
-            // 
-            // pictureBoxLogo
-            // 
-            pictureBoxLogo.Image = (Image)resources.GetObject("pictureBoxLogo.Image");
-            pictureBoxLogo.Location = new Point(0, -3);
-            pictureBoxLogo.Name = "pictureBoxLogo";
-            pictureBoxLogo.Size = new Size(93, 83);
-            pictureBoxLogo.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBoxLogo.TabIndex = 0;
-            pictureBoxLogo.TabStop = false;
+            lblPageTitle.Size = new Size(327, 37);
+            lblPageTitle.TabIndex = 0;
+            lblPageTitle.Text = "Attendance Managment";
             // 
             // btnDashboard
             // 
@@ -382,7 +343,7 @@
             btnDashboard.ForeColor = Color.FromArgb(200, 200, 200);
             btnDashboard.Location = new Point(0, 90);
             btnDashboard.Name = "btnDashboard";
-            btnDashboard.Size = new Size(220, 45);
+            btnDashboard.Size = new Size(328, 45);
             btnDashboard.TabIndex = 1;
             btnDashboard.Text = "📊 Dashboard";
             btnDashboard.TextAlign = ContentAlignment.MiddleLeft;
@@ -398,7 +359,7 @@
             btnEmployees.ForeColor = SystemColors.ScrollBar;
             btnEmployees.Location = new Point(0, 140);
             btnEmployees.Name = "btnEmployees";
-            btnEmployees.Size = new Size(220, 45);
+            btnEmployees.Size = new Size(328, 45);
             btnEmployees.TabIndex = 2;
             btnEmployees.Text = "👥 Employees";
             btnEmployees.TextAlign = ContentAlignment.MiddleLeft;
@@ -414,7 +375,7 @@
             btnDepartment.ForeColor = Color.FromArgb(200, 200, 200);
             btnDepartment.Location = new Point(0, 190);
             btnDepartment.Name = "btnDepartment";
-            btnDepartment.Size = new Size(220, 45);
+            btnDepartment.Size = new Size(328, 45);
             btnDepartment.TabIndex = 3;
             btnDepartment.Text = "🏢 Department";
             btnDepartment.TextAlign = ContentAlignment.MiddleLeft;
@@ -430,12 +391,11 @@
             btnAttendance.ForeColor = Color.White;
             btnAttendance.Location = new Point(0, 240);
             btnAttendance.Name = "btnAttendance";
-            btnAttendance.Size = new Size(220, 45);
+            btnAttendance.Size = new Size(328, 45);
             btnAttendance.TabIndex = 4;
             btnAttendance.Text = "📅 Attendance";
             btnAttendance.TextAlign = ContentAlignment.MiddleLeft;
             btnAttendance.UseVisualStyleBackColor = false;
-            btnAttendance.Click += btnAttendance_Click;
             // 
             // btnLeave
             // 
@@ -446,7 +406,7 @@
             btnLeave.ForeColor = SystemColors.ScrollBar;
             btnLeave.Location = new Point(0, 290);
             btnLeave.Name = "btnLeave";
-            btnLeave.Size = new Size(220, 45);
+            btnLeave.Size = new Size(328, 45);
             btnLeave.TabIndex = 5;
             btnLeave.Text = "🏖 Leave";
             btnLeave.TextAlign = ContentAlignment.MiddleLeft;
@@ -501,43 +461,32 @@
             btnLogout.UseVisualStyleBackColor = false;
             btnLogout.Click += btnLogout_Click;
             // 
-            // Form2
+            // AttendanceForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1421, 798);
+            ClientSize = new Size(1879, 1051);
             Controls.Add(panelSideMenu);
-            Name = "Form2";
-            Text = "Form2";
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Name = "AttendanceForm";
+            Text = "NexusHR - Attendance Managment";
             Load += Form2_Load;
             panelSideMenu.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             panel4.ResumeLayout(false);
             panel6.ResumeLayout(false);
             panel6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvPending).EndInit();
             panel5.ResumeLayout(false);
             panel5.PerformLayout();
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
-            panelLogo.ResumeLayout(false);
-            panelLogo.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxLogo).EndInit();
+            topBar.ResumeLayout(false);
+            topBar.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
         private Panel panelSideMenu;
         private Panel panel4;
-        private Panel panel1;
-        private Label lblPageTitle;
-        private Panel panelLogo;
-        private Panel panel3;
-        private Panel panel2;
-        private Label lblAppTitle;
-        private PictureBox pictureBoxLogo;
-        private Button btnDashboard;
-        private Button btnEmployees;
-        private Button btnDepartment;
         private Button btnAttendance;
         private Button btnLeave;
         private Button btnPayroll;
@@ -559,5 +508,11 @@
         private TextBox txtLate;
         private TextBox txtHalfDay;
         private TextBox txtAbsent;
+        private Button btnDashboard;
+        private Button btnEmployees;
+        private Button btnDepartment;
+        private Panel topBar;
+        private Label lblPageTitle;
+        private PictureBox pictureBox2;
     }
 }

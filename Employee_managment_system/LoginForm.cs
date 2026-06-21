@@ -13,14 +13,12 @@ namespace Employee_managment_system
 
         private void LoginForm_Load(object sender, EventArgs e)
         {
-            // Clear all fields
             txtUsername.Clear();
             txtPassword.Clear();
             txtPassword.PasswordChar = '●';
             chkShowPassword.Checked = false;
             txtUsername.Focus();
 
-            // Show admin creation message if needed
             bool adminCreated = AuthService.CreateAdminUserIfNeeded();
 
             if (adminCreated)
@@ -69,7 +67,6 @@ namespace Employee_managment_system
                 if (result.Success)
                 {
                     Session.CurrentUser = result;
-
                     MessageBox.Show($"Welcome {result.Username}!",
                         "Login Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -117,20 +114,6 @@ namespace Employee_managment_system
             Application.Exit();
         }
 
-        private void txtPassword_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                btnLogin_Click(sender, e);
-            }
-        }
-
-        private void txtUsername_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                txtPassword.Focus();
-            }
-        }
+        
     }
 }

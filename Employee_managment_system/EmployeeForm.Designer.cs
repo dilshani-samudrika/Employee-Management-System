@@ -130,7 +130,7 @@
             panelSideMenu.Dock = DockStyle.Left;
             panelSideMenu.Location = new Point(0, 0);
             panelSideMenu.Name = "panelSideMenu";
-            panelSideMenu.Size = new Size(351, 857);
+            panelSideMenu.Size = new Size(351, 953);
             panelSideMenu.TabIndex = 0;
             panelSideMenu.Paint += panelSideMenu_Paint;
             // 
@@ -287,7 +287,7 @@
             btnLogout.FlatStyle = FlatStyle.Flat;
             btnLogout.Font = new Font("Segoe UI", 10F);
             btnLogout.ForeColor = Color.FromArgb(231, 76, 60);
-            btnLogout.Location = new Point(0, 829);
+            btnLogout.Location = new Point(0, 925);
             btnLogout.Margin = new Padding(2);
             btnLogout.Name = "btnLogout";
             btnLogout.Size = new Size(351, 28);
@@ -304,7 +304,7 @@
             panelContent.Location = new Point(351, 0);
             panelContent.Margin = new Padding(2);
             panelContent.Name = "panelContent";
-            panelContent.Size = new Size(1190, 857);
+            panelContent.Size = new Size(1302, 953);
             panelContent.TabIndex = 1;
             // 
             // panelMainContent
@@ -315,7 +315,7 @@
             panelMainContent.Dock = DockStyle.Fill;
             panelMainContent.Location = new Point(0, 0);
             panelMainContent.Name = "panelMainContent";
-            panelMainContent.Size = new Size(1190, 857);
+            panelMainContent.Size = new Size(1302, 953);
             panelMainContent.TabIndex = 1;
             // 
             // splitContainer1
@@ -335,8 +335,8 @@
             splitContainer1.Panel2.BackgroundImage = Properties.Resources.background_for_all_without_logo;
             splitContainer1.Panel2.Controls.Add(pnlRightPanel);
             splitContainer1.Panel2.Paint += splitContainer1_Panel2_Paint;
-            splitContainer1.Size = new Size(1190, 777);
-            splitContainer1.SplitterDistance = 831;
+            splitContainer1.Size = new Size(1302, 873);
+            splitContainer1.SplitterDistance = 909;
             splitContainer1.TabIndex = 2;
             // 
             // filterPanel
@@ -350,7 +350,7 @@
             filterPanel.Margin = new Padding(2);
             filterPanel.Name = "filterPanel";
             filterPanel.Padding = new Padding(6, 5, 6, 5);
-            filterPanel.Size = new Size(831, 65);
+            filterPanel.Size = new Size(909, 65);
             filterPanel.TabIndex = 5;
             // 
             // txtSearch
@@ -412,7 +412,7 @@
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
             dgvEmployees.DefaultCellStyle = dataGridViewCellStyle2;
             dgvEmployees.EnableHeadersVisualStyles = false;
-            dgvEmployees.Location = new Point(56, 66);
+            dgvEmployees.Location = new Point(2, 66);
             dgvEmployees.Margin = new Padding(2);
             dgvEmployees.MultiSelect = false;
             dgvEmployees.Name = "dgvEmployees";
@@ -421,7 +421,7 @@
             dgvEmployees.RowHeadersWidth = 51;
             dgvEmployees.RowTemplate.Height = 35;
             dgvEmployees.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvEmployees.Size = new Size(869, 575);
+            dgvEmployees.Size = new Size(959, 863);
             dgvEmployees.TabIndex = 0;
             dgvEmployees.CellContentClick += dgvEmployees_CellContentClick;
             dgvEmployees.SelectionChanged += dgvEmployees_SelectionChanged;
@@ -529,10 +529,10 @@
             pnlRightPanel.Controls.Add(btnCancel);
             pnlRightPanel.Controls.Add(btnDelete);
             pnlRightPanel.Dock = DockStyle.Right;
-            pnlRightPanel.Location = new Point(138, 0);
+            pnlRightPanel.Location = new Point(0, 0);
             pnlRightPanel.Margin = new Padding(2);
             pnlRightPanel.Name = "pnlRightPanel";
-            pnlRightPanel.Size = new Size(217, 777);
+            pnlRightPanel.Size = new Size(389, 873);
             pnlRightPanel.TabIndex = 0;
             pnlRightPanel.Visible = false;
             // 
@@ -913,7 +913,7 @@
             topPanel.Location = new Point(0, 0);
             topPanel.Margin = new Padding(2);
             topPanel.Name = "topPanel";
-            topPanel.Size = new Size(1190, 80);
+            topPanel.Size = new Size(1302, 80);
             topPanel.TabIndex = 4;
             // 
             // btnAdd
@@ -924,7 +924,7 @@
             btnAdd.FlatStyle = FlatStyle.Flat;
             btnAdd.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnAdd.ForeColor = Color.White;
-            btnAdd.Location = new Point(610, 7);
+            btnAdd.Location = new Point(972, 11);
             btnAdd.Margin = new Padding(2);
             btnAdd.Name = "btnAdd";
             btnAdd.Size = new Size(120, 37);
@@ -941,7 +941,7 @@
             btnExport.FlatStyle = FlatStyle.Flat;
             btnExport.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnExport.ForeColor = Color.White;
-            btnExport.Location = new Point(763, 7);
+            btnExport.Location = new Point(1134, 11);
             btnExport.Margin = new Padding(2);
             btnExport.Name = "btnExport";
             btnExport.Size = new Size(145, 37);
@@ -968,7 +968,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             BackgroundImage = Properties.Resources.otherBackground;
-            ClientSize = new Size(1541, 857);
+            ClientSize = new Size(1653, 953);
             Controls.Add(panelContent);
             Controls.Add(panelSideMenu);
             Font = new Font("Segoe UI", 9F);

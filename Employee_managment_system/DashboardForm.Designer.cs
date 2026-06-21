@@ -402,7 +402,7 @@
             btnQuickAttendance.Name = "btnQuickAttendance";
             btnQuickAttendance.Size = new Size(170, 70);
             btnQuickAttendance.TabIndex = 2;
-            btnQuickAttendance.Text = "Mark Attendance";
+            btnQuickAttendance.Text = "Check Attendance";
             btnQuickAttendance.UseVisualStyleBackColor = false;
             btnQuickAttendance.Click += btnQuickAttendance_Click;
             // 
@@ -480,11 +480,11 @@
             // lblCardCount2
             // 
             lblCardCount2.AutoSize = true;
-            lblCardCount2.Font = new Font("Segoe UI", 28F, FontStyle.Bold);
+            lblCardCount2.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
             lblCardCount2.ForeColor = Color.FromArgb(30, 58, 95);
-            lblCardCount2.Location = new Point(121, 52);
+            lblCardCount2.Location = new Point(95, 98);
             lblCardCount2.Name = "lblCardCount2";
-            lblCardCount2.Size = new Size(54, 62);
+            lblCardCount2.Size = new Size(40, 46);
             lblCardCount2.TabIndex = 1;
             lblCardCount2.Text = "0";
             // 
@@ -492,7 +492,7 @@
             // 
             iconCard2.AutoSize = true;
             iconCard2.Font = new Font("Segoe UI", 28F);
-            iconCard2.Location = new Point(15, 52);
+            iconCard2.Location = new Point(68, 34);
             iconCard2.Name = "iconCard2";
             iconCard2.Size = new Size(86, 62);
             iconCard2.TabIndex = 2;
@@ -515,7 +515,7 @@
             lblCardTitle3.AutoSize = true;
             lblCardTitle3.Font = new Font("Segoe UI", 10F);
             lblCardTitle3.ForeColor = Color.FromArgb(100, 100, 100);
-            lblCardTitle3.Location = new Point(30, 28);
+            lblCardTitle3.Location = new Point(30, 11);
             lblCardTitle3.Name = "lblCardTitle3";
             lblCardTitle3.Size = new Size(149, 23);
             lblCardTitle3.TabIndex = 0;
@@ -524,11 +524,11 @@
             // lblCardCount3
             // 
             lblCardCount3.AutoSize = true;
-            lblCardCount3.Font = new Font("Segoe UI", 28F, FontStyle.Bold);
+            lblCardCount3.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
             lblCardCount3.ForeColor = Color.FromArgb(30, 58, 95);
-            lblCardCount3.Location = new Point(125, 51);
+            lblCardCount3.Location = new Point(83, 97);
             lblCardCount3.Name = "lblCardCount3";
-            lblCardCount3.Size = new Size(54, 62);
+            lblCardCount3.Size = new Size(40, 46);
             lblCardCount3.TabIndex = 1;
             lblCardCount3.Text = "0";
             // 
@@ -536,7 +536,7 @@
             // 
             iconCard3.AutoSize = true;
             iconCard3.Font = new Font("Segoe UI", 28F);
-            iconCard3.Location = new Point(12, 51);
+            iconCard3.Location = new Point(57, 33);
             iconCard3.Name = "iconCard3";
             iconCard3.Size = new Size(86, 62);
             iconCard3.TabIndex = 2;
@@ -560,7 +560,7 @@
             lblCardTitle5.AutoSize = true;
             lblCardTitle5.Font = new Font("Segoe UI", 10F);
             lblCardTitle5.ForeColor = Color.FromArgb(100, 100, 100);
-            lblCardTitle5.Location = new Point(31, 7);
+            lblCardTitle5.Location = new Point(40, 8);
             lblCardTitle5.Name = "lblCardTitle5";
             lblCardTitle5.Size = new Size(158, 23);
             lblCardTitle5.TabIndex = 0;
@@ -569,19 +569,20 @@
             // lblCardCount5
             // 
             lblCardCount5.AutoSize = true;
-            lblCardCount5.Font = new Font("Segoe UI", 28F, FontStyle.Bold);
+            lblCardCount5.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
             lblCardCount5.ForeColor = Color.FromArgb(52, 152, 219);
-            lblCardCount5.Location = new Point(106, 52);
+            lblCardCount5.Location = new Point(83, 92);
             lblCardCount5.Name = "lblCardCount5";
-            lblCardCount5.Size = new Size(54, 62);
+            lblCardCount5.Size = new Size(40, 46);
             lblCardCount5.TabIndex = 1;
             lblCardCount5.Text = "0";
+            lblCardCount5.Click += lblCardCount5_Click;
             // 
             // iconCard5
             // 
             iconCard5.AutoSize = true;
             iconCard5.Font = new Font("Segoe UI", 28F);
-            iconCard5.Location = new Point(14, 52);
+            iconCard5.Location = new Point(8, 34);
             iconCard5.Name = "iconCard5";
             iconCard5.Size = new Size(86, 62);
             iconCard5.TabIndex = 2;
@@ -592,7 +593,7 @@
             lblAttendancePercent.AutoSize = true;
             lblAttendancePercent.Font = new Font("Segoe UI", 9F);
             lblAttendancePercent.ForeColor = Color.FromArgb(52, 152, 219);
-            lblAttendancePercent.Location = new Point(100, 75);
+            lblAttendancePercent.Location = new Point(109, 76);
             lblAttendancePercent.Name = "lblAttendancePercent";
             lblAttendancePercent.Size = new Size(0, 20);
             lblAttendancePercent.TabIndex = 3;
@@ -615,7 +616,7 @@
             lblCardTitle7.AutoSize = true;
             lblCardTitle7.Font = new Font("Segoe UI", 10F);
             lblCardTitle7.ForeColor = Color.FromArgb(100, 100, 100);
-            lblCardTitle7.Location = new Point(41, 18);
+            lblCardTitle7.Location = new Point(31, 7);
             lblCardTitle7.Name = "lblCardTitle7";
             lblCardTitle7.Size = new Size(128, 23);
             lblCardTitle7.TabIndex = 0;
@@ -624,19 +625,20 @@
             // lblCardCount7
             // 
             lblCardCount7.AutoSize = true;
-            lblCardCount7.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
+            lblCardCount7.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             lblCardCount7.ForeColor = Color.FromArgb(46, 204, 113);
-            lblCardCount7.Location = new Point(83, 63);
+            lblCardCount7.Location = new Point(66, 95);
             lblCardCount7.Name = "lblCardCount7";
-            lblCardCount7.Size = new Size(97, 41);
+            lblCardCount7.Size = new Size(66, 28);
             lblCardCount7.TabIndex = 1;
             lblCardCount7.Text = "LKR 0";
+            lblCardCount7.Click += lblCardCount7_Click;
             // 
             // iconCard7
             // 
             iconCard7.AutoSize = true;
             iconCard7.Font = new Font("Segoe UI", 28F);
-            iconCard7.Location = new Point(3, 52);
+            iconCard7.Location = new Point(16, 29);
             iconCard7.Name = "iconCard7";
             iconCard7.Size = new Size(86, 62);
             iconCard7.TabIndex = 2;
@@ -680,7 +682,7 @@
             lblCardCount8.AutoSize = true;
             lblCardCount8.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
             lblCardCount8.ForeColor = Color.FromArgb(155, 89, 182);
-            lblCardCount8.Location = new Point(102, 58);
+            lblCardCount8.Location = new Point(64, 94);
             lblCardCount8.Name = "lblCardCount8";
             lblCardCount8.Size = new Size(81, 41);
             lblCardCount8.TabIndex = 1;
@@ -690,7 +692,7 @@
             // 
             iconCard8.AutoSize = true;
             iconCard8.Font = new Font("Segoe UI", 28F);
-            iconCard8.Location = new Point(16, 52);
+            iconCard8.Location = new Point(59, 29);
             iconCard8.Name = "iconCard8";
             iconCard8.Size = new Size(86, 62);
             iconCard8.TabIndex = 2;

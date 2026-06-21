@@ -33,6 +33,9 @@ namespace Employee_managment_system
             LoadCombos();
             GenerateEmployeeCode();
             SetDefaultDates();
+
+            cmbDepartment.SelectedIndexChanged += new EventHandler(cmbDepartment_SelectedIndexChanged);
+            cmbDesignation.SelectedIndexChanged += new EventHandler(cmbDesignation_SelectedIndexChanged);
         }
 
         private void LoadCombos()
@@ -53,13 +56,14 @@ namespace Employee_managment_system
             cmbStatus.Items.Clear();
             cmbStatus.Items.AddRange(new object[] { "Active", "Inactive" });
             cmbStatus.SelectedIndex = 0;
+
+            cmbDesignation.DataSource = null;
         }
 
         private void GenerateEmployeeCode()
         {
             try
             {
-                // Get the maximum EmpNo from the database
                 string query = "SELECT MAX(EmpNo) FROM Employees";
                 object? result = DatabaseHelper.ExecuteScalar(query);
 
@@ -76,12 +80,11 @@ namespace Employee_managment_system
                     }
                     else
                     {
-                        // Extract the number part (EMP001 -> 1)
                         string numberPart = maxEmpNo.Replace("EMP", "");
                         if (int.TryParse(numberPart, out int number))
                         {
                             number++;
-                            generatedEmployeeCode = $"EMP{number:D3}"; // D3 pads with zeros (001, 002, etc.)
+                            generatedEmployeeCode = $"EMP{number:D3}";
                         }
                         else
                         {
@@ -104,16 +107,47 @@ namespace Employee_managment_system
 
         private void cmbDepartment_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbDepartment.SelectedValue is int deptId)
+            if (cmbDepartment.SelectedValue != null && cmbDepartment.SelectedValue is int deptId)
             {
                 var filtered = designations.Where(d => d.DeptID == deptId).ToList();
                 cmbDesignation.DataSource = filtered;
                 cmbDesignation.DisplayMember = "Title";
                 cmbDesignation.ValueMember = "DesignationID";
+
+                // Reset salary when department changes
+                txtSalary.Text = "";
+                txtSalary.BackColor = SystemColors.Window;
             }
             else
             {
                 cmbDesignation.DataSource = null;
+                txtSalary.Text = "";
+                txtSalary.BackColor = SystemColors.Window;
+            }
+        }
+
+        // AUTO-FILL SALARY WHEN DESIGNATION CHANGES 
+        private void cmbDesignation_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbDesignation.SelectedItem != null)
+            {
+                var selectedDesignation = cmbDesignation.SelectedItem as EmployeeForm.Designation;
+
+                if (selectedDesignation != null && selectedDesignation.BasicSalary > 0)
+                {
+                    txtSalary.Text = selectedDesignation.BasicSalary.ToString("N2");
+                    txtSalary.BackColor = Color.FromArgb(255, 255, 224);
+                }
+                else
+                {
+                    txtSalary.Text = "";
+                    txtSalary.BackColor = SystemColors.Window;
+                }
+            }
+            else
+            {
+                txtSalary.Text = "";
+                txtSalary.BackColor = SystemColors.Window;
             }
         }
 
@@ -173,8 +207,8 @@ namespace Employee_managment_system
 
             if (!IsValidEmail(txtEmail.Text))
             {
-                MessageBox.Show("Please enter a valid email address (e.g., name@domain.com).",
-                              "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please enter a valid email address.", "Validation Error",
+                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtEmail.Focus();
                 txtEmail.SelectAll();
                 return false;
@@ -196,12 +230,29 @@ namespace Employee_managment_system
                 return false;
             }
 
+            if (string.IsNullOrWhiteSpace(txtSalary.Text))
+            {
+                MessageBox.Show("Salary is required. Please select a designation or enter manually.",
+                              "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtSalary.Focus();
+                return false;
+            }
+
+            if (!decimal.TryParse(txtSalary.Text, out _))
+            {
+                MessageBox.Show("Please enter a valid salary amount.", "Validation Error",
+                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtSalary.Focus();
+                txtSalary.SelectAll();
+                return false;
+            }
+
             if (!string.IsNullOrWhiteSpace(txtNIC.Text))
             {
                 if (!IsValidNIC(txtNIC.Text))
                 {
-                    MessageBox.Show("Please enter a valid NIC (e.g., 990123456V or 199901234567).",
-                                  "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Please enter a valid NIC.", "Validation Error",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txtNIC.Focus();
                     txtNIC.SelectAll();
                     return false;
@@ -212,22 +263,10 @@ namespace Employee_managment_system
             {
                 if (!IsValidContact(txtContact.Text))
                 {
-                    MessageBox.Show("Please enter a valid contact number (e.g., 0712345678).",
-                                  "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Please enter a valid contact number.", "Validation Error",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txtContact.Focus();
                     txtContact.SelectAll();
-                    return false;
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(txtSalary.Text))
-            {
-                if (!decimal.TryParse(txtSalary.Text, out _))
-                {
-                    MessageBox.Show("Please enter a valid salary amount.", "Validation Error",
-                                  MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtSalary.Focus();
-                    txtSalary.SelectAll();
                     return false;
                 }
             }
@@ -299,8 +338,8 @@ namespace Employee_managment_system
                     int nicCount = Convert.ToInt32(DatabaseHelper.ExecuteScalar(checkNIC, nicParams));
                     if (nicCount > 0)
                     {
-                        MessageBox.Show("NIC already exists in the system. Please check the data.",
-                                      "Duplicate Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("NIC already exists in the system.", "Duplicate Error",
+                                      MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         txtNIC.Focus();
                         txtNIC.SelectAll();
                         return;
@@ -313,25 +352,25 @@ namespace Employee_managment_system
                 int emailCount = Convert.ToInt32(DatabaseHelper.ExecuteScalar(checkEmail, emailParams));
                 if (emailCount > 0)
                 {
-                    MessageBox.Show("Email already exists in the system. Please check the data.",
-                                  "Duplicate Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Email already exists in the system.", "Duplicate Error",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txtEmail.Focus();
                     txtEmail.SelectAll();
                     return;
                 }
 
-                // Generate new employee code
                 GenerateEmployeeCode();
 
-                // Check if the generated code already exists (safety check)
                 string checkCode = "SELECT COUNT(*) FROM Employees WHERE EmpNo = @EmpNo";
                 SqlParameter[] codeParams = { new SqlParameter("@EmpNo", generatedEmployeeCode) };
                 int codeCount = Convert.ToInt32(DatabaseHelper.ExecuteScalar(checkCode, codeParams));
                 if (codeCount > 0)
                 {
-                    // If code exists, generate a new one with timestamp
                     generatedEmployeeCode = $"EMP{DateTime.Now:HHmmss}";
                 }
+
+                decimal salary = 0;
+                decimal.TryParse(txtSalary.Text, out salary);
 
                 string query = @"
                     INSERT INTO Employees (
@@ -354,7 +393,7 @@ namespace Employee_managment_system
                     new SqlParameter("@DeptID", (int)cmbDepartment.SelectedValue),
                     new SqlParameter("@DesignationID", (int)cmbDesignation.SelectedValue),
                     new SqlParameter("@JoinedDate", dtpJoinDate.Value.Date),
-                    new SqlParameter("@BasicSalary", decimal.TryParse(txtSalary.Text, out decimal sal) ? sal : 0),
+                    new SqlParameter("@BasicSalary", salary),
                     new SqlParameter("@Category", (object?)cmbCategory.Text ?? DBNull.Value),
                     new SqlParameter("@PhotoBase64", (object?)newPhotoBase64 ?? DBNull.Value),
                     new SqlParameter("@Status", cmbStatus.Text)
@@ -373,7 +412,7 @@ namespace Employee_managment_system
             }
             catch (SqlException ex)
             {
-                if (ex.Number == 2627) // Unique constraint violation
+                if (ex.Number == 2627)
                 {
                     MessageBox.Show("Duplicate entry detected. Employee Code, NIC, or Email already exists.",
                                   "Duplicate Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -424,7 +463,8 @@ namespace Employee_managment_system
             txtNIC.Clear();
             txtContact.Clear();
             txtEmail.Clear();
-            txtSalary.Clear();
+            txtSalary.Text = "";
+            txtSalary.BackColor = SystemColors.Window;
             txtAddress.Clear();
 
             cmbGender.SelectedIndex = 0;

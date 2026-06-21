@@ -26,10 +26,9 @@ namespace Employee_managment_system
             LoadLeaveData();
             LoadLeaveCounts();
             LoadLeaveHistory();
-            SetupActionButtons();
         }
 
-        // ============ LOAD PENDING LEAVE REQUESTS ============
+        // LOAD PENDING LEAVE REQUESTS 
         private void LoadLeaveData()
         {
             try
@@ -40,8 +39,10 @@ namespace Employee_managment_system
                     l.LeaveType AS 'Leave Type',
                     l.FromDate AS 'From',
                     l.ToDate AS 'To',
+                    l.TotalDays AS 'Days',
                     l.Reason,
-                    l.ApprovalStatus AS 'Status'
+                    l.ApprovalStatus AS 'Status',
+                    CONVERT(VARCHAR, l.AppliedDate, 103) AS 'Applied Date'
                 FROM LeaveRequests l
                 INNER JOIN Employees e ON l.EmpNo = e.EmpNo
                 WHERE l.ApprovalStatus = 'Pending'
@@ -54,13 +55,30 @@ namespace Employee_managment_system
                 if (dgvPending.Columns["LeaveID"] != null)
                     dgvPending.Columns["LeaveID"].Visible = false;
 
+                // Add Action column if it doesn't exist
+                if (!dgvPending.Columns.Contains("Action"))
+                {
+                    DataGridViewButtonColumn actionColumn = new DataGridViewButtonColumn();
+                    actionColumn.Name = "Action";
+                    actionColumn.HeaderText = "Action";
+                    actionColumn.Text = "Approve/Reject";
+                    actionColumn.UseColumnTextForButtonValue = false;
+                    dgvPending.Columns.Add(actionColumn);
+                }
+
                 dgvPending.AutoResizeColumns();
 
-                // Set Status column to auto-size
+                // Set column widths
+                if (dgvPending.Columns["Employee Name"] != null)
+                    dgvPending.Columns["Employee Name"].Width = 150;
+                if (dgvPending.Columns["Leave Type"] != null)
+                    dgvPending.Columns["Leave Type"].Width = 100;
+                if (dgvPending.Columns["Days"] != null)
+                    dgvPending.Columns["Days"].Width = 60;
                 if (dgvPending.Columns["Status"] != null)
-                {
-                    dgvPending.Columns["Status"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                }
+                    dgvPending.Columns["Status"].Width = 100;
+                if (dgvPending.Columns["Action"] != null)
+                    dgvPending.Columns["Action"].Width = 120;
             }
             catch (Exception ex)
             {
@@ -69,7 +87,7 @@ namespace Employee_managment_system
             }
         }
 
-        // ============ LOAD LEAVE HISTORY ============
+        // LOAD LEAVE HISTORY 
         private void LoadLeaveHistory()
         {
             try
@@ -79,7 +97,9 @@ namespace Employee_managment_system
                     l.LeaveType AS 'Leave Type',
                     l.FromDate AS 'From',
                     l.ToDate AS 'To',
-                    l.ApprovalStatus AS 'Status'
+                    l.TotalDays AS 'Days',
+                    l.ApprovalStatus AS 'Status',
+                    CONVERT(VARCHAR, l.AppliedDate, 103) AS 'Applied Date'
                 FROM LeaveRequests l
                 INNER JOIN Employees e ON l.EmpNo = e.EmpNo
                 WHERE l.ApprovalStatus IN ('Approved', 'Rejected')
@@ -89,11 +109,15 @@ namespace Employee_managment_system
                 dgvHistory.DataSource = dt;
                 dgvHistory.AutoResizeColumns();
 
-                // Set Status column to auto-size
+                // Set column widths
+                if (dgvHistory.Columns["Employee Name"] != null)
+                    dgvHistory.Columns["Employee Name"].Width = 150;
+                if (dgvHistory.Columns["Leave Type"] != null)
+                    dgvHistory.Columns["Leave Type"].Width = 100;
+                if (dgvHistory.Columns["Days"] != null)
+                    dgvHistory.Columns["Days"].Width = 60;
                 if (dgvHistory.Columns["Status"] != null)
-                {
-                    dgvHistory.Columns["Status"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                }
+                    dgvHistory.Columns["Status"].Width = 100;
             }
             catch (Exception ex)
             {
@@ -102,7 +126,7 @@ namespace Employee_managment_system
             }
         }
 
-        // ============ LOAD LEAVE COUNTS (Dashboard Stats) ============
+        //  LOAD LEAVE COUNTS (Dashboard Stats) 
         private void LoadLeaveCounts()
         {
             try
@@ -122,15 +146,11 @@ namespace Employee_managment_system
                 object rejectedCount = DatabaseHelper.ExecuteScalar(rejectedQuery);
                 lblRejectedCount.Text = rejectedCount?.ToString() ?? "0";
 
-                // Today's Leave Count
+                // Today's Leave Count (employees on leave today)
                 string todayQuery = @"SELECT COUNT(*) FROM LeaveRequests 
                                     WHERE ApprovalStatus = 'Approved' 
-                                    AND @Today BETWEEN FromDate AND ToDate";
-                SqlParameter[] parameters = new SqlParameter[]
-                {
-                    new SqlParameter("@Today", DateTime.Today)
-                };
-                object todayCount = DatabaseHelper.ExecuteScalar(todayQuery, parameters);
+                                    AND CAST(GETDATE() AS DATE) BETWEEN FromDate AND ToDate";
+                object todayCount = DatabaseHelper.ExecuteScalar(todayQuery);
                 lblTodayLeaveCount.Text = todayCount?.ToString() ?? "0";
             }
             catch (Exception ex)
@@ -140,34 +160,9 @@ namespace Employee_managment_system
             }
         }
 
-        // ============ SETUP ACTION BUTTONS IN DATAGRIDVIEW ============
-        private void SetupActionButtons()
-        {
-            dgvPending.CellClick += dgvPending_CellClick;
-            dgvPending.CellFormatting += dgvPending_CellFormatting;
-            dgvHistory.CellFormatting += dgvHistory_CellFormatting;
-        }
-
-        // ============ FORMAT STATUS COLUMN IN PENDING DATAGRIDVIEW ============
+        //  FORMAT STATUS COLUMN IN PENDING DATAGRIDVIEW 
         private void dgvPending_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            // Format Action column
-            if (dgvPending.Columns[e.ColumnIndex].Name == "Action" && e.RowIndex >= 0)
-            {
-                string status = dgvPending.Rows[e.RowIndex].Cells["Status"]?.Value?.ToString() ?? "";
-                if (status == "Pending")
-                {
-                    e.Value = "✅ Approve | ❌ Reject";
-                    e.CellStyle.ForeColor = Color.Blue;
-                    e.CellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
-                }
-                else
-                {
-                    e.Value = "✓ " + status;
-                    e.CellStyle.ForeColor = status == "Approved" ? Color.Green : Color.Red;
-                }
-            }
-
             // Format Status column with colors
             if (dgvPending.Columns[e.ColumnIndex].Name == "Status" && e.RowIndex >= 0)
             {
@@ -176,21 +171,55 @@ namespace Employee_managment_system
                 {
                     e.CellStyle.ForeColor = Color.Green;
                     e.CellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+                    e.Value = "✓ Approved";
                 }
                 else if (status == "Rejected")
                 {
                     e.CellStyle.ForeColor = Color.Red;
                     e.CellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+                    e.Value = "✗ Rejected";
                 }
                 else if (status == "Pending")
                 {
                     e.CellStyle.ForeColor = Color.Orange;
                     e.CellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+                    e.Value = "⏳ Pending";
+                }
+            }
+
+            // Format Action column with buttons
+            if (dgvPending.Columns[e.ColumnIndex].Name == "Action" && e.RowIndex >= 0)
+            {
+                string status = dgvPending.Rows[e.RowIndex].Cells["Status"]?.Value?.ToString() ?? "";
+                if (status.Contains("Pending"))
+                {
+                    e.Value = "Approve / Reject";
+                    e.CellStyle.ForeColor = Color.Blue;
+                    e.CellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+                }
+                else
+                {
+                    e.Value = "Completed";
+                    e.CellStyle.ForeColor = Color.Gray;
+                }
+            }
+
+            // Format Days column
+            if (dgvPending.Columns[e.ColumnIndex].Name == "Days" && e.RowIndex >= 0)
+            {
+                if (e.Value != null && e.Value != DBNull.Value)
+                {
+                    int days = Convert.ToInt32(e.Value);
+                    if (days > 5)
+                    {
+                        e.CellStyle.ForeColor = Color.Red;
+                        e.CellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+                    }
                 }
             }
         }
 
-        // ============ FORMAT STATUS COLUMN IN HISTORY DATAGRIDVIEW ============
+        //  FORMAT STATUS COLUMN IN HISTORY DATAGRIDVIEW 
         private void dgvHistory_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             // Format Status column with colors in history grid
@@ -201,57 +230,56 @@ namespace Employee_managment_system
                 {
                     e.CellStyle.ForeColor = Color.Green;
                     e.CellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+                    e.Value = "✓ Approved";
                 }
                 else if (status == "Rejected")
                 {
                     e.CellStyle.ForeColor = Color.Red;
                     e.CellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+                    e.Value = "✗ Rejected";
                 }
-                else if (status == "Pending")
+                else
                 {
                     e.CellStyle.ForeColor = Color.Orange;
-                    e.CellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+                    e.Value = "⏳ " + status;
                 }
             }
-        }
 
-        // ============ HANDLE ACTION CLICK (Approve/Reject) ============
-        private void dgvPending_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0 && dgvPending.Columns[e.ColumnIndex].Name == "Action")
+            // Format Days column
+            if (dgvHistory.Columns[e.ColumnIndex].Name == "Days" && e.RowIndex >= 0)
             {
-                string status = dgvPending.Rows[e.RowIndex].Cells["Status"]?.Value?.ToString() ?? "";
-                if (status == "Pending")
+                if (e.Value != null && e.Value != DBNull.Value)
                 {
-                    DialogResult result = MessageBox.Show(
-                        "Click YES to APPROVE or NO to REJECT this leave request.",
-                        "Leave Approval",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Question);
-
-                    if (result == DialogResult.Yes)
+                    int days = Convert.ToInt32(e.Value);
+                    if (days > 5)
                     {
-                        UpdateLeaveStatus(e.RowIndex, "Approved");
-                    }
-                    else
-                    {
-                        UpdateLeaveStatus(e.RowIndex, "Rejected");
+                        e.CellStyle.ForeColor = Color.Red;
+                        e.CellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
                     }
                 }
             }
         }
 
-        // ============ UPDATE LEAVE STATUS IN DATABASE ============
+        //  UPDATE LEAVE STATUS IN DATABASE 
         private void UpdateLeaveStatus(int rowIndex, string newStatus)
         {
             try
             {
                 int leaveId = Convert.ToInt32(dgvPending.Rows[rowIndex].Cells["LeaveID"].Value);
+                string employeeName = dgvPending.Rows[rowIndex].Cells["Employee Name"].Value?.ToString() ?? "Unknown";
+
+                // Confirm action
+                DialogResult confirm = MessageBox.Show(
+                    $"Are you sure you want to {newStatus} leave request for {employeeName}?",
+                    "Confirm Action",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (confirm != DialogResult.Yes)
+                    return;
 
                 string query = @"UPDATE LeaveRequests 
-                               SET ApprovalStatus = @Status, 
-                                   ApprovedBy = 1,  -- Assuming UserID 1 is admin
-                                   AppliedDate = GETDATE()
+                               SET ApprovalStatus = @Status
                                WHERE LeaveID = @LeaveID";
 
                 SqlParameter[] parameters = new SqlParameter[]
@@ -264,93 +292,230 @@ namespace Employee_managment_system
 
                 if (rowsAffected > 0)
                 {
-                    MessageBox.Show($"Leave {newStatus} successfully!", "Success",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show($"Leave {newStatus} successfully for {employeeName}!",
+                        "Success",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
 
                     // Refresh all data
                     LoadLeaveData();
                     LoadLeaveCounts();
                     LoadLeaveHistory();
+
+                    // Check if all leaves are processed
+                    CheckAllProcessed();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error updating: {ex.Message}", "Error",
+                MessageBox.Show($"Error updating leave status: {ex.Message}",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
+
+        //  CHECK IF ALL PENDING LEAVES ARE PROCESSED 
+        private void CheckAllProcessed()
+        {
+            try
+            {
+                string query = "SELECT COUNT(*) FROM LeaveRequests WHERE ApprovalStatus = 'Pending'";
+                object pendingCount = DatabaseHelper.ExecuteScalar(query);
+                int count = pendingCount != null ? Convert.ToInt32(pendingCount) : 0;
+
+                if (count == 0)
+                {
+                    MessageBox.Show("🎉 All pending leave requests have been processed!",
+                        "Complete",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+            }
+            catch { }
+        }
+
+        private void RefreshData()
+        {
+            LoadLeaveData();
+            LoadLeaveCounts();
+            LoadLeaveHistory();
+        }
+
+        //  FILTER LEAVE REQUESTS 
+        private void FilterLeaveData(string filter)
+        {
+            try
+            {
+                string whereClause = "";
+                if (filter != "All")
+                    whereClause = $"WHERE l.ApprovalStatus = '{filter.Replace(" ", "")}'";
+                else
+                    whereClause = "WHERE l.ApprovalStatus IN ('Pending', 'Approved', 'Rejected')";
+
+                string query = $@"SELECT 
+                    l.LeaveID,
+                    e.FullName AS 'Employee Name',
+                    l.LeaveType AS 'Leave Type',
+                    l.FromDate AS 'From',
+                    l.ToDate AS 'To',
+                    l.TotalDays AS 'Days',
+                    l.ApprovalStatus AS 'Status',
+                    CONVERT(VARCHAR, l.AppliedDate, 103) AS 'Applied Date'
+                FROM LeaveRequests l
+                INNER JOIN Employees e ON l.EmpNo = e.EmpNo
+                {whereClause}
+                ORDER BY l.AppliedDate DESC";
+
+                DataTable dt = DatabaseHelper.ExecuteQuery(query);
+                dgvPending.DataSource = dt;
+
+                if (dgvPending.Columns["LeaveID"] != null)
+                    dgvPending.Columns["LeaveID"].Visible = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error filtering data: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // ============ NAVIGATION - DASHBOARD ============
-        private void btnDashboard_Click(object sender, EventArgs e)
+        //  FORM NAVIGATION EVENTS 
+        private void btnAttendance_Click_1(object sender, EventArgs e)
         {
-            MessageBox.Show("Dashboard feature coming soon!", "Information",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            AttendanceForm att = new AttendanceForm();
+            att.Show();
+            this.Hide();
         }
 
-        // ============ NAVIGATION - EMPLOYEES ============
-        private void btnEmployees_Click(object sender, EventArgs e)
+        private void btnDashboard_Click_1(object sender, EventArgs e)
         {
-            MessageBox.Show("Employees feature coming soon!", "Information",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            DashboardForm dash = new DashboardForm();
+            dash.Show();
+            this.Hide();
         }
 
-        // ============ NAVIGATION - DEPARTMENT ============
-        private void btnDepartment_Click(object sender, EventArgs e)
+        private void btnEmployees_Click_1(object sender, EventArgs e)
         {
-            MessageBox.Show("Department feature coming soon!", "Information",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            EmployeeForm emp = new EmployeeForm();
+            emp.Show();
+            this.Hide();
         }
 
-        // ============ NAVIGATION - ATTENDANCE ============
-        private void btnAttendance_Click(object sender, EventArgs e)
+        private void btnDepartment_Click_1(object sender, EventArgs e)
         {
-            // Open Attendance Form (Form2)
-            AttendanceForm attendanceForm = new AttendanceForm();
-            attendanceForm.Show();
-            this.Hide(); // Hide current form
+            DepartmentForm dept = new DepartmentForm();
+            dept.Show();
+            this.Hide();
         }
 
-        // ============ NAVIGATION - LEAVE (Current) ============
-        private void btnLeave_Click(object sender, EventArgs e)
+        private void btnPayroll_Click_1(object sender, EventArgs e)
         {
-            // Already on Leave Management page, just refresh data
-            LoadLeaveData();
-            LoadLeaveCounts();
-            LoadLeaveHistory();
-            MessageBox.Show("Leave data refreshed!", "Information",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            PayrollForm payroll = new PayrollForm();
+            payroll.Show();
+            this.Hide();
         }
 
-        // ============ NAVIGATION - PAYROLL ============
-        private void btnPayroll_Click(object sender, EventArgs e)
+        private void btnReports_Click_1(object sender, EventArgs e)
         {
-            MessageBox.Show("Payroll feature coming soon!", "Information",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            reports report = new reports();
+            report.Show();
+            this.Hide();
         }
 
-        // ============ NAVIGATION - REPORTS ============
-        private void btnReports_Click(object sender, EventArgs e)
+        //  DATAGRIDVIEW CELL CLICK EVENT 
+        private void dgvPending_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            MessageBox.Show("Reports feature coming soon!", "Information",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        // ============ NAVIGATION - LOGOUT ============
-        private void btnLogout_Click(object sender, EventArgs e)
-        {
-            DialogResult result = MessageBox.Show("Are you sure you want to logout?", "Logout",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result == DialogResult.Yes)
+            // Check if the clicked cell is in the Action column
+            if (e.RowIndex >= 0 && e.ColumnIndex >= 0 &&
+                dgvPending.Columns[e.ColumnIndex].Name == "Action")
             {
-                this.Close(); // Close current form
-                Application.Exit(); // Exit application
+                string status = dgvPending.Rows[e.RowIndex].Cells["Status"]?.Value?.ToString() ?? "";
+                if (status.Contains("Pending"))
+                {
+                    // Create custom dialog for approve/reject
+                    DialogResult result = MessageBox.Show(
+                        "Select action for this leave request:\n\n" +
+                        "Click YES to APPROVE\n" +
+                        "Click NO to REJECT",
+                        "Leave Approval",
+                        MessageBoxButtons.YesNoCancel,
+                        MessageBoxIcon.Question,
+                        MessageBoxDefaultButton.Button1);
+
+                    if (result == DialogResult.Yes)
+                    {
+                        UpdateLeaveStatus(e.RowIndex, "Approved");
+                    }
+                    else if (result == DialogResult.No)
+                    {
+                        UpdateLeaveStatus(e.RowIndex, "Rejected");
+                    }
+                    // If Cancel, do nothing
+                }
+                else
+                {
+                    MessageBox.Show("This leave request has already been processed.",
+                        "Information",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
             }
         }
 
-        // ============ PANEL PAINT EVENT (Optional) ============
-        private void panel4_Paint(object sender, PaintEventArgs e)
+        //  MOUSE CLICK FOR CONTEXT MENU 
+        private void dgvPending_MouseClick(object sender, MouseEventArgs e)
         {
-            // Optional custom painting
+            if (e.Button == MouseButtons.Right)
+            {
+                ContextMenuStrip contextMenu = new ContextMenuStrip();
+                contextMenu.Items.Add("✅ Approve", null, (s, ev) =>
+                {
+                    int rowIndex = dgvPending.CurrentCell?.RowIndex ?? -1;
+                    if (rowIndex >= 0) UpdateLeaveStatus(rowIndex, "Approved");
+                });
+                contextMenu.Items.Add("❌ Reject", null, (s, ev) =>
+                {
+                    int rowIndex = dgvPending.CurrentCell?.RowIndex ?? -1;
+                    if (rowIndex >= 0) UpdateLeaveStatus(rowIndex, "Rejected");
+                });
+                contextMenu.Items.Add("-");
+                contextMenu.Items.Add("🔄 Refresh", null, (s, ev) => RefreshData());
+
+                contextMenu.Show(dgvPending, e.Location);
+            }
+        }
+
+        //  FORM CLOSING EVENT 
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                DialogResult result = MessageBox.Show("Are you sure you want to exit the application?",
+                    "Exit",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    Application.Exit();
+                }
+                else
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
+
+        private void panel4_Paint(object sender, PaintEventArgs e) 
+        {
+        
+        }
+        private void dgvPending_CellContentClick(object sender, DataGridViewCellEventArgs e) 
+        {
+        
         }
     }
 }

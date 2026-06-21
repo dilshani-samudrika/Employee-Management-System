@@ -31,7 +31,7 @@ namespace Employee_managment_system
             LoadAttendanceCounts();
         }
 
-        // ============ LOAD DEPARTMENTS INTO COMBOBOX ============
+        // LOAD DEPARTMENTS INTO COMBOBOX 
         private void LoadDepartments()
         {
             try
@@ -46,7 +46,7 @@ namespace Employee_managment_system
                     return;
                 }
 
-                // Add "All Departments" option at the beginning
+                // Add All Departments option at the beginning
                 DataRow allRow = dt.NewRow();
                 allRow["DeptID"] = -1;
                 allRow["DeptName"] = "-- All Departments --";
@@ -64,19 +64,37 @@ namespace Employee_managment_system
             }
         }
 
-        // ============ LOAD ATTENDANCE DATA INTO DATAGRIDVIEW ============
+        //  HELPER: GET SELECTED DEPARTMENT ID SAFELY 
+        private int GetSelectedDepartmentId()
+        {
+            try
+            {
+                if (comboBox1.SelectedValue == null)
+                    return -1;
+
+                // Handle both DataRowView and int cases
+                if (comboBox1.SelectedValue is DataRowView)
+                {
+                    DataRowView drv = (DataRowView)comboBox1.SelectedValue;
+                    return Convert.ToInt32(drv["DeptID"]);
+                }
+                else
+                {
+                    return Convert.ToInt32(comboBox1.SelectedValue);
+                }
+            }
+            catch
+            {
+                return -1;
+            }
+        }
+
         private void LoadAttendanceData()
         {
             try
             {
-                int deptId = -1;
-                if (comboBox1.SelectedValue != null)
-                {
-                    deptId = Convert.ToInt32(comboBox1.SelectedValue);
-                }
+                int deptId = GetSelectedDepartmentId();
 
-                // Database column names: EmpNo, FullName, DeptName, Status, OTHours
-                // Note: There is NO Remarks column in the Attendance table
                 string query = @"SELECT 
                     a.EmpNo AS 'Employee ID',
                     e.FullName AS 'Name',
@@ -124,16 +142,11 @@ namespace Employee_managment_system
             }
         }
 
-        // ============ LOAD ATTENDANCE COUNTS ============
         private void LoadAttendanceCounts()
         {
             try
             {
-                int deptId = -1;
-                if (comboBox1.SelectedValue != null)
-                {
-                    deptId = Convert.ToInt32(comboBox1.SelectedValue);
-                }
+                int deptId = GetSelectedDepartmentId();
 
                 string query = @"
                     SELECT 
@@ -181,14 +194,12 @@ namespace Employee_managment_system
             }
         }
 
-        // ============ DATE TIME PICKER - VALUE CHANGED ============
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
             LoadAttendanceData();
             LoadAttendanceCounts();
         }
 
-        // ============ COMBOBOX - DEPARTMENT FILTER ============
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBox1.SelectedValue != null)
@@ -198,7 +209,6 @@ namespace Employee_managment_system
             }
         }
 
-        // ============ EXPORT CSV BUTTON ============
         private void button1_Click(object sender, EventArgs e)
         {
             try
@@ -214,9 +224,10 @@ namespace Employee_managment_system
                 saveFileDialog.Filter = "CSV Files (*.csv)|*.csv";
 
                 string deptName = "";
-                if (comboBox1.SelectedValue != null && Convert.ToInt32(comboBox1.SelectedValue) != -1)
+                int deptId = GetSelectedDepartmentId();
+                if (deptId != -1)
                 {
-                    deptName = "_" + comboBox1.Text.Replace(" ", "");
+                    deptName = "_" + comboBox1.Text.Replace(" ", "").Replace("-", "");
                 }
                 saveFileDialog.FileName = $"Attendance_{dateTimePicker1.Value:yyyyMMdd}{deptName}.csv";
 
@@ -257,68 +268,92 @@ namespace Employee_managment_system
             }
         }
 
-        // ============ NAVIGATION - DASHBOARD ============
-        private void btnDashboard_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Dashboard feature coming soon!", "Information",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        // ============ NAVIGATION - EMPLOYEES ============
-        private void btnEmployees_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Employees feature coming soon!", "Information",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        // ============ NAVIGATION - DEPARTMENT ============
-        private void btnDepartment_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Department feature coming soon!", "Information",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        // ============ NAVIGATION - ATTENDANCE (Current) ============
-        private void btnAttendance_Click(object sender, EventArgs e)
-        {
-            LoadAttendanceData();
-            LoadAttendanceCounts();
-            MessageBox.Show("Attendance data refreshed!", "Information",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        // ============ NAVIGATION - LEAVE ============
-        private void btnLeave_Click(object sender, EventArgs e)
-        {
-            LeaveForm leaveForm = new LeaveForm();
-            leaveForm.Show();
-            this.Hide();
-        }
-
-        // ============ NAVIGATION - PAYROLL ============
-        private void btnPayroll_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Payroll feature coming soon!", "Information",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        // ============ NAVIGATION - REPORTS ============
-        private void btnReports_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Reports feature coming soon!", "Information",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        // ============ NAVIGATION - LOGOUT ============
+        // FIXED LOGOUT - RETURNS TO LOGIN 
         private void btnLogout_Click(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show("Are you sure you want to logout?", "Logout",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
             if (result == DialogResult.Yes)
             {
-                this.Close();
-                Application.Exit();
+                try
+                {
+                    // Show login form
+                    LoginForm login = new LoginForm();
+                    login.Show();
+
+                    // Close all other forms
+                    foreach (Form form in Application.OpenForms)
+                    {
+                        if (form != login && form != this)
+                        {
+                            form.Close();
+                        }
+                    }
+
+                    // Close this form
+                    this.Close();
+                }
+                catch
+                {
+                   
+                    Application.Exit();
+                }
             }
+        }
+
+        private void btnDashboard_Click_1(object sender, EventArgs e)
+        {
+            DashboardForm dash = new DashboardForm();
+            dash.Show();
+            this.Hide();
+        }
+
+        private void btnLeave_Click(object sender, EventArgs e)
+        {
+            LeaveForm leave = new LeaveForm();
+            leave.Show();
+            this.Hide();
+        }
+
+        private void btnDashboard_Click(object sender, EventArgs e)
+        {
+            DashboardForm dash = new DashboardForm();
+            dash.Show();
+            this.Hide();
+        }
+
+        private void btnEmployees_Click(object sender, EventArgs e)
+        {
+            EmployeeForm emp = new EmployeeForm();
+            emp.Show();
+            this.Hide();
+        }
+
+        private void btnDepartment_Click(object sender, EventArgs e)
+        {
+            DepartmentForm dept = new DepartmentForm();
+            dept.Show();
+            this.Hide();
+        }
+
+        private void btnPayroll_Click(object sender, EventArgs e)
+        {
+            PayrollForm payroll = new PayrollForm();
+            payroll.Show();
+            this.Hide();
+        }
+
+        private void btnReports_Click(object sender, EventArgs e)
+        {
+            reports report = new reports();
+            report.Show();
+            this.Hide();
+        }
+
+        private void panel6_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

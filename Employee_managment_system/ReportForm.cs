@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Drawing.Printing;
@@ -12,29 +11,21 @@ namespace Employee_managment_system
 {
     public partial class reports : Form
     {
-        // Tracks which preview row we're up to when printing across multiple pages
         private int printRowIndex = 0;
 
         public reports()
         {
             InitializeComponent();
 
-            // Default date range: last 30 days
+            // Set default dates
             fromDatePicker.Value = DateTime.Today.AddMonths(-1);
             toDatePicker.Value = DateTime.Today;
 
-            LoadDepartmentsIntoCombo();
-
-            // Setting these triggers their SelectedIndexChanged handlers below,
-            // which configure the grid columns and reset the preview text.
-            reportTypeCombo.SelectedIndex = 0;   // "Employee List"
-            formatCombo.SelectedIndex = 1;       // "CSV" (only export format currently implemented)
+            LoadDepartments();
+            SetupDefaultReport();
         }
 
-        // ============================================
-        // LOAD DEPARTMENTS INTO FILTER COMBO
-        // ============================================
-        private void LoadDepartmentsIntoCombo()
+        private void LoadDepartments()
         {
             try
             {
@@ -59,6 +50,29 @@ namespace Employee_managment_system
         }
 
         
+        // SETUP DEFAULT REPORT
+       
+        private void SetupDefaultReport()
+        {
+            if (reportTypeCombo.Items.Count > 0)
+            {
+                reportTypeCombo.SelectedIndex = 0;
+            }
+            if (formatCombo.Items.Count > 0)
+            {
+                formatCombo.SelectedIndex = 1;
+            }
+
+            previewGrid.Rows.Clear();
+            totalRecordsLabel.Text = "Total Records: 0";
+            reportSubtitleLabel.Text = "Select a report type and click Generate";
+            reportMetaLabel.Text = "Period: — | Generated: —";
+            pageInfoLabel.Text = "Page 1 of 1";
+        }
+
+        
+        // SIDEBAR NAVIGATION
+        
         private void btnDashboard_Click(object sender, EventArgs e)
         {
             DashboardForm dash = new DashboardForm();
@@ -68,11 +82,9 @@ namespace Employee_managment_system
 
         private void btnEmployees_Click(object sender, EventArgs e)
         {
-
             EmployeeForm emp = new EmployeeForm();
             emp.Show();
             this.Hide();
-
         }
 
         private void btnDepartment_Click(object sender, EventArgs e)
@@ -112,67 +124,86 @@ namespace Employee_managment_system
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
-            LoginForm login = new LoginForm();
-            login.Show();
-            this.Close();
+            DialogResult result = MessageBox.Show("Are you sure you want to logout?",
+                                    "Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                LoginForm login = new LoginForm();
+                login.Show();
+                this.Close();
+            }
         }
 
+        
+        // REPORT TYPE CHANGE
         
         private void reportTypeCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selected = reportTypeCombo.SelectedItem?.ToString() ?? "Employee List";
-            ConfigureGridColumnsForReportType(selected);
-            ClearPreview(selected);
+            ConfigureColumns(selected);
+            previewGrid.Rows.Clear();
+            reportSubtitleLabel.Text = $"{selected} Report";
+            totalRecordsLabel.Text = "Total Records: 0";
+            reportMetaLabel.Text = "Period: — | Generated: —";
         }
 
-        private void ConfigureGridColumnsForReportType(string reportType)
+        private void ConfigureColumns(string reportType)
         {
+            // Hide all columns first
+            colID.Visible = false;
+            colName.Visible = false;
+            colDepartment.Visible = false;
+            colDesignation.Visible = false;
+            colJoiningDate.Visible = false;
+            colStatus.Visible = false;
+
             switch (reportType)
             {
                 case "Department Summary":
-                    SetGridHeaders("Dept ID", "Department", "Total Employees", "Total Designations", "Description", null);
+                    colID.Visible = true;
+                    colID.HeaderText = "Dept ID";
+                    colName.Visible = true;
+                    colName.HeaderText = "Department";
+                    colDepartment.Visible = true;
+                    colDepartment.HeaderText = "Total Employees";
+                    colDesignation.Visible = true;
+                    colDesignation.HeaderText = "Total Designations";
+                    colJoiningDate.Visible = true;
+                    colJoiningDate.HeaderText = "Description";
                     break;
 
                 case "Active/Inactive Status":
-                    SetGridHeaders("ID", "Name", "Department", "Status", null, null);
+                    colID.Visible = true;
+                    colID.HeaderText = "Emp ID";
+                    colName.Visible = true;
+                    colName.HeaderText = "Employee Name";
+                    colDepartment.Visible = true;
+                    colDepartment.HeaderText = "Department";
+                    colStatus.Visible = true;
+                    colStatus.HeaderText = "Status";
                     break;
 
                 case "Employee List":
                 default:
-                    SetGridHeaders("ID", "Name", "Department", "Designation", "Joining Date", "Status");
+                    colID.Visible = true;
+                    colID.HeaderText = "Emp ID";
+                    colName.Visible = true;
+                    colName.HeaderText = "Employee Name";
+                    colDepartment.Visible = true;
+                    colDepartment.HeaderText = "Department";
+                    colDesignation.Visible = true;
+                    colDesignation.HeaderText = "Designation";
+                    colJoiningDate.Visible = true;
+                    colJoiningDate.HeaderText = "Joining Date";
+                    colStatus.Visible = true;
+                    colStatus.HeaderText = "Status";
                     break;
             }
         }
 
-     
-        private void SetGridHeaders(string c1, string c2, string c3, string c4, string c5, string c6)
-        {
-            DataGridViewColumn[] cols = { colID, colName, colDepartment, colDesignation, colJoiningDate, colStatus };
-            string[] headers = { c1, c2, c3, c4, c5, c6 };
-
-            for (int i = 0; i < cols.Length; i++)
-            {
-                if (headers[i] == null)
-                {
-                    cols[i].Visible = false;
-                }
-                else
-                {
-                    cols[i].Visible = true;
-                    cols[i].HeaderText = headers[i];
-                }
-            }
-        }
-
-        private void ClearPreview(string reportType)
-        {
-            previewGrid.Rows.Clear();
-            reportSubtitleLabel.Text = $"{reportType} Report";
-            reportMetaLabel.Text = "Period: — | Generated: — | By: Admin";
-            totalRecordsLabel.Text = "Total Records: 0";
-            pageInfoLabel.Text = "Page 1 of 1 | Zoom: 100%";
-        }
-
+        
+        // DATE VALIDATION
+        
         private void fromDatePicker_ValueChanged(object sender, EventArgs e)
         {
             if (fromDatePicker.Value > toDatePicker.Value)
@@ -185,20 +216,9 @@ namespace Employee_managment_system
                 fromDatePicker.Value = toDatePicker.Value;
         }
 
-        private void formatCombo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void deptCombo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-        }
-
         
-        private void previewGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-        }
-
-       
+        // GENERATE REPORT
+        
         private void generateButton_Click(object sender, EventArgs e)
         {
             if (reportTypeCombo.SelectedItem == null)
@@ -220,7 +240,7 @@ namespace Employee_managment_system
                 string deptFilter = deptCombo.SelectedItem?.ToString() ?? "All";
 
                 previewGrid.Rows.Clear();
-                int recordCount;
+                int recordCount = 0;
 
                 switch (reportType)
                 {
@@ -239,9 +259,9 @@ namespace Employee_managment_system
                 }
 
                 reportSubtitleLabel.Text = $"{reportType} Report";
-                reportMetaLabel.Text = $"Period: {fromDate:dd-MMM-yyyy} to {toDate:dd-MMM-yyyy} | Generated: {DateTime.Now:dd-MMM-yyyy HH:mm} | By: Admin";
+                reportMetaLabel.Text = $"Period: {fromDate:dd-MMM-yyyy} to {toDate:dd-MMM-yyyy} | Generated: {DateTime.Now:dd-MMM-yyyy HH:mm}";
                 totalRecordsLabel.Text = $"Total Records: {recordCount}";
-                pageInfoLabel.Text = "Page 1 of 1 | Zoom: 100%";
+                pageInfoLabel.Text = "Page 1 of 1";
             }
             catch (Exception ex)
             {
@@ -250,57 +270,68 @@ namespace Employee_managment_system
             }
         }
 
+        
        
         private int LoadEmployeeList(DateTime fromDate, DateTime toDate, string deptFilter)
         {
             string query = @"
-                SELECT e.EmpNo, e.FullName, dep.DeptName, des.Title, e.JoinedDate,
-                       CASE WHEN u.IsActive = 0 THEN 'Inactive' ELSE 'Active' END AS Status
+                SELECT 
+                    e.EmpNo, 
+                    e.FullName, 
+                    ISNULL(dep.DeptName, 'N/A') AS DeptName, 
+                    ISNULL(des.Title, 'N/A') AS Designation, 
+                    e.JoinedDate, 
+                    ISNULL(e.Status, 'Active') AS Status
                 FROM Employees e
                 LEFT JOIN Departments dep ON e.DeptID = dep.DeptID
                 LEFT JOIN Designations des ON e.DesignationID = des.DesignationID
-                LEFT JOIN Users u ON u.EmployeeID = e.EmpNo
-                WHERE e.JoinedDate BETWEEN @From AND @To
-                  AND (@Dept = 'All' OR dep.DeptName = @Dept)
+                WHERE (@Dept = 'All' OR dep.DeptName = @Dept)
                 ORDER BY e.FullName";
 
             SqlParameter[] parameters = {
-                new SqlParameter("@From", fromDate),
-                new SqlParameter("@To", toDate),
                 new SqlParameter("@Dept", deptFilter)
             };
 
             DataTable dt = DatabaseHelper.ExecuteQuery(query, parameters);
 
+            if (dt.Rows.Count == 0)
+            {
+                previewGrid.Rows.Add("No records found", "", "", "", "", "");
+                return 0;
+            }
+
             foreach (DataRow row in dt.Rows)
             {
-                previewGrid.Rows.Add(
-                    row["EmpNo"].ToString(),
-                    row["FullName"].ToString(),
-                    row["DeptName"] == DBNull.Value ? "" : row["DeptName"].ToString(),
-                    row["Title"] == DBNull.Value ? "" : row["Title"].ToString(),
-                    Convert.ToDateTime(row["JoinedDate"]).ToString("dd-MMM-yyyy"),
-                    row["Status"].ToString()
-                );
+                string empNo = row["EmpNo"]?.ToString() ?? "";
+                string fullName = row["FullName"]?.ToString() ?? "";
+                string deptName = row["DeptName"]?.ToString() ?? "N/A";
+                string designation = row["Designation"]?.ToString() ?? "N/A";
+                string joinedDate = row["JoinedDate"] != DBNull.Value ? Convert.ToDateTime(row["JoinedDate"]).ToString("dd-MMM-yyyy") : "N/A";
+                string status = row["Status"]?.ToString() ?? "Active";
+
+                previewGrid.Rows.Add(empNo, fullName, deptName, designation, joinedDate, status);
             }
 
             return dt.Rows.Count;
         }
 
+        
+        // DEPARTMENT SUMMARY REPORT
+        
         private int LoadDepartmentSummary(DateTime fromDate, DateTime toDate, string deptFilter)
         {
             string query = @"
-                SELECT dep.DeptID, dep.DeptName, dep.Description,
-                       (SELECT COUNT(*) FROM Employees e WHERE e.DeptID = dep.DeptID
-                            AND e.JoinedDate BETWEEN @From AND @To) AS TotalEmployees,
-                       (SELECT COUNT(*) FROM Designations d WHERE d.DeptID = dep.DeptID) AS TotalDesignations
+                SELECT 
+                    dep.DeptID, 
+                    dep.DeptName, 
+                    dep.Description,
+                    (SELECT COUNT(*) FROM Employees e WHERE e.DeptID = dep.DeptID) AS TotalEmployees,
+                    (SELECT COUNT(*) FROM Designations d WHERE d.DeptID = dep.DeptID) AS TotalDesignations
                 FROM Departments dep
                 WHERE (@Dept = 'All' OR dep.DeptName = @Dept)
                 ORDER BY dep.DeptName";
 
             SqlParameter[] parameters = {
-                new SqlParameter("@From", fromDate),
-                new SqlParameter("@To", toDate),
                 new SqlParameter("@Dept", deptFilter)
             };
 
@@ -321,24 +352,19 @@ namespace Employee_managment_system
             return dt.Rows.Count;
         }
 
-        // ============================================
+        
         // ACTIVE / INACTIVE STATUS REPORT
-        // ============================================
+        
         private int LoadActiveInactiveStatus(DateTime fromDate, DateTime toDate, string deptFilter)
         {
             string query = @"
-                SELECT e.EmpNo, e.FullName, dep.DeptName,
-                       CASE WHEN u.IsActive = 0 THEN 'Inactive' ELSE 'Active' END AS Status
+                SELECT e.EmpNo, e.FullName, ISNULL(dep.DeptName, 'N/A') AS DeptName, e.Status
                 FROM Employees e
                 LEFT JOIN Departments dep ON e.DeptID = dep.DeptID
-                LEFT JOIN Users u ON u.EmployeeID = e.EmpNo
-                WHERE e.JoinedDate BETWEEN @From AND @To
-                  AND (@Dept = 'All' OR dep.DeptName = @Dept)
+                WHERE (@Dept = 'All' OR dep.DeptName = @Dept)
                 ORDER BY e.FullName";
 
             SqlParameter[] parameters = {
-                new SqlParameter("@From", fromDate),
-                new SqlParameter("@To", toDate),
                 new SqlParameter("@Dept", deptFilter)
             };
 
@@ -349,7 +375,7 @@ namespace Employee_managment_system
                 previewGrid.Rows.Add(
                     row["EmpNo"].ToString(),
                     row["FullName"].ToString(),
-                    row["DeptName"] == DBNull.Value ? "" : row["DeptName"].ToString(),
+                    row["DeptName"].ToString(),
                     row["Status"].ToString(),
                     "",
                     ""
@@ -359,9 +385,65 @@ namespace Employee_managment_system
             return dt.Rows.Count;
         }
 
-        // ============================================
+        
+        // EXPORT TO CSV
+      
+        private void exportButton_Click(object sender, EventArgs e)
+        {
+            if (previewGrid.Rows.Count == 0)
+            {
+                MessageBox.Show("Please generate a report first.", "No Data",
+                              MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            using (SaveFileDialog sfd = new SaveFileDialog())
+            {
+                sfd.Filter = "CSV File|*.csv";
+                sfd.FileName = $"{reportTypeCombo.SelectedItem}_{DateTime.Now:yyyyMMdd_HHmmss}.csv";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        ExportToCsv(sfd.FileName);
+                        MessageBox.Show("Report exported successfully.", "Success",
+                                      MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error exporting: {ex.Message}", "Error",
+                                      MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void ExportToCsv(string filePath)
+        {
+            using (StreamWriter sw = new StreamWriter(filePath))
+            {
+                var visibleCols = previewGrid.Columns.Cast<DataGridViewColumn>()
+                                                      .Where(c => c.Visible)
+                                                      .ToList();
+
+                sw.WriteLine(string.Join(",", visibleCols.Select(c => $"\"{c.HeaderText}\"")));
+
+                foreach (DataGridViewRow row in previewGrid.Rows)
+                {
+                    var values = visibleCols.Select(c =>
+                    {
+                        string val = row.Cells[c.Index].Value?.ToString() ?? "";
+                        return $"\"{val.Replace("\"", "\"\"")}\"";
+                    });
+                    sw.WriteLine(string.Join(",", values));
+                }
+            }
+        }
+
+        
         // PRINT
-        // ============================================
+        
         private void printButton_Click(object sender, EventArgs e)
         {
             if (previewGrid.Rows.Count == 0)
@@ -386,7 +468,7 @@ namespace Employee_managment_system
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Error printing report: {ex.Message}", "Error",
+                        MessageBox.Show($"Error printing: {ex.Message}", "Error",
                                       MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
@@ -404,7 +486,7 @@ namespace Employee_managment_system
             int left = e.MarginBounds.Left;
             int pageWidth = e.MarginBounds.Width;
 
-            g.DrawString(reportTitleLabel.Text, titleFont, Brushes.Black, left, top);
+            g.DrawString("NexusHR - Report", titleFont, Brushes.Black, left, top);
             top += 30;
             g.DrawString(reportSubtitleLabel.Text, headerFont, Brushes.Black, left, top);
             top += 25;
@@ -413,8 +495,13 @@ namespace Employee_managment_system
 
             var visibleCols = previewGrid.Columns.Cast<DataGridViewColumn>()
                                                   .Where(c => c.Visible)
-                                                  .OrderBy(c => c.DisplayIndex)
                                                   .ToList();
+
+            if (visibleCols.Count == 0)
+            {
+                e.HasMorePages = false;
+                return;
+            }
 
             int colWidth = pageWidth / visibleCols.Count;
 
@@ -432,12 +519,14 @@ namespace Employee_managment_system
             {
                 DataGridViewRow row = previewGrid.Rows[printRowIndex];
                 x = left;
+
                 foreach (var col in visibleCols)
                 {
                     string text = row.Cells[col.Index].Value?.ToString() ?? "";
                     g.DrawString(text, cellFont, Brushes.Black, x, top);
                     x += colWidth;
                 }
+
                 top += 22;
                 printRowIndex++;
 
@@ -451,78 +540,28 @@ namespace Employee_managment_system
             e.HasMorePages = false;
         }
 
-        // ============================================
-        // EXPORT (CSV)
-        // ============================================
-        private void exportButton_Click(object sender, EventArgs e)
-        {
-            if (previewGrid.Rows.Count == 0 || previewGrid == null)
-            {
-                MessageBox.Show("Please generate a report first.", "No Data",
-                              MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            using (SaveFileDialog sfd = new SaveFileDialog())
-            {
-                sfd.Filter = "CSV File|*.csv";
-                sfd.FileName = $"{reportTypeCombo.SelectedItem}_{DateTime.Now:yyyyMMdd_HHmmss}.csv";
-
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        ExportGridToCsv(sfd.FileName);
-                        MessageBox.Show("Report exported successfully.", "Success",
-                                      MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Error exporting report: {ex.Message}", "Error",
-                                      MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-        }
-
-        private void ExportGridToCsv(string filePath)
-        {
-            using (StreamWriter sw = new StreamWriter(filePath))
-            {
-                var visibleCols = previewGrid.Columns.Cast<DataGridViewColumn>()
-                                                      .Where(c => c.Visible)
-                                                      .OrderBy(c => c.DisplayIndex)
-                                                      .ToList();
-
-                sw.WriteLine(string.Join(",", visibleCols.Select(c => EscapeCsv(c.HeaderText))));
-
-                foreach (DataGridViewRow row in previewGrid.Rows)
-                {
-                    var values = visibleCols.Select(c => EscapeCsv(row.Cells[c.Index].Value?.ToString() ?? ""));
-                    sw.WriteLine(string.Join(",", values));
-                }
-            }
-        }
-
-        private string EscapeCsv(string value)
-        {
-            if (value.Contains(",") || value.Contains("\"") || value.Contains("\n"))
-            {
-                value = value.Replace("\"", "\"\"");
-                return $"\"{value}\"";
-            }
-            return value;
-        }
-
-        private void filterCardPanel_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void reportMetaLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-
         
+        
+        
+        private void formatCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        
+        }
+        private void deptCombo_SelectedIndexChanged(object sender, EventArgs e) 
+        {
+        
+        }
+        private void previewGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+        
+        }
+        private void filterCardPanel_Paint(object sender, PaintEventArgs e) 
+        {
+        
+        }
+        private void reportMetaLabel_Click(object sender, EventArgs e) 
+        {
+        
+        }
     }
 }
