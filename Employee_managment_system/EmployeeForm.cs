@@ -593,7 +593,7 @@ namespace Employee_managment_system
 
         private void btnReports_Click(object sender, EventArgs e)
         {
-            ReportForm report = new ReportForm();
+            reports report = new reports();
             report.Show();
             this.Hide();
         }
@@ -622,6 +622,11 @@ namespace Employee_managment_system
                 pnlRightPanel.Visible = false;
                 selectedEmployee = null;
             }
+
+        }
+
+        private void panelSideMenu_Paint(object sender, PaintEventArgs e)
+        {
 
         }
     }

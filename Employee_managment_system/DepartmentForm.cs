@@ -76,7 +76,7 @@ namespace Employee_managment_system
             btnAttendance.Click += (s, e) => { AttendanceForm att = new AttendanceForm(); att.Show(); Hide(); };
             btnLeave.Click += (s, e) => { LeaveForm leave = new LeaveForm(); leave.Show(); Hide(); };
             btnPayroll.Click += (s, e) => { PayrollForm payroll = new PayrollForm(); payroll.Show(); Hide(); };
-            btnReports.Click += (s, e) => { ReportForm report = new ReportForm(); report.Show(); Hide(); };
+            btnReports.Click += (s, e) => { reports report = new reports(); report.Show(); Hide(); };
             btnLogout.Click += (s, e) => { LoginForm login = new LoginForm(); login.Show(); Close(); };
         }
 
@@ -663,6 +663,11 @@ namespace Employee_managment_system
             btnDeleteDesig.Enabled = false;
             dgvDesignations.ClearSelection();
             lblDesigInfo.Text = "💡 Click a designation to view and edit details";
+        }
+
+        private void btnDashboard_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

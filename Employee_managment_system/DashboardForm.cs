@@ -162,7 +162,7 @@ namespace Employee_managment_system
         {
             HighlightActiveButton(btnReports);
             lblPageTitle.Text = "Reports";
-            ReportForm reportForm = new ReportForm();
+            reports reportForm = new reports();
             reportForm.Show();
             Hide();
         }
