@@ -63,6 +63,16 @@ namespace Employee_managment_system.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap background_for_all_without_logo {
+            get {
+                object obj = ResourceManager.GetObject("background for all without logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap LoginBackground {
             get {
                 object obj = ResourceManager.GetObject("LoginBackground", resourceCulture);
@@ -76,6 +86,16 @@ namespace Employee_managment_system.Properties {
         internal static System.Drawing.Bitmap logo_and_name_for_header {
             get {
                 object obj = ResourceManager.GetObject("logo and name for header", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap other_background_without_logo {
+            get {
+                object obj = ResourceManager.GetObject("other background without logo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

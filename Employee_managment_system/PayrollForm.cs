@@ -119,6 +119,13 @@ namespace Employee_managment_system
             this.Hide();
         }
 
+        private void btnEmployees_Click(object sender, EventArgs e)
+        {
+            EmployeeForm emp = new EmployeeForm();
+            emp.Show();
+            this.Hide();
+        }
+
         // Employees (Current Page - no navigation needed)
         // btnEmployees click is handled by the button itself or can be empty
 
@@ -760,6 +767,11 @@ namespace Employee_managment_system
         }
 
         private void salaryCardPanel_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void tabPage2_Click(object sender, EventArgs e)
         {
 
         }

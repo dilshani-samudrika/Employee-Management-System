@@ -58,11 +58,7 @@ namespace Employee_managment_system
             }
         }
 
-        // ============================================
-        // SIDEBAR NAVIGATION EVENTS
-        // ============================================
-
-        // Dashboard
+        
         private void btnDashboard_Click(object sender, EventArgs e)
         {
             DashboardForm dash = new DashboardForm();
@@ -70,10 +66,15 @@ namespace Employee_managment_system
             this.Hide();
         }
 
-        // Employees (Current Page - no navigation needed)
-        // btnEmployees click is handled by the button itself or can be empty
+        private void btnEmployees_Click(object sender, EventArgs e)
+        {
 
-        // Department
+            EmployeeForm emp = new EmployeeForm();
+            emp.Show();
+            this.Hide();
+
+        }
+
         private void btnDepartment_Click(object sender, EventArgs e)
         {
             DepartmentForm dept = new DepartmentForm();
@@ -81,7 +82,6 @@ namespace Employee_managment_system
             this.Hide();
         }
 
-        // Attendance
         private void btnAttendance_Click(object sender, EventArgs e)
         {
             AttendanceForm att = new AttendanceForm();
@@ -89,7 +89,6 @@ namespace Employee_managment_system
             this.Hide();
         }
 
-        // Leave
         private void btnLeave_Click(object sender, EventArgs e)
         {
             LeaveForm leave = new LeaveForm();
@@ -97,7 +96,6 @@ namespace Employee_managment_system
             this.Hide();
         }
 
-        // Payroll
         private void btnPayroll_Click(object sender, EventArgs e)
         {
             PayrollForm payroll = new PayrollForm();
@@ -105,7 +103,6 @@ namespace Employee_managment_system
             this.Hide();
         }
 
-        // Reports
         private void btnReports_Click(object sender, EventArgs e)
         {
             reports report = new reports();
@@ -113,7 +110,6 @@ namespace Employee_managment_system
             this.Hide();
         }
 
-        // Logout
         private void btnLogout_Click(object sender, EventArgs e)
         {
             LoginForm login = new LoginForm();
@@ -121,9 +117,7 @@ namespace Employee_managment_system
             this.Close();
         }
 
-        // ============================================
-        // REPORT TYPE CHANGE -> RECONFIGURE GRID COLUMNS
-        // ============================================
+        
         private void reportTypeCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selected = reportTypeCombo.SelectedItem?.ToString() ?? "Employee List";
@@ -150,8 +144,7 @@ namespace Employee_managment_system
             }
         }
 
-        // Re-labels and shows/hides the Designer's existing 6 columns instead of
-        // recreating columns, so each report type can reuse the same grid.
+     
         private void SetGridHeaders(string c1, string c2, string c3, string c4, string c5, string c6)
         {
             DataGridViewColumn[] cols = { colID, colName, colDepartment, colDesignation, colJoiningDate, colStatus };
@@ -180,9 +173,6 @@ namespace Employee_managment_system
             pageInfoLabel.Text = "Page 1 of 1 | Zoom: 100%";
         }
 
-        // ============================================
-        // DATE RANGE VALIDATION
-        // ============================================
         private void fromDatePicker_ValueChanged(object sender, EventArgs e)
         {
             if (fromDatePicker.Value > toDatePicker.Value)
@@ -195,10 +185,6 @@ namespace Employee_managment_system
                 fromDatePicker.Value = toDatePicker.Value;
         }
 
-        // ============================================
-        // FORMAT / DEPT COMBO (no immediate action needed;
-        // values are simply read when Generate/Export is clicked)
-        // ============================================
         private void formatCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
         }
@@ -207,14 +193,12 @@ namespace Employee_managment_system
         {
         }
 
-        // No clickable/link cells in this grid currently
+        
         private void previewGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
         }
 
-        // ============================================
-        // GENERATE REPORT
-        // ============================================
+       
         private void generateButton_Click(object sender, EventArgs e)
         {
             if (reportTypeCombo.SelectedItem == null)
@@ -266,9 +250,7 @@ namespace Employee_managment_system
             }
         }
 
-        // ============================================
-        // EMPLOYEE LIST REPORT
-        // ============================================
+       
         private int LoadEmployeeList(DateTime fromDate, DateTime toDate, string deptFilter)
         {
             string query = @"
@@ -305,9 +287,6 @@ namespace Employee_managment_system
             return dt.Rows.Count;
         }
 
-        // ============================================
-        // DEPARTMENT SUMMARY REPORT
-        // ============================================
         private int LoadDepartmentSummary(DateTime fromDate, DateTime toDate, string deptFilter)
         {
             string query = @"
@@ -543,5 +522,7 @@ namespace Employee_managment_system
         {
 
         }
+
+        
     }
 }

@@ -19,7 +19,6 @@
             mainPanel = new Panel();
             loginPanel = new Panel();
             lblWelcome = new Label();
-            lblSubtitle = new Label();
             lblUsername = new Label();
             txtUsername = new TextBox();
             lblPassword = new Label();
@@ -27,6 +26,7 @@
             chkShowPassword = new CheckBox();
             btnLogin = new Button();
             btnClear = new Button();
+            lblSubtitle = new Label();
             mainPanel.SuspendLayout();
             loginPanel.SuspendLayout();
             SuspendLayout();
@@ -73,17 +73,6 @@
             lblWelcome.TabIndex = 2;
             lblWelcome.Text = "Welcome Back!";
             // 
-            // lblSubtitle
-            // 
-            lblSubtitle.AutoSize = true;
-            lblSubtitle.Font = new Font("Segoe UI", 11F);
-            lblSubtitle.ForeColor = Color.FromArgb(100, 100, 100);
-            lblSubtitle.Location = new Point(95, 76);
-            lblSubtitle.Name = "lblSubtitle";
-            lblSubtitle.Size = new Size(264, 25);
-            lblSubtitle.TabIndex = 3;
-            lblSubtitle.Text = "Please sign in to your account";
-            // 
             // lblUsername
             // 
             lblUsername.AutoSize = true;
@@ -124,7 +113,6 @@
             txtPassword.PasswordChar = '●';
             txtPassword.Size = new Size(350, 32);
             txtPassword.TabIndex = 2;
-            txtPassword.TextChanged += txtPassword_TextChanged;
             // 
             // chkShowPassword
             // 
@@ -170,6 +158,17 @@
             btnClear.Text = "🗑 Clear";
             btnClear.UseVisualStyleBackColor = false;
             btnClear.Click += btnClear_Click;
+            // 
+            // lblSubtitle
+            // 
+            lblSubtitle.AutoSize = true;
+            lblSubtitle.Font = new Font("Segoe UI", 11F);
+            lblSubtitle.ForeColor = Color.FromArgb(100, 100, 100);
+            lblSubtitle.Location = new Point(147, 82);
+            lblSubtitle.Name = "lblSubtitle";
+            lblSubtitle.Size = new Size(132, 25);
+            lblSubtitle.TabIndex = 3;
+            lblSubtitle.Text = "Please sign in ";
             // 
             // LoginForm
             // 

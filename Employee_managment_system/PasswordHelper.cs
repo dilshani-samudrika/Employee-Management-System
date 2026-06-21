@@ -28,9 +28,12 @@ namespace Employee_managment_system
             }
         }
 
-        // Verify password
+        // Verify password against stored hash and salt
         public static bool VerifyPassword(string password, string storedHash, string storedSalt)
         {
+            if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(storedHash) || string.IsNullOrEmpty(storedSalt))
+                return false;
+
             string computedHash = HashPassword(password, storedSalt);
             return computedHash == storedHash;
         }

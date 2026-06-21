@@ -13,10 +13,29 @@ namespace Employee_managment_system
 
         private void LoginForm_Load(object sender, EventArgs e)
         {
-            txtUsername.Focus();
-            txtUsername.Text = "";
-            txtPassword.Text = "";
+            // Clear all fields
+            txtUsername.Clear();
+            txtPassword.Clear();
             txtPassword.PasswordChar = '●';
+            chkShowPassword.Checked = false;
+            txtUsername.Focus();
+
+            // Show admin creation message if needed
+            bool adminCreated = AuthService.CreateAdminUserIfNeeded();
+
+            if (adminCreated)
+            {
+                MessageBox.Show(
+                    "No users found in the system.\n\n" +
+                    "Default admin account has been created.\n" +
+                    "Username: admin\n" +
+                    "Password: 123456\n\n" +
+                    "Please login and change your password immediately!",
+                    "First Time Setup",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
+            }
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -31,31 +50,29 @@ namespace Employee_managment_system
                 return;
             }
 
-            // Disable login button during processing
             btnLogin.Enabled = false;
             btnLogin.Text = "Logging in...";
 
             try
             {
-                // Test database connection first
                 if (!DatabaseHelper.TestConnection())
                 {
-                    MessageBox.Show("Cannot connect to database. Please check your connection string.",
+                    MessageBox.Show("Cannot connect to database.\n\nPlease check:\n1. SQL Server is running\n2. Database 'EMS_DB' exists",
                         "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     btnLogin.Enabled = true;
                     btnLogin.Text = "Login";
                     return;
                 }
 
-                // Use secure authentication service
                 var result = AuthService.Login(username, password);
 
                 if (result.Success)
                 {
+                    Session.CurrentUser = result;
+
                     MessageBox.Show($"Welcome {result.Username}!",
                         "Login Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // Open Dashboard
                     DashboardForm dashboard = new DashboardForm();
                     dashboard.Show();
                     this.Hide();
@@ -70,7 +87,7 @@ namespace Employee_managment_system
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}\n\nPlease try again or contact administrator.",
+                MessageBox.Show($"Error: {ex.Message}",
                     "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtPassword.Clear();
                 txtPassword.Focus();
@@ -100,9 +117,20 @@ namespace Employee_managment_system
             Application.Exit();
         }
 
-        private void txtPassword_TextChanged(object sender, EventArgs e)
+        private void txtPassword_KeyDown(object sender, KeyEventArgs e)
         {
-            
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnLogin_Click(sender, e);
+            }
+        }
+
+        private void txtUsername_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                txtPassword.Focus();
+            }
         }
     }
 }

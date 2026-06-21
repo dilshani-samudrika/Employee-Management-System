@@ -254,9 +254,9 @@ namespace Employee_managment_system
             txtDeptEmployeeCount.Text = GetEmployeeCountForDepartment(dept.DeptID).ToString();
         }
 
-        
+
         // DESIGNATION SELECTION CHANGED 
-        
+
         private void dgvDesignations_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvDesignations.SelectedRows.Count > 0)
@@ -682,7 +682,7 @@ namespace Employee_managment_system
 
         private void btnReports_Click(object sender, EventArgs e)
         {
-            ReportForm report = new ReportForm();
+            reports report = new reports();
             report.Show();
             this.Hide();
         }
@@ -699,5 +699,14 @@ namespace Employee_managment_system
             }
         }
 
+        private void pnlDesigDetails_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void pnlDeptDetails_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }
