@@ -7,7 +7,7 @@ namespace Employee_managment_system
 {
     public static class DatabaseHelper
     {
-        private static string connectionString = @"Data Source=DILSHANI;Initial Catalog=EMS_DB;Integrated Security=True;";
+        private static string connectionString = @"Data Source=localhost;Initial Catalog=EMS_DB;Integrated Security=True;";
 
         public static SqlConnection GetConnection()
         {

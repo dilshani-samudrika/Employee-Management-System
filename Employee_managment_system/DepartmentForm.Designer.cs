@@ -131,6 +131,7 @@
             panelLogo.Controls.Add(pictureBoxLogo);
             panelLogo.Dock = DockStyle.Top;
             panelLogo.Location = new Point(0, 0);
+            panelLogo.Margin = new Padding(5, 5, 5, 5);
             panelLogo.Name = "panelLogo";
             panelLogo.Size = new Size(351, 80);
             panelLogo.TabIndex = 0;
@@ -153,7 +154,8 @@
             btnDashboard.FlatStyle = FlatStyle.Flat;
             btnDashboard.Font = new Font("Segoe UI", 10F);
             btnDashboard.ForeColor = Color.FromArgb(200, 200, 200);
-            btnDashboard.Location = new Point(0, 90);
+            btnDashboard.Location = new Point(0, 144);
+            btnDashboard.Margin = new Padding(5, 5, 5, 5);
             btnDashboard.Name = "btnDashboard";
             btnDashboard.Size = new Size(328, 45);
             btnDashboard.TabIndex = 1;
@@ -169,7 +171,8 @@
             btnEmployees.FlatStyle = FlatStyle.Flat;
             btnEmployees.Font = new Font("Segoe UI", 10F);
             btnEmployees.ForeColor = Color.FromArgb(200, 200, 200);
-            btnEmployees.Location = new Point(0, 140);
+            btnEmployees.Location = new Point(0, 224);
+            btnEmployees.Margin = new Padding(5, 5, 5, 5);
             btnEmployees.Name = "btnEmployees";
             btnEmployees.Size = new Size(332, 45);
             btnEmployees.TabIndex = 2;
@@ -185,7 +188,8 @@
             btnDepartment.FlatStyle = FlatStyle.Flat;
             btnDepartment.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             btnDepartment.ForeColor = Color.White;
-            btnDepartment.Location = new Point(0, 190);
+            btnDepartment.Location = new Point(0, 304);
+            btnDepartment.Margin = new Padding(5, 5, 5, 5);
             btnDepartment.Name = "btnDepartment";
             btnDepartment.Size = new Size(328, 45);
             btnDepartment.TabIndex = 3;
@@ -200,7 +204,8 @@
             btnAttendance.FlatStyle = FlatStyle.Flat;
             btnAttendance.Font = new Font("Segoe UI", 10F);
             btnAttendance.ForeColor = Color.FromArgb(200, 200, 200);
-            btnAttendance.Location = new Point(0, 240);
+            btnAttendance.Location = new Point(0, 384);
+            btnAttendance.Margin = new Padding(5, 5, 5, 5);
             btnAttendance.Name = "btnAttendance";
             btnAttendance.Size = new Size(328, 45);
             btnAttendance.TabIndex = 4;
@@ -216,7 +221,8 @@
             btnLeave.FlatStyle = FlatStyle.Flat;
             btnLeave.Font = new Font("Segoe UI", 10F);
             btnLeave.ForeColor = Color.FromArgb(200, 200, 200);
-            btnLeave.Location = new Point(0, 290);
+            btnLeave.Location = new Point(0, 464);
+            btnLeave.Margin = new Padding(5, 5, 5, 5);
             btnLeave.Name = "btnLeave";
             btnLeave.Size = new Size(332, 45);
             btnLeave.TabIndex = 5;
@@ -232,7 +238,8 @@
             btnPayroll.FlatStyle = FlatStyle.Flat;
             btnPayroll.Font = new Font("Segoe UI", 10F);
             btnPayroll.ForeColor = Color.FromArgb(200, 200, 200);
-            btnPayroll.Location = new Point(0, 340);
+            btnPayroll.Location = new Point(0, 544);
+            btnPayroll.Margin = new Padding(5, 5, 5, 5);
             btnPayroll.Name = "btnPayroll";
             btnPayroll.Size = new Size(332, 45);
             btnPayroll.TabIndex = 6;
@@ -248,7 +255,8 @@
             btnReports.FlatStyle = FlatStyle.Flat;
             btnReports.Font = new Font("Segoe UI", 10F);
             btnReports.ForeColor = Color.FromArgb(200, 200, 200);
-            btnReports.Location = new Point(0, 390);
+            btnReports.Location = new Point(0, 624);
+            btnReports.Margin = new Padding(5, 5, 5, 5);
             btnReports.Name = "btnReports";
             btnReports.Size = new Size(332, 45);
             btnReports.TabIndex = 7;
@@ -290,6 +298,7 @@
             topBar.Dock = DockStyle.Top;
             topBar.ForeColor = SystemColors.ControlLightLight;
             topBar.Location = new Point(0, 0);
+            topBar.Margin = new Padding(5, 5, 5, 5);
             topBar.Name = "topBar";
             topBar.Size = new Size(1576, 80);
             topBar.TabIndex = 0;
@@ -327,6 +336,7 @@
             panelLeft.Controls.Add(pnlDeptDetails);
             panelLeft.Controls.Add(lblDeptInfo);
             panelLeft.Location = new Point(0, 0);
+            panelLeft.Margin = new Padding(5, 5, 5, 5);
             panelLeft.Name = "panelLeft";
             panelLeft.Size = new Size(707, 975);
             panelLeft.TabIndex = 0;
@@ -345,7 +355,8 @@
             lblDeptHeader.AutoSize = true;
             lblDeptHeader.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblDeptHeader.ForeColor = Color.White;
-            lblDeptHeader.Location = new Point(10, 4);
+            lblDeptHeader.Location = new Point(16, 6);
+            lblDeptHeader.Margin = new Padding(5, 0, 5, 0);
             lblDeptHeader.Name = "lblDeptHeader";
             lblDeptHeader.Size = new Size(115, 23);
             lblDeptHeader.TabIndex = 0;
@@ -368,9 +379,10 @@
             btnAddDept.FlatStyle = FlatStyle.Flat;
             btnAddDept.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnAddDept.ForeColor = Color.White;
-            btnAddDept.Location = new Point(10, 5);
+            btnAddDept.Location = new Point(16, 8);
+            btnAddDept.Margin = new Padding(5, 5, 5, 5);
             btnAddDept.Name = "btnAddDept";
-            btnAddDept.Size = new Size(100, 30);
+            btnAddDept.Size = new Size(162, 48);
             btnAddDept.TabIndex = 0;
             btnAddDept.Text = "➕ Add";
             btnAddDept.UseVisualStyleBackColor = false;
@@ -385,9 +397,10 @@
             btnDeleteDept.FlatStyle = FlatStyle.Flat;
             btnDeleteDept.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnDeleteDept.ForeColor = Color.White;
-            btnDeleteDept.Location = new Point(120, 5);
+            btnDeleteDept.Location = new Point(195, 8);
+            btnDeleteDept.Margin = new Padding(5, 5, 5, 5);
             btnDeleteDept.Name = "btnDeleteDept";
-            btnDeleteDept.Size = new Size(100, 30);
+            btnDeleteDept.Size = new Size(162, 48);
             btnDeleteDept.TabIndex = 1;
             btnDeleteDept.Text = "🗑️ Delete";
             btnDeleteDept.UseVisualStyleBackColor = false;
@@ -478,7 +491,8 @@
             lblDeptDetailsTitle.AutoSize = true;
             lblDeptDetailsTitle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             lblDeptDetailsTitle.ForeColor = Color.FromArgb(30, 58, 95);
-            lblDeptDetailsTitle.Location = new Point(10, 8);
+            lblDeptDetailsTitle.Location = new Point(16, 13);
+            lblDeptDetailsTitle.Margin = new Padding(5, 0, 5, 0);
             lblDeptDetailsTitle.Name = "lblDeptDetailsTitle";
             lblDeptDetailsTitle.Size = new Size(199, 28);
             lblDeptDetailsTitle.TabIndex = 0;
@@ -501,7 +515,7 @@
             txtDeptName.Font = new Font("Segoe UI", 10F);
             txtDeptName.Location = new Point(201, 55);
             txtDeptName.Name = "txtDeptName";
-            txtDeptName.Size = new Size(220, 30);
+            txtDeptName.Size = new Size(356, 43);
             txtDeptName.TabIndex = 2;
             // 
             // lblDeptDescription
@@ -521,7 +535,7 @@
             txtDeptDescription.Font = new Font("Segoe UI", 10F);
             txtDeptDescription.Location = new Point(201, 111);
             txtDeptDescription.Name = "txtDeptDescription";
-            txtDeptDescription.Size = new Size(220, 30);
+            txtDeptDescription.Size = new Size(356, 43);
             txtDeptDescription.TabIndex = 4;
             // 
             // lblDeptEmployeeCount
@@ -543,7 +557,7 @@
             txtDeptEmployeeCount.Location = new Point(201, 165);
             txtDeptEmployeeCount.Name = "txtDeptEmployeeCount";
             txtDeptEmployeeCount.ReadOnly = true;
-            txtDeptEmployeeCount.Size = new Size(100, 30);
+            txtDeptEmployeeCount.Size = new Size(161, 43);
             txtDeptEmployeeCount.TabIndex = 6;
             // 
             // btnSaveDept
@@ -556,7 +570,7 @@
             btnSaveDept.ForeColor = Color.White;
             btnSaveDept.Location = new Point(518, 55);
             btnSaveDept.Name = "btnSaveDept";
-            btnSaveDept.Size = new Size(100, 30);
+            btnSaveDept.Size = new Size(162, 48);
             btnSaveDept.TabIndex = 7;
             btnSaveDept.Text = "💾 Save";
             btnSaveDept.UseVisualStyleBackColor = false;
@@ -572,7 +586,7 @@
             btnCancelDept.ForeColor = Color.White;
             btnCancelDept.Location = new Point(518, 111);
             btnCancelDept.Name = "btnCancelDept";
-            btnCancelDept.Size = new Size(100, 30);
+            btnCancelDept.Size = new Size(162, 48);
             btnCancelDept.TabIndex = 8;
             btnCancelDept.Text = "❌ Cancel";
             btnCancelDept.UseVisualStyleBackColor = false;
@@ -583,7 +597,8 @@
             lblDeptInfo.AutoSize = true;
             lblDeptInfo.Font = new Font("Segoe UI", 8F);
             lblDeptInfo.ForeColor = Color.Gray;
-            lblDeptInfo.Location = new Point(10, 435);
+            lblDeptInfo.Location = new Point(16, 696);
+            lblDeptInfo.Margin = new Padding(5, 0, 5, 0);
             lblDeptInfo.Name = "lblDeptInfo";
             lblDeptInfo.Size = new Size(292, 19);
             lblDeptInfo.TabIndex = 4;
@@ -617,7 +632,8 @@
             lblDesigHeader.AutoSize = true;
             lblDesigHeader.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblDesigHeader.ForeColor = Color.White;
-            lblDesigHeader.Location = new Point(10, 4);
+            lblDesigHeader.Location = new Point(16, 6);
+            lblDesigHeader.Margin = new Padding(5, 0, 5, 0);
             lblDesigHeader.Name = "lblDesigHeader";
             lblDesigHeader.Size = new Size(113, 23);
             lblDesigHeader.TabIndex = 0;
@@ -640,9 +656,10 @@
             btnAddDesig.FlatStyle = FlatStyle.Flat;
             btnAddDesig.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnAddDesig.ForeColor = Color.White;
-            btnAddDesig.Location = new Point(10, 5);
+            btnAddDesig.Location = new Point(16, 8);
+            btnAddDesig.Margin = new Padding(5, 5, 5, 5);
             btnAddDesig.Name = "btnAddDesig";
-            btnAddDesig.Size = new Size(100, 30);
+            btnAddDesig.Size = new Size(162, 48);
             btnAddDesig.TabIndex = 0;
             btnAddDesig.Text = "➕ Add";
             btnAddDesig.UseVisualStyleBackColor = false;
@@ -657,9 +674,10 @@
             btnDeleteDesig.FlatStyle = FlatStyle.Flat;
             btnDeleteDesig.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnDeleteDesig.ForeColor = Color.White;
-            btnDeleteDesig.Location = new Point(120, 5);
+            btnDeleteDesig.Location = new Point(195, 8);
+            btnDeleteDesig.Margin = new Padding(5, 5, 5, 5);
             btnDeleteDesig.Name = "btnDeleteDesig";
-            btnDeleteDesig.Size = new Size(100, 30);
+            btnDeleteDesig.Size = new Size(162, 48);
             btnDeleteDesig.TabIndex = 1;
             btnDeleteDesig.Text = "🗑️ Delete";
             btnDeleteDesig.UseVisualStyleBackColor = false;
@@ -750,7 +768,8 @@
             lblDesigDetailsTitle.AutoSize = true;
             lblDesigDetailsTitle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             lblDesigDetailsTitle.ForeColor = Color.FromArgb(30, 58, 95);
-            lblDesigDetailsTitle.Location = new Point(10, 8);
+            lblDesigDetailsTitle.Location = new Point(16, 13);
+            lblDesigDetailsTitle.Margin = new Padding(5, 0, 5, 0);
             lblDesigDetailsTitle.Name = "lblDesigDetailsTitle";
             lblDesigDetailsTitle.Size = new Size(198, 28);
             lblDesigDetailsTitle.TabIndex = 0;
@@ -773,7 +792,7 @@
             txtDesigTitle.Font = new Font("Segoe UI", 10F);
             txtDesigTitle.Location = new Point(134, 51);
             txtDesigTitle.Name = "txtDesigTitle";
-            txtDesigTitle.Size = new Size(220, 30);
+            txtDesigTitle.Size = new Size(356, 43);
             txtDesigTitle.TabIndex = 2;
             // 
             // lblDesigDepartment
@@ -783,7 +802,7 @@
             lblDesigDepartment.ForeColor = Color.FromArgb(30, 58, 95);
             lblDesigDepartment.Location = new Point(9, 111);
             lblDesigDepartment.Name = "lblDesigDepartment";
-            lblDesigDepartment.Size = new Size(98, 20);
+            lblDesigDepartment.Size = new Size(159, 32);
             lblDesigDepartment.TabIndex = 3;
             lblDesigDepartment.Text = "Department:";
             // 
@@ -793,7 +812,7 @@
             cmbDesigDepartment.Font = new Font("Segoe UI", 10F);
             cmbDesigDepartment.Location = new Point(134, 106);
             cmbDesigDepartment.Name = "cmbDesigDepartment";
-            cmbDesigDepartment.Size = new Size(220, 31);
+            cmbDesigDepartment.Size = new Size(355, 45);
             cmbDesigDepartment.TabIndex = 4;
             cmbDesigDepartment.SelectedIndexChanged += cmbDesigDepartment_SelectedIndexChanged_1;
             // 
@@ -817,7 +836,7 @@
             txtDesigEmployeeCount.Location = new Point(136, 161);
             txtDesigEmployeeCount.Name = "txtDesigEmployeeCount";
             txtDesigEmployeeCount.ReadOnly = true;
-            txtDesigEmployeeCount.Size = new Size(100, 30);
+            txtDesigEmployeeCount.Size = new Size(161, 43);
             txtDesigEmployeeCount.TabIndex = 6;
             // 
             // btnSaveDesig
@@ -830,7 +849,7 @@
             btnSaveDesig.ForeColor = Color.White;
             btnSaveDesig.Location = new Point(440, 50);
             btnSaveDesig.Name = "btnSaveDesig";
-            btnSaveDesig.Size = new Size(100, 30);
+            btnSaveDesig.Size = new Size(162, 48);
             btnSaveDesig.TabIndex = 7;
             btnSaveDesig.Text = "💾 Save";
             btnSaveDesig.UseVisualStyleBackColor = false;
@@ -846,7 +865,7 @@
             btnCancelDesig.ForeColor = Color.White;
             btnCancelDesig.Location = new Point(440, 106);
             btnCancelDesig.Name = "btnCancelDesig";
-            btnCancelDesig.Size = new Size(100, 30);
+            btnCancelDesig.Size = new Size(162, 48);
             btnCancelDesig.TabIndex = 8;
             btnCancelDesig.Text = "❌ Cancel";
             btnCancelDesig.UseVisualStyleBackColor = false;
@@ -857,7 +876,8 @@
             lblDesigInfo.AutoSize = true;
             lblDesigInfo.Font = new Font("Segoe UI", 8F);
             lblDesigInfo.ForeColor = Color.Gray;
-            lblDesigInfo.Location = new Point(10, 435);
+            lblDesigInfo.Location = new Point(16, 696);
+            lblDesigInfo.Margin = new Padding(5, 0, 5, 0);
             lblDesigInfo.Name = "lblDesigInfo";
             lblDesigInfo.Size = new Size(291, 19);
             lblDesigInfo.TabIndex = 4;
