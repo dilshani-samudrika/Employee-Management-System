@@ -16,7 +16,7 @@ namespace Employee_managment_system
         private List<EmployeeForm.Designation> designations;
         private EmployeeForm parentForm;
         private string? newPhotoBase64 = null;
-        private string? generatedEmployeeCode = null; // Store employee code here
+        private string? generatedEmployeeCode = null;
 
         public AddEmployeeForm(
             List<EmployeeForm.Employee> employees,
@@ -33,29 +33,23 @@ namespace Employee_managment_system
             LoadCombos();
             GenerateEmployeeCode();
             SetDefaultDates();
-
-
         }
 
         private void LoadCombos()
         {
-            // Department combo
             cmbDepartment.DataSource = null;
             cmbDepartment.DataSource = departments.ToList();
             cmbDepartment.DisplayMember = "DeptName";
             cmbDepartment.ValueMember = "DeptID";
 
-            // Gender combo
             cmbGender.Items.Clear();
             cmbGender.Items.AddRange(new object[] { "Male", "Female", "Other" });
             cmbGender.SelectedIndex = 0;
 
-            // Category combo
             cmbCategory.Items.Clear();
             cmbCategory.Items.AddRange(new object[] { "Permanent", "Contract", "Intern", "Temporary" });
             cmbCategory.SelectedIndex = 0;
 
-            // Status combo
             cmbStatus.Items.Clear();
             cmbStatus.Items.AddRange(new object[] { "Active", "Inactive" });
             cmbStatus.SelectedIndex = 0;
@@ -65,9 +59,36 @@ namespace Employee_managment_system
         {
             try
             {
-                string query = "SELECT 'EMP' + RIGHT('000' + CAST(ISNULL(MAX(EmployeeID), 0) + 1 AS VARCHAR(3)) FROM Employees";
+                // Get the maximum EmpNo from the database
+                string query = "SELECT MAX(EmpNo) FROM Employees";
                 object? result = DatabaseHelper.ExecuteScalar(query);
-                generatedEmployeeCode = result?.ToString() ?? "EMP001";
+
+                if (result == null || result == DBNull.Value)
+                {
+                    generatedEmployeeCode = "EMP001";
+                }
+                else
+                {
+                    string maxEmpNo = result.ToString()!;
+                    if (string.IsNullOrEmpty(maxEmpNo) || !maxEmpNo.StartsWith("EMP"))
+                    {
+                        generatedEmployeeCode = "EMP001";
+                    }
+                    else
+                    {
+                        // Extract the number part (EMP001 -> 1)
+                        string numberPart = maxEmpNo.Replace("EMP", "");
+                        if (int.TryParse(numberPart, out int number))
+                        {
+                            number++;
+                            generatedEmployeeCode = $"EMP{number:D3}"; // D3 pads with zeros (001, 002, etc.)
+                        }
+                        else
+                        {
+                            generatedEmployeeCode = "EMP001";
+                        }
+                    }
+                }
             }
             catch
             {
@@ -124,17 +145,153 @@ namespace Employee_managment_system
             }
         }
 
+        private bool ValidateAllInputs()
+        {
+            if (string.IsNullOrWhiteSpace(txtFirstName.Text))
+            {
+                MessageBox.Show("First name is required.", "Validation Error",
+                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtFirstName.Focus();
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtLastName.Text))
+            {
+                MessageBox.Show("Last name is required.", "Validation Error",
+                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtLastName.Focus();
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtEmail.Text))
+            {
+                MessageBox.Show("Email is required.", "Validation Error",
+                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtEmail.Focus();
+                return false;
+            }
+
+            if (!IsValidEmail(txtEmail.Text))
+            {
+                MessageBox.Show("Please enter a valid email address (e.g., name@domain.com).",
+                              "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtEmail.Focus();
+                txtEmail.SelectAll();
+                return false;
+            }
+
+            if (cmbDepartment.SelectedValue == null)
+            {
+                MessageBox.Show("Please select a department.", "Validation Error",
+                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cmbDepartment.Focus();
+                return false;
+            }
+
+            if (cmbDesignation.SelectedValue == null)
+            {
+                MessageBox.Show("Please select a designation.", "Validation Error",
+                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cmbDesignation.Focus();
+                return false;
+            }
+
+            if (!string.IsNullOrWhiteSpace(txtNIC.Text))
+            {
+                if (!IsValidNIC(txtNIC.Text))
+                {
+                    MessageBox.Show("Please enter a valid NIC (e.g., 990123456V or 199901234567).",
+                                  "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtNIC.Focus();
+                    txtNIC.SelectAll();
+                    return false;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(txtContact.Text))
+            {
+                if (!IsValidContact(txtContact.Text))
+                {
+                    MessageBox.Show("Please enter a valid contact number (e.g., 0712345678).",
+                                  "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtContact.Focus();
+                    txtContact.SelectAll();
+                    return false;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(txtSalary.Text))
+            {
+                if (!decimal.TryParse(txtSalary.Text, out _))
+                {
+                    MessageBox.Show("Please enter a valid salary amount.", "Validation Error",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtSalary.Focus();
+                    txtSalary.SelectAll();
+                    return false;
+                }
+            }
+
+            if (dtpDOB.Value > DateTime.Now.AddYears(-16))
+            {
+                MessageBox.Show("Employee must be at least 16 years old.", "Validation Error",
+                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dtpDOB.Focus();
+                return false;
+            }
+
+            if (dtpJoinDate.Value > DateTime.Now)
+            {
+                MessageBox.Show("Join date cannot be in the future.", "Validation Error",
+                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dtpJoinDate.Focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            string trimmed = email.Trim();
+            return trimmed.Contains("@") &&
+                   trimmed.IndexOf("@") > 0 &&
+                   trimmed.LastIndexOf(".") > trimmed.IndexOf("@") &&
+                   trimmed.LastIndexOf(".") < trimmed.Length - 1;
+        }
+
+        private bool IsValidNIC(string nic)
+        {
+            if (string.IsNullOrWhiteSpace(nic))
+                return false;
+
+            nic = nic.Trim().ToUpper();
+            return (nic.Length == 10 && nic.EndsWith("V") && nic.Substring(0, 9).All(char.IsDigit)) ||
+                   (nic.Length == 12 && nic.All(char.IsDigit));
+        }
+
+        private bool IsValidContact(string contact)
+        {
+            if (string.IsNullOrWhiteSpace(contact))
+                return false;
+
+            contact = contact.Trim();
+            return contact.Length == 10 && contact.All(char.IsDigit) && contact.StartsWith("0");
+        }
+
         private void btnSave_Click(object sender, EventArgs e)
         {
-            // Validate required fields
-            if (!ValidateInput())
+            if (!ValidateAllInputs())
                 return;
 
             try
             {
                 string fullName = $"{txtFirstName.Text.Trim()} {txtLastName.Text.Trim()}";
 
-                // First check if NIC already exists
+                // Check NIC duplicate
                 if (!string.IsNullOrWhiteSpace(txtNIC.Text))
                 {
                     string checkNIC = "SELECT COUNT(*) FROM Employees WHERE NIC = @NIC";
@@ -150,7 +307,7 @@ namespace Employee_managment_system
                     }
                 }
 
-                // Check if Email already exists
+                // Check Email duplicate
                 string checkEmail = "SELECT COUNT(*) FROM Employees WHERE Email = @Email";
                 SqlParameter[] emailParams = { new SqlParameter("@Email", txtEmail.Text.Trim()) };
                 int emailCount = Convert.ToInt32(DatabaseHelper.ExecuteScalar(checkEmail, emailParams));
@@ -163,36 +320,45 @@ namespace Employee_managment_system
                     return;
                 }
 
-                // Regenerate code to ensure no duplicate
+                // Generate new employee code
                 GenerateEmployeeCode();
 
-#pragma warning disable CS0618 // Type or member is obsolete
+                // Check if the generated code already exists (safety check)
+                string checkCode = "SELECT COUNT(*) FROM Employees WHERE EmpNo = @EmpNo";
+                SqlParameter[] codeParams = { new SqlParameter("@EmpNo", generatedEmployeeCode) };
+                int codeCount = Convert.ToInt32(DatabaseHelper.ExecuteScalar(checkCode, codeParams));
+                if (codeCount > 0)
+                {
+                    // If code exists, generate a new one with timestamp
+                    generatedEmployeeCode = $"EMP{DateTime.Now:HHmmss}";
+                }
+
                 string query = @"
-            INSERT INTO Employees (
-                EmpNo, FullName, Gender, DateOfBirth, NIC, ContactNo, Email,
-                Address, DeptID, DesignationID, JoinedDate, BasicSalary, Category, PhotoBase64
-            ) VALUES (
-                @EmpNo, @FullName, @Gender, @DateOfBirth, @NIC, @ContactNo, @Email,
-                @Address, @DeptID, @DesignationID, @JoinedDate, @BasicSalary, @Category, @PhotoBase64
-            )";
+                    INSERT INTO Employees (
+                        EmpNo, FullName, Gender, DateOfBirth, NIC, ContactNo, Email,
+                        Address, DeptID, DesignationID, JoinedDate, BasicSalary, Category, PhotoBase64, Status
+                    ) VALUES (
+                        @EmpNo, @FullName, @Gender, @DateOfBirth, @NIC, @ContactNo, @Email,
+                        @Address, @DeptID, @DesignationID, @JoinedDate, @BasicSalary, @Category, @PhotoBase64, @Status
+                    )";
 
                 SqlParameter[] parameters = {
-            new SqlParameter("@EmpNo", generatedEmployeeCode ?? "EMP001"),
-            new SqlParameter("@FullName", fullName),
-            new SqlParameter("@Gender", (object?)cmbGender.Text ?? DBNull.Value),
-            new SqlParameter("@DateOfBirth", dtpDOB.Value.Date),
-            new SqlParameter("@NIC", (object?)txtNIC.Text.Trim() ?? DBNull.Value),
-            new SqlParameter("@ContactNo", (object?)txtContact.Text.Trim() ?? DBNull.Value),
-            new SqlParameter("@Email", txtEmail.Text.Trim()),
-            new SqlParameter("@Address", (object?)txtAddress.Text.Trim() ?? DBNull.Value),
-            new SqlParameter("@DeptID", (int)cmbDepartment.SelectedValue),
-            new SqlParameter("@DesignationID", cmbDesignation.SelectedValue != null ? (object)(int)cmbDesignation.SelectedValue : DBNull.Value),
-            new SqlParameter("@JoinedDate", dtpJoinDate.Value.Date),
-            new SqlParameter("@BasicSalary", decimal.TryParse(txtSalary.Text, out decimal sal) ? sal : 0),
-            new SqlParameter("@Category", (object?)cmbCategory.Text ?? DBNull.Value),
-            new SqlParameter("@PhotoBase64", (object?)newPhotoBase64 ?? DBNull.Value)
-        };
-#pragma warning restore CS0618
+                    new SqlParameter("@EmpNo", generatedEmployeeCode),
+                    new SqlParameter("@FullName", fullName),
+                    new SqlParameter("@Gender", (object?)cmbGender.Text ?? DBNull.Value),
+                    new SqlParameter("@DateOfBirth", dtpDOB.Value.Date),
+                    new SqlParameter("@NIC", (object?)txtNIC.Text.Trim() ?? DBNull.Value),
+                    new SqlParameter("@ContactNo", (object?)txtContact.Text.Trim() ?? DBNull.Value),
+                    new SqlParameter("@Email", txtEmail.Text.Trim()),
+                    new SqlParameter("@Address", (object?)txtAddress.Text.Trim() ?? DBNull.Value),
+                    new SqlParameter("@DeptID", (int)cmbDepartment.SelectedValue),
+                    new SqlParameter("@DesignationID", (int)cmbDesignation.SelectedValue),
+                    new SqlParameter("@JoinedDate", dtpJoinDate.Value.Date),
+                    new SqlParameter("@BasicSalary", decimal.TryParse(txtSalary.Text, out decimal sal) ? sal : 0),
+                    new SqlParameter("@Category", (object?)cmbCategory.Text ?? DBNull.Value),
+                    new SqlParameter("@PhotoBase64", (object?)newPhotoBase64 ?? DBNull.Value),
+                    new SqlParameter("@Status", cmbStatus.Text)
+                };
 
                 int rowsAffected = DatabaseHelper.ExecuteNonQuery(query, parameters);
 
@@ -225,132 +391,6 @@ namespace Employee_managment_system
             }
         }
 
-        private bool ValidateInput()
-        {
-            // First Name validation
-            if (string.IsNullOrWhiteSpace(txtFirstName.Text))
-            {
-                MessageBox.Show("First name is required.", "Validation Error",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtFirstName.Focus();
-                return false;
-            }
-
-            // Last Name validation
-            if (string.IsNullOrWhiteSpace(txtLastName.Text))
-            {
-                MessageBox.Show("Last name is required.", "Validation Error",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtLastName.Focus();
-                return false;
-            }
-
-            // Email validation
-            if (string.IsNullOrWhiteSpace(txtEmail.Text))
-            {
-                MessageBox.Show("Email is required.", "Validation Error",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtEmail.Focus();
-                return false;
-            }
-
-            // Email format validation
-            if (!IsValidEmail(txtEmail.Text))
-            {
-                MessageBox.Show("Please enter a valid email address.", "Validation Error",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtEmail.Focus();
-                txtEmail.SelectAll();
-                return false;
-            }
-
-            // Department validation
-            if (cmbDepartment.SelectedValue == null)
-            {
-                MessageBox.Show("Please select a department.", "Validation Error",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                cmbDepartment.Focus();
-                return false;
-            }
-
-            // NIC validation (optional but if entered, check format)
-            if (!string.IsNullOrWhiteSpace(txtNIC.Text))
-            {
-                if (!IsValidNIC(txtNIC.Text))
-                {
-                    MessageBox.Show("Please enter a valid NIC (e.g., 990123456V or 199901234567).",
-                                  "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtNIC.Focus();
-                    txtNIC.SelectAll();
-                    return false;
-                }
-            }
-
-            // Contact validation (optional but if entered, check format)
-            if (!string.IsNullOrWhiteSpace(txtContact.Text))
-            {
-                if (!IsValidContact(txtContact.Text))
-                {
-                    MessageBox.Show("Please enter a valid contact number (e.g., 0712345678).",
-                                  "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtContact.Focus();
-                    txtContact.SelectAll();
-                    return false;
-                }
-            }
-
-            // Salary validation (optional but if entered, check it's a number)
-            if (!string.IsNullOrWhiteSpace(txtSalary.Text))
-            {
-                if (!decimal.TryParse(txtSalary.Text, out _))
-                {
-                    MessageBox.Show("Please enter a valid salary amount.", "Validation Error",
-                                  MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtSalary.Focus();
-                    txtSalary.SelectAll();
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private bool IsValidEmail(string email)
-        {
-            if (string.IsNullOrWhiteSpace(email))
-                return false;
-
-            // Trim and check for basic email pattern
-            string trimmed = email.Trim();
-
-            // Must have @ and at least one . after @
-            return trimmed.Contains("@") &&
-                   trimmed.IndexOf("@") > 0 &&
-                   trimmed.LastIndexOf(".") > trimmed.IndexOf("@") &&
-                   trimmed.LastIndexOf(".") < trimmed.Length - 1;
-        }
-
-        private bool IsValidNIC(string nic)
-        {
-            // Sri Lankan NIC format: 9 digits + V (old) OR 12 digits (new)
-            if (string.IsNullOrWhiteSpace(nic))
-                return false;
-
-            nic = nic.Trim().ToUpper();
-            return (nic.Length == 10 && nic.EndsWith("V") && nic.Substring(0, 9).All(char.IsDigit)) ||
-                   (nic.Length == 12 && nic.All(char.IsDigit));
-        }
-
-        private bool IsValidContact(string contact)
-        {
-            // Sri Lankan contact: 10 digits starting with 0
-            if (string.IsNullOrWhiteSpace(contact))
-                return false;
-
-            contact = contact.Trim();
-            return contact.Length == 10 && contact.All(char.IsDigit) && contact.StartsWith("0");
-        }
-
         private void btnCancel_Click(object sender, EventArgs e)
         {
             if (HasUnsavedChanges())
@@ -379,7 +419,6 @@ namespace Employee_managment_system
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            // Reset all fields without closing the form
             txtFirstName.Clear();
             txtLastName.Clear();
             txtNIC.Clear();

@@ -1,182 +1,346 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Employee_managment_system
 {
+
     public partial class DashboardForm : Form
     {
         public DashboardForm()
         {
             InitializeComponent();
             LoadDashboardStats();
-            WireUpMenuEvents();
-            HighlightActiveButton(btnDashboard);
         }
 
         private void LoadDashboardStats()
         {
             try
             {
-                // 1. Total Employees
+                //  Total Employees
                 string empQuery = "SELECT COUNT(*) FROM Employees";
-                object empResult = DatabaseHelper.ExecuteScalar(empQuery);
+                object? empResult = DatabaseHelper.ExecuteScalar(empQuery);
                 int totalEmployees = empResult != null ? Convert.ToInt32(empResult) : 0;
-                lblCardCount1.Text = totalEmployees.ToString();
 
-                // 2. Total Departments
+                //  Total Departments
                 string deptQuery = "SELECT COUNT(*) FROM Departments";
-                object deptResult = DatabaseHelper.ExecuteScalar(deptQuery);
+                object? deptResult = DatabaseHelper.ExecuteScalar(deptQuery);
                 lblCardCount2.Text = deptResult?.ToString() ?? "0";
 
-                // 3. Total Designations
+                //  Total Designations
                 string desigQuery = "SELECT COUNT(*) FROM Designations";
-                object desigResult = DatabaseHelper.ExecuteScalar(desigQuery);
+                object? desigResult = DatabaseHelper.ExecuteScalar(desigQuery);
                 lblCardCount3.Text = desigResult?.ToString() ?? "0";
 
-                // 4. Active Employees
-                string activeQuery = "SELECT COUNT(*) FROM Employees WHERE Status = 'Active'";
-                object activeResult = DatabaseHelper.ExecuteScalar(activeQuery);
-                int activeEmployees = activeResult != null ? Convert.ToInt32(activeResult) : 0;
-                lblCardCount4.Text = activeEmployees.ToString();
-
-                // 5. Today's Attendance
+                //  Today's Attendance
                 string todayQuery = "SELECT COUNT(*) FROM Attendance WHERE AttendDate = CAST(GETDATE() AS DATE)";
-                object todayResult = DatabaseHelper.ExecuteScalar(todayQuery);
-                lblCardCount5.Text = todayResult?.ToString() ?? "0";
+                object? todayResult = DatabaseHelper.ExecuteScalar(todayQuery);
+                int todayCount = todayResult != null ? Convert.ToInt32(todayResult) : 0;
+                lblCardCount5.Text = todayCount.ToString();
 
-                // 6. Pending Leave Requests
+                // Attendance percentage
+                int totalEmployeesForAtt = totalEmployees > 0 ? totalEmployees : 1;
+                int percent = (todayCount * 100) / totalEmployeesForAtt;
+                lblAttendancePercent.Text = $"{percent}% today";
+                lblAttendancePercent.ForeColor = percent >= 80 ? Color.Green : percent >= 50 ? Color.Orange : Color.Red;
+
+                // Pending Leave Requests
                 string pendingLeaveQuery = "SELECT COUNT(*) FROM LeaveRequests WHERE ApprovalStatus = 'Pending'";
-                object pendingResult = DatabaseHelper.ExecuteScalar(pendingLeaveQuery);
-                lblCardCount6.Text = pendingResult?.ToString() ?? "0";
+                object? pendingResult = DatabaseHelper.ExecuteScalar(pendingLeaveQuery);
 
-                // 7. Monthly Payroll
+                // Monthly Payroll
                 string payrollQuery = @"
-                    SELECT ISNULL(SUM(NetSalary), 0) 
-                    FROM Payroll 
-                    WHERE PayMonth = MONTH(GETDATE()) AND PayYear = YEAR(GETDATE())";
-                object payrollResult = DatabaseHelper.ExecuteScalar(payrollQuery);
+            SELECT ISNULL(SUM(NetSalary), 0) 
+            FROM Payroll 
+            WHERE PayMonth = MONTH(GETDATE()) AND PayYear = YEAR(GETDATE())";
+                object? payrollResult = DatabaseHelper.ExecuteScalar(payrollQuery);
                 decimal monthlyPayroll = payrollResult != null ? Convert.ToDecimal(payrollResult) : 0;
                 lblCardCount7.Text = $"LKR {monthlyPayroll:N0}";
 
-                // 8. Active / Total Employee Balance
+                // Payroll trend
+                string lastMonthQuery = @"
+            SELECT ISNULL(SUM(NetSalary), 0) 
+            FROM Payroll 
+            WHERE PayMonth = MONTH(DATEADD(MONTH, -1, GETDATE())) 
+            AND PayYear = YEAR(DATEADD(MONTH, -1, GETDATE()))";
+                object? lastMonthResult = DatabaseHelper.ExecuteScalar(lastMonthQuery);
+                decimal lastMonthPayroll = lastMonthResult != null ? Convert.ToDecimal(lastMonthResult) : 0;
+
+                if (lastMonthPayroll > 0)
+                {
+                    decimal change = ((monthlyPayroll - lastMonthPayroll) / lastMonthPayroll) * 100;
+                    if (change > 0)
+                    {
+                        lblPayrollTrend.Text = $"▲ +{change:F1}%";
+                        lblPayrollTrend.ForeColor = Color.Green;
+                    }
+                    else if (change < 0)
+                    {
+                        lblPayrollTrend.Text = $"▼ {change:F1}%";
+                        lblPayrollTrend.ForeColor = Color.Red;
+                    }
+                    else
+                    {
+                        lblPayrollTrend.Text = "━ 0%";
+                        lblPayrollTrend.ForeColor = Color.Gray;
+                    }
+                }
+                else
+                {
+                    lblPayrollTrend.Text = "First month";
+                    lblPayrollTrend.ForeColor = Color.Gray;
+                }
+
+                // Active / Total Employee Balance
+                int activeEmployees = 0;
+                string activeQuery = "SELECT COUNT(*) FROM Employees WHERE Status = 'Active'";
+                object? activeResult = DatabaseHelper.ExecuteScalar(activeQuery);
+                activeEmployees = activeResult != null ? Convert.ToInt32(activeResult) : 0;
                 lblCardCount8.Text = $"{activeEmployees} / {totalEmployees}";
+
+                //  Weekly Attendance
+                LoadWeeklyAttendance();
             }
             catch
             {
-                lblCardCount1.Text = "0";
+                // Handle exceptions silently
                 lblCardCount2.Text = "0";
                 lblCardCount3.Text = "0";
-                lblCardCount4.Text = "0";
                 lblCardCount5.Text = "0";
-                lblCardCount6.Text = "0";
                 lblCardCount7.Text = "LKR 0";
                 lblCardCount8.Text = "0 / 0";
+                lblAttendancePercent.Text = "0% today";
             }
         }
-
-        private void WireUpMenuEvents()
+        private void LoadWeeklyAttendance()
         {
-            btnDashboard.Click += BtnDashboard_Click;
-            btnEmployees.Click += BtnEmployees_Click;
-            btnDepartment.Click += BtnDepartment_Click;
-            btnAttendance.Click += BtnAttendance_Click;
-            btnLeave.Click += BtnLeave_Click;
-            btnPayroll.Click += BtnPayroll_Click;
-            btnReports.Click += BtnReports_Click;
-            btnLogout.Click += BtnLogout_Click;
-        }
-
-        private void HighlightActiveButton(Button activeBtn)
-        {
-            // Reset all buttons
-            Button[] buttons = { btnDashboard, btnEmployees, btnDepartment, btnAttendance, btnLeave, btnPayroll, btnReports, btnLogout };
-            foreach (Button btn in buttons)
+            try
             {
-                btn.BackColor = Color.FromArgb(25, 48, 78);
-                btn.ForeColor = Color.FromArgb(200, 200, 200);
-                btn.Font = new Font("Segoe UI", 10F);
-            }
+                string query = @"
+            SELECT 
+                DATENAME(WEEKDAY, AttendDate) AS DayName,
+                COUNT(*) AS Count
+            FROM Attendance
+            WHERE AttendDate >= DATEADD(DAY, -6, CAST(GETDATE() AS DATE))
+            AND AttendDate <= CAST(GETDATE() AS DATE)
+            GROUP BY DATENAME(WEEKDAY, AttendDate)
+            ORDER BY AttendDate";
 
-            // Highlight active
-            activeBtn.BackColor = Color.FromArgb(52, 152, 219);
-            activeBtn.ForeColor = Color.White;
-            activeBtn.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+                DataTable dt = DatabaseHelper.ExecuteQuery(query);
+
+                // Reset all counts
+                lblMonCount.Text = "0";
+                lblTueCount.Text = "0";
+                lblWedCount.Text = "0";
+                lblThuCount.Text = "0";
+                lblFriCount.Text = "0";
+                lblSatCount.Text = "0";
+                lblSunCount.Text = "0";
+
+                // Update with actual data
+                foreach (DataRow row in dt.Rows)
+                {
+                    string day = row["DayName"].ToString()!.Substring(0, 3);
+                    string count = row["Count"].ToString()!;
+
+                    switch (day)
+                    {
+                        case "Mon": lblMonCount.Text = count; break;
+                        case "Tue": lblTueCount.Text = count; break;
+                        case "Wed": lblWedCount.Text = count; break;
+                        case "Thu": lblThuCount.Text = count; break;
+                        case "Fri": lblFriCount.Text = count; break;
+                        case "Sat": lblSatCount.Text = count; break;
+                        case "Sun": lblSunCount.Text = count; break;
+                    }
+                }
+            }
+            catch
+            {
+                // If attendance table doesn't exist, show zeros
+                lblMonCount.Text = "0";
+                lblTueCount.Text = "0";
+                lblWedCount.Text = "0";
+                lblThuCount.Text = "0";
+                lblFriCount.Text = "0";
+                lblSatCount.Text = "0";
+                lblSunCount.Text = "0";
+            }
         }
 
-        // ============================================
-        // MENU NAVIGATION
-        // ============================================
-        private void BtnDashboard_Click(object sender, EventArgs e)
+        private void btnRefresh_Click(object sender, EventArgs e)
         {
-            HighlightActiveButton(btnDashboard);
-            lblPageTitle.Text = "Dashboard";
+            LoadDashboardStats();
+
+        }
+
+        private void btnQuickAddEmployee_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnQuickAttendance_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnQuickApproveLeave_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnQuickPayroll_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnQuickReports_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+        private void btnDepartment_Click(object sender, EventArgs e)
+        {
+            DepartmentForm deptForm = new DepartmentForm();
+            deptForm.Show();
+            this.Hide();
+        }
+
+        private void btnEmployees_Click(object sender, EventArgs e)
+        {
+            EmployeeForm empForm = new EmployeeForm();
+            empForm.Show();
+            this.Hide();
+        }
+
+        private void btnAttendance_Click(object sender, EventArgs e)
+        {
+            AttendanceForm att = new AttendanceForm();
+            att.Show();
+            this.Hide();
+        }
+
+        private void btnLeave_Click(object sender, EventArgs e)
+        {
+            LeaveForm leave = new LeaveForm();
+            leave.Show();
+            this.Hide();
+        }
+
+        private void btnPayroll_Click(object sender, EventArgs e)
+        {
+            PayrollForm payroll = new PayrollForm();
+            payroll.Show();
+            this.Hide();
+        }
+
+        private void btnReports_Click(object sender, EventArgs e)
+        {
+            ReportForm report = new ReportForm();
+            report.Show();
+            this.Hide();
+        }
+
+        private void btnDashboard_Click(object sender, EventArgs e)
+        {
             LoadDashboardStats();
         }
 
-        private void BtnEmployees_Click(object sender, EventArgs e)
+        private void btnChangePassword_Click(object sender, EventArgs e)
         {
-            HighlightActiveButton(btnEmployees);
-            EmployeeForm empForm = new EmployeeForm();
-            empForm.Show();
-            Hide();
+            ChangePassword();
+        }
+        private void ChangePassword()
+        {
+            string currentPassword = Microsoft.VisualBasic.Interaction.InputBox(
+                "Enter Current Password:",
+                "Change Password - Verify Identity",
+                "",
+                -1, -1);
+
+            if (string.IsNullOrEmpty(currentPassword))
+                return;
+
+            string newPassword = Microsoft.VisualBasic.Interaction.InputBox(
+                "Enter New Password (min 6 characters):",
+                "Change Password",
+                "",
+                -1, -1);
+
+            if (string.IsNullOrEmpty(newPassword))
+                return;
+
+            if (newPassword.Length < 6)
+            {
+                MessageBox.Show("Password must be at least 6 characters.", "Error",
+                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string confirmPassword = Microsoft.VisualBasic.Interaction.InputBox(
+                "Confirm New Password:",
+                "Change Password",
+                "",
+                -1, -1);
+
+            if (string.IsNullOrEmpty(confirmPassword))
+                return;
+
+            if (newPassword != confirmPassword)
+            {
+                MessageBox.Show("Passwords do not match!", "Error",
+                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Direct password update in database (without AuthService)
+            try
+            {
+                string updateQuery = "UPDATE Users SET PasswordHash = @PasswordHash WHERE Username = @Username";
+                SqlParameter[] parameters = {
+            new SqlParameter("@Username", "admin"),
+            new SqlParameter("@PasswordHash", newPassword)
+        };
+
+                int rowsAffected = DatabaseHelper.ExecuteNonQuery(updateQuery, parameters);
+
+                if (rowsAffected > 0)
+                {
+                    MessageBox.Show("Password changed successfully! Please login again.",
+                                  "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    LoginForm login = new LoginForm();
+                    login.Show();
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Password change failed. Please try again.",
+                                  "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error changing password: {ex.Message}",
+                              "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private void BtnDepartment_Click(object sender, EventArgs e)
-        {
-            HighlightActiveButton(btnDepartment);
-            DepartmentForm deptForm = new DepartmentForm();
-            deptForm.Show();
-            Hide();
-        }
-
-        private void BtnAttendance_Click(object sender, EventArgs e)
-        {
-            HighlightActiveButton(btnAttendance);
-            lblPageTitle.Text = "Attendance";
-            AttendanceForm attForm = new AttendanceForm();
-            attForm.Show();
-            Hide();
-        }
-
-        private void BtnLeave_Click(object sender, EventArgs e)
-        {
-            HighlightActiveButton(btnLeave);
-            lblPageTitle.Text = "Leave Management";
-            LeaveForm leaveForm = new LeaveForm();
-            leaveForm.Show();
-            Hide();
-        }
-
-        private void BtnPayroll_Click(object sender, EventArgs e)
-        {
-            HighlightActiveButton(btnPayroll);
-            lblPageTitle.Text = "Payroll";
-            PayrollForm payrollForm = new PayrollForm();
-            payrollForm.Show();
-            Hide();
-        }
-
-        private void BtnReports_Click(object sender, EventArgs e)
-        {
-            HighlightActiveButton(btnReports);
-            lblPageTitle.Text = "Reports";
-            ReportForm reportForm = new ReportForm();
-            reportForm.Show();
-            Hide();
-        }
-
-        private void BtnLogout_Click(object sender, EventArgs e)
+        private void btnLogout_Click(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show("Are you sure you want to logout?",
-                                "Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        "Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
                 LoginForm loginForm = new LoginForm();
                 loginForm.Show();
-                Close();
+                this.Close();
+
             }
+
         }
     }
 }

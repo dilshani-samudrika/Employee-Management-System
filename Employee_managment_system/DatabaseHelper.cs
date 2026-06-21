@@ -8,40 +8,14 @@ namespace Employee_managment_system
 {
     public static class DatabaseHelper
     {
-        private static readonly string connectionString;
-
-        static DatabaseHelper()
-        {
-            try
-            {
-                connectionString = ConfigurationManager
-                    .ConnectionStrings["EMS_DB"]?.ConnectionString;
-
-                if (string.IsNullOrEmpty(connectionString))
-                {
-                    connectionString =
-                        @"Data Source=DILSHANI;
-                          Initial Catalog=EMS_DB;
-                          Integrated Security=True;
-                          TrustServerCertificate=True;";
-                }
-            }
-            catch
-            {
-                connectionString =
-                    @"Data Source=DILSHANI;
-                      Initial Catalog=EMS_DB;
-                      Integrated Security=True;
-                      TrustServerCertificate=True;";
-            }
-        }
+        private static string connectionString = @"Data Source=localhost;Initial Catalog=EMS_DB;Integrated Security=True;";
 
         public static SqlConnection GetConnection()
         {
             return new SqlConnection(connectionString);
         }
 
-        public static bool TestConnection(bool showMessageBox = false)
+        public static DataTable ExecuteQuery(string query, SqlParameter[]? parameters = null)
         {
             try
             {
@@ -101,9 +75,7 @@ namespace Employee_managment_system
             return dt;
         }
 
-        public static int ExecuteNonQuery(
-            string query,
-            SqlParameter[] parameters = null)
+        public static int ExecuteNonQuery(string query, SqlParameter[]? parameters = null)
         {
             using (SqlConnection conn = GetConnection())
             {
@@ -120,9 +92,7 @@ namespace Employee_managment_system
             }
         }
 
-        public static object ExecuteScalar(
-            string query,
-            SqlParameter[] parameters = null)
+        public static object? ExecuteScalar(string query, SqlParameter[]? parameters = null)
         {
             using (SqlConnection conn = GetConnection())
             {
